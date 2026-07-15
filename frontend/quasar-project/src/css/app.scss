@@ -1,1 +1,133 @@
-// app global css
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar {
+  border-right: 1px solid #EAECF0;
+}
+
+.menu-title {
+  padding: 0 20px 10px;
+  color: #98A2B3;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.menu-icon {
+  color: #98A2B3;
+  font-size: 22px;
+  transition: .25s;
+}
+
+.menu-text {
+  color: #475467;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.q-item {
+  min-height: 48px;
+  border-radius: 10px;
+  margin: 2px 10px;
+  transition: .25s;
+}
+
+.q-item:hover {
+  background: #F8FAFC;
+}
+
+.q-item:hover .menu-icon,
+.q-item:hover .menu-text {
+  color: #0F5D63;
+}
+
+.menu-active {
+  background: #EEF5F6;
+  border-left: 4px solid #0F5D63;
+}
+
+.menu-active .menu-icon,
+.menu-active .menu-text {
+  color: #0F5D63;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 15px;
+  width: 100%;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header-toolbar {
+  min-height: 78px;
+  padding: 0 24px;
+}
+
+.header-menu-button {
+  margin-right: 18px;
+}
+
+.header-logo {
+  margin-right: 16px;
+}
+
+.header-title {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+.header-user-button {
+  margin-left: 16px;
+}
+
+/* =====================================================
+   LOGO DO SISTEMA
+===================================================== */
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  user-select: none;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #43d26b 0%,
+    #2bb7c8 100%
+  );
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img{
+    width:22px;
+    height:22px;
+  }
+}
+
+.logo-text{
+  font-size:34px;
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-1px;
+}
+
+.logo-white{
+  color:#FFFFFF;
+}
+
+.logo-green{
+  color:#4AD66D;
+}

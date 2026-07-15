@@ -1,14 +1,13 @@
-
-<script setup>
-import AppHeader from '../components/layout/AppHeader.vue'
-import AppSidebar from '../components/layout/AppSideBar.vue'
-</script>
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr lFf">
 
-    <AppHeader />
+    <AppHeader
+      @toggle-drawer="toggleSidebar"
+    />
 
-    <AppSidebar />
+    <AppSidebar
+      v-model="isSidebarExpanded"
+    />
 
     <q-page-container>
       <router-view />
@@ -17,3 +16,15 @@ import AppSidebar from '../components/layout/AppSideBar.vue'
   </q-layout>
 </template>
 
+<script setup>
+import { ref } from 'vue'
+
+import AppHeader from '../components/layout/AppHeader.vue'
+import AppSidebar from '../components/layout/AppSidebar.vue'
+
+const isSidebarExpanded = ref(false)
+
+function toggleSidebar() {
+  isSidebarExpanded.value = !isSidebarExpanded.value
+}
+</script>
