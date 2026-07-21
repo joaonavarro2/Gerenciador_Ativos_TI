@@ -131,3 +131,953 @@
 .logo-green{
   color:#4AD66D;
 }
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-page {
+  padding: 32px;
+}
+
+.dashboard-header {
+  margin-bottom: 36px;
+}
+
+.dashboard-title {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #101828;
+}
+
+.dashboard-subtitle {
+  margin-top: 8px;
+  color: #667085;
+  font-size: 1rem;
+}
+
+/* Espaçamento entre as seções */
+
+.dashboard-summary {
+  margin-bottom: 32px;
+}
+
+.dashboard-charts {
+  margin-bottom: 32px;
+}
+
+.dashboard-table {
+  margin-bottom: 32px;
+}
+
+/* ==========================================================
+   DASHBOARD - CARDS RESUMO
+========================================================== */
+
+.dashboard-summary {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 24px;
+
+  margin-top: 28px;
+}
+
+.summary-card {
+
+  padding: 22px;
+
+  border-radius: 20px;
+
+  box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+
+  transition: .25s;
+
+  min-height: 140px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+}
+
+.summary-card:hover {
+
+  transform: translateY(-4px);
+
+  box-shadow: 0 10px 24px rgba(15,23,42,.10);
+
+}
+
+.summary-card-top {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+}
+
+.summary-title {
+
+  font-size: 15px;
+
+  color: #667085;
+
+  font-weight: 500;
+
+}
+
+.summary-value {
+
+  margin-top: 8px;
+
+  font-size: 48px;
+
+  font-weight: 700;
+
+  color: #101828;
+
+  line-height: 1;
+
+}
+
+.summary-footer {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 14px;
+
+}
+
+.summary-period {
+
+  color: #98A2B3;
+
+}
+
+.summary-positive {
+
+  color: #16A34A;
+
+  font-weight: 600;
+
+}
+
+.summary-negative {
+
+  color: #DC2626;
+
+  font-weight: 600;
+
+}
+
+.summary-icon {
+
+  width: 46px;
+
+  height: 46px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+.summary-icon .q-icon {
+
+  font-size: 24px;
+
+}
+
+/* ==========================
+   CORES DOS ÍCONES
+========================== */
+
+.bg-success-light {
+
+  background: #DCFCE7;
+
+}
+
+.icon-success {
+
+  color: #22C55E;
+
+}
+
+.bg-warning-light {
+
+  background: #FEF3C7;
+
+}
+
+.icon-warning {
+
+  color: #F97316;
+
+}
+
+.bg-danger-light {
+
+  background: #FEE2E2;
+
+}
+
+.icon-danger {
+
+  color: #EF4444;
+
+}
+
+.bg-info-light {
+
+  background: #DBEAFE;
+
+}
+
+.icon-info {
+
+  color: #2563EB;
+
+}
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 1400px) {
+
+  .dashboard-summary {
+
+    grid-template-columns: repeat(2, 1fr);
+
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .dashboard-summary {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .summary-card {
+
+    min-height: 120px;
+
+  }
+
+  .summary-value {
+
+    font-size: 38px;
+
+  }
+
+}
+
+/* ==========================================================
+   DASHBOARD - CHARTS
+========================================================== */
+
+.dashboard-charts{
+
+  display:grid;
+
+  grid-template-columns: 2fr 1fr;
+
+  gap:24px;
+
+  margin-top:28px;
+
+}
+
+.dashboard-chart-card{
+
+  border-radius:20px;
+
+  padding:26px;
+
+  min-height:420px;
+
+  box-shadow:0 4px 18px rgba(15,23,42,.06);
+
+  display:flex;
+
+  flex-direction:column;
+
+}
+
+.dashboard-chart-header{
+
+  margin-bottom:25px;
+
+}
+
+.dashboard-chart-title{
+
+  margin:0;
+
+  font-size:30px;
+
+  font-weight:700;
+
+  color:#101828;
+
+}
+
+.dashboard-chart-subtitle{
+
+  margin-top:6px;
+
+  font-size:15px;
+
+  color:#98A2B3;
+
+}
+
+.dashboard-chart-body{
+
+  flex:1;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+}
+
+.chart-placeholder{
+
+  width:100%;
+
+  height:100%;
+
+  border:2px dashed #E4E7EC;
+
+  border-radius:18px;
+
+  background:#FCFCFD;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:18px;
+
+}
+
+.chart-placeholder-icon{
+
+  color:#D0D5DD;
+
+}
+
+.chart-placeholder span{
+
+  color:#98A2B3;
+
+  font-size:15px;
+
+}
+
+/* ==========================
+   RESPONSIVO
+========================== */
+
+@media (max-width:1200px){
+
+.dashboard-charts{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+@media (max-width:768px){
+
+.dashboard-chart-card{
+
+min-height:340px;
+
+padding:18px;
+
+}
+
+.dashboard-chart-title{
+
+font-size:24px;
+
+}
+
+}
+
+/* ==========================================================
+   DASHBOARD - TABELA
+========================================================== */
+
+.dashboard-table {
+
+  background: white;
+  border-radius: 18px;
+
+  margin-top: 26px;
+
+  overflow: hidden;
+
+  border: 1px solid #EDF1F5;
+
+}
+
+.table-header{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:26px 28px;
+
+}
+
+.table-header h2{
+
+  margin:0;
+
+  font-size:24px;
+
+  font-weight:700;
+
+  color:#101828;
+
+}
+
+.table-header span{
+
+  color:#98A2B3;
+
+  font-size:14px;
+
+}
+
+.table-search{
+
+  width:240px;
+
+}
+
+.assets-table{
+
+  border-top:1px solid #EEF2F6;
+
+}
+
+.assets-table thead tr{
+
+  background:#F8FAFC;
+
+}
+
+.assets-table thead th{
+
+  color:#667085;
+
+  font-weight:700;
+
+  font-size:13px;
+
+  letter-spacing:.04em;
+
+}
+
+.assets-table tbody td{
+
+  height:72px;
+
+  color:#344054;
+
+  font-size:15px;
+
+}
+
+.assets-table tbody tr{
+
+  transition:.2s;
+
+}
+
+.assets-table tbody tr:hover{
+
+  background:#F9FBFC;
+
+}
+
+.q-badge{
+
+  padding:8px 14px;
+
+  border-radius:999px;
+
+  font-size:13px;
+
+  font-weight:600;
+
+}
+
+@media(max-width:900px){
+
+.table-header{
+
+flex-direction:column;
+align-items:flex-start;
+gap:20px;
+
+}
+
+.table-search{
+
+width:100%;
+
+}
+
+}
+
+/* ==========================================================
+   GERAL
+========================================================== */
+
+body {
+  background: #f5f7fa;
+}
+
+.q-page {
+  background: #f5f7fa;
+  padding: 24px;
+}
+
+
+/* ==========================================================
+   BENS - HEADER
+========================================================== */
+
+.bens-header {
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  margin-bottom: 24px;
+}
+
+.bens-header .text-h4 {
+  font-size: 38px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.bens-header .text-subtitle1 {
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.bens-header .q-btn {
+  height: 42px;
+  border-radius: 10px;
+}
+
+.bens-header .q-field {
+  border-radius: 10px;
+}
+
+
+/*=========================================================
+=            BENS / TABELA                                =
+=========================================================*/
+
+.bens-table {
+  border-radius: 14px;
+  border: 1px solid #EAECF0;
+  overflow: hidden;
+  background: #FFF;
+  margin-top: 24px;
+}
+
+/*=========================================================
+=            CABEÇALHO                                   =
+=========================================================*/
+
+.table-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:24px 28px;
+
+  border-bottom:1px solid #EAECF0;
+}
+
+.table-title{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+
+.table-title-main{
+  font-size:20px;
+  font-weight:600;
+  color:#101828;
+}
+
+.table-title-sub{
+  font-size:14px;
+  color:#667085;
+}
+
+.table-last-update{
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  font-size:13px;
+  color:#98A2B3;
+
+}
+
+/*=========================================================
+=            QTABLE                                      =
+=========================================================*/
+
+.bens-qtable{
+
+  thead{
+
+    background:#F9FAFB;
+
+  }
+
+  thead th{
+
+    color:#667085;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:.05em;
+
+    text-transform:uppercase;
+
+    border-bottom:1px solid #EAECF0;
+
+    padding:16px;
+
+  }
+
+  tbody td{
+
+    padding:18px 16px;
+
+    border-bottom:1px solid #F2F4F7;
+
+    color:#344054;
+
+    font-size:14px;
+
+  }
+
+  tbody tr{
+
+    transition:.20s;
+
+  }
+
+  tbody tr:hover{
+
+    background:#F9FAFB;
+
+  }
+
+}
+
+/*=========================================================
+=            ID                                          =
+=========================================================*/
+
+.badge-id{
+
+  background:#ECFDF3;
+
+  color:#027A48;
+
+  font-weight:600;
+
+  border-radius:8px;
+
+  padding:6px 12px;
+
+}
+
+/*=========================================================
+=            DESCRIÇÃO                                   =
+=========================================================*/
+
+.descricao-cell{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+}
+
+.descricao-title{
+
+  font-size:15px;
+
+  font-weight:600;
+
+  color:#101828;
+
+}
+
+.descricao-serie{
+
+  font-size:13px;
+
+  color:#667085;
+
+  margin-top:4px;
+
+}
+
+/*=========================================================
+=            RESPONSÁVEL                                 =
+=========================================================*/
+
+.responsavel-cell{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:10px;
+
+}
+
+/*=========================================================
+=            CATEGORIA                                   =
+=========================================================*/
+
+.categoria-chip{
+
+  background:#F2F4F7;
+
+  color:#475467;
+
+  font-weight:500;
+
+  border-radius:8px;
+
+}
+
+/*=========================================================
+=            STATUS                                      =
+=========================================================*/
+
+.status-chip{
+
+  border-radius:8px;
+
+  font-weight:600;
+
+  padding:0 10px;
+
+}
+
+/* Ativo */
+
+.status-ativo{
+
+  background:#ECFDF3;
+
+  color:#027A48;
+
+}
+
+/* Em manutenção */
+
+.status-manutencao{
+
+  background:#FFFAEB;
+
+  color:#B54708;
+
+}
+
+/* Inativo */
+
+.status-inativo{
+
+  background:#FEF3F2;
+
+  color:#B42318;
+
+}
+
+/* Descartado */
+
+.status-descartado{
+
+  background:#F2F4F7;
+
+  color:#475467;
+
+}
+
+/*=========================================================
+=            BOTÕES                                      =
+=========================================================*/
+
+.acao-btn{
+
+  color:#667085;
+
+  transition:.25s;
+
+}
+
+.acao-btn:hover{
+
+  color:#0F5D63;
+
+  background:#EEF7F8;
+
+}
+
+/*=========================================================
+=            RODAPÉ                                      =
+=========================================================*/
+
+.table-footer{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:18px 24px;
+
+  border-top:1px solid #EAECF0;
+
+  background:#FCFCFD;
+
+}
+
+.footer-left{
+
+  font-size:14px;
+
+  color:#667085;
+
+}
+
+.footer-right{
+
+  display:flex;
+
+  gap:10px;
+
+  flex-wrap:wrap;
+
+}
+
+/*=========================================================
+=            RESPONSIVIDADE                              =
+=========================================================*/
+
+/*=========================================================
+=            RESPONSIVIDADE                              =
+=========================================================*/
+
+@media (max-width:1024px){
+
+  .table-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:12px;
+
+  }
+
+  .table-last-update{
+
+    margin-left:auto;
+
+  }
+
+  .table-footer{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap:16px;
+
+  }
+
+}
+
+@media (max-width:600px){
+
+  .table-header{
+
+    flex-direction:column;
+    align-items:flex-start;
+
+  }
+
+  .table-last-update{
+
+    margin-left:0;
+
+  }
+
+  .table-footer{
+
+    flex-direction:column;
+    align-items:flex-start;
+
+  }
+
+  .footer-right{
+
+    width:100%;
+
+  }
+
+}

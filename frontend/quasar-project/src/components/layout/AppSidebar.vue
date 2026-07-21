@@ -1,10 +1,18 @@
 <template>
   <q-drawer
-    :model-value="true"
+    :model-value="modelValue"
+    @update:model-value="$emit('update:modelValue', $event)"
+
+    :mini="$q.screen.gt.sm ? mini : false"
+
+    show-if-above
+
     bordered
-    :mini="!modelValue"
+
     :width="260"
+
     :mini-width="72"
+
     class="sidebar bg-white"
   >
     <q-scroll-area class="fit">
@@ -13,9 +21,7 @@
 
         <!-- DASHBOARD -->
 
-        <q-item
-          clickable
-          active
+        <q-item clickable to="/dashboard"
           active-class="menu-active"
         >
           <q-item-section avatar>
@@ -26,7 +32,7 @@
           </q-item-section>
 
           <q-item-section
-            v-if="modelValue"
+            v-if="!mini"
             class="menu-text"
           >
             Dashboard
@@ -38,13 +44,13 @@
         <!-- PATRIMÔNIO -->
 
         <div
-          v-if="modelValue"
+          v-if="!mini"
           class="menu-title"
         >
           PATRIMÔNIO
         </div>
 
-        <q-item clickable>
+        <q-item clickable to="/bens">
           <q-item-section avatar>
             <q-icon
               name="inventory_2"
@@ -54,13 +60,13 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Bens / Ativos
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/movimentacoes">
           <q-item-section avatar>
             <q-icon
               name="sync_alt"
@@ -70,7 +76,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Movimentações
           </q-item-section>
@@ -86,7 +92,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Históricos
           </q-item-section>
@@ -102,7 +108,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Consertos
           </q-item-section>
@@ -113,7 +119,7 @@
         <!-- CADASTROS -->
 
         <div
-          v-if="modelValue"
+          v-if="!mini"
           class="menu-title"
         >
           CADASTROS
@@ -129,7 +135,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Escritórios
           </q-item-section>
@@ -145,7 +151,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Departamentos
           </q-item-section>
@@ -161,7 +167,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Pessoas
           </q-item-section>
@@ -177,7 +183,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Outros Itens
           </q-item-section>
@@ -198,7 +204,7 @@
 
           <q-item-section
             class="menu-text"
-            v-if="modelValue"
+            v-if="!mini"
           >
             Sair
           </q-item-section>
@@ -212,7 +218,16 @@
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
 defineProps({
-  modelValue: Boolean
+  modelValue: Boolean,
+  mini: Boolean
 })
+
+defineEmits([
+  'update:modelValue'
+])
+
 </script>
