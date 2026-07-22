@@ -34,131 +34,131 @@
          TABELA
          ======================================================= -->
 
-    <q-table flat :rows="bens" :columns="columns" row-key="id" hide-pagination rows-per-page-options="[0]"
-      class="bens-qtable"> </q-table>
+    <q-table flat :rows="bens" :columns="columns" row-key="id" 
+>
 
-    <!-- ==============================
+      <!-- ==============================
            ID
       ============================== -->
 
-    <template #body="props">
-      <q-tr :props="props">
-        <q-td key="id">
+      <template #body="props">
+        <q-tr :props="props">
+          <q-td key="id" :props="props">
 
-          <q-badge class="badge-id">
-            {{ props.row.id }}
-          </q-badge>
+            <q-badge class="badge-id">
+              {{ props.row.id }}
+            </q-badge>
 
-        </q-td>
+          </q-td>
 
 
 
-        <!-- ==============================
+          <!-- ==============================
            DESCRIÇÃO
       ============================== -->
 
-        <q-td key="descricao">
+          <q-td key="descricao">
 
-          <div class="descricao-cell">
+            <div class="descricao-cell">
 
-            <q-avatar rounded :color="props.row.avatarColor" :text-color="props.row.iconColor" size="38px">
-              <q-icon :name="props.row.icon" size="18px" />
-            </q-avatar>
+              <q-avatar rounded :color="props.row.avatarColor" :text-color="props.row.iconColor" size="38px">
+                <q-icon :name="props.row.icon" size="18px" />
+              </q-avatar>
 
-            <div class="descricao-title">
+              <div class="descricao-title">
 
-              {{ props.row.descricao }}
+                {{ props.row.descricao }}
+
+              </div>
 
             </div>
 
-          </div>
+          </q-td>
 
-        </q-td>
-
-        <!-- ==============================
+          <!-- ==============================
            CATEGORIA
       ============================== -->
 
-        <q-td key="categoria">
+          <q-td key="categoria" :props="props">
 
-          <q-chip dense square class="categoria-chip">
-            {{ props.row.categoria }}
-          </q-chip>
+            <q-chip dense square class="categoria-chip">
+              {{ props.row.categoria }}
+            </q-chip>
 
-        </q-td>
+          </q-td>
 
-        <!-- ==============================
+          <!-- ==============================
            MARCA
       ============================== -->
 
-        <q-td key="marca">
+          <q-td key="marca">
 
-          {{ props.row.marca }}
+            {{ props.row.marca }}
 
-        </q-td>
+          </q-td>
 
-        <!-- ==============================
+          <!-- ==============================
            DEPARTAMENTO
       ============================== -->
 
-        <q-td key="departamento">
+          <q-td key="departamento" :props="props">
 
-          {{ props.row.departamento }}
+            {{ props.row.departamento }}
 
-        </q-td>
+          </q-td>
 
-        <!-- ==============================
+          <!-- ==============================
            RESPONSÁVEL
       ============================== -->
 
-        <q-td key="responsavel">
+          <q-td key="responsavel">
 
-          <div class="responsavel-cell">
+            <div class="responsavel-cell">
 
-            <q-avatar size="28px" color="blue-1" text-color="primary">
-              <q-icon name="person" size="15px" />
-            </q-avatar>
+              <q-avatar size="28px" color="blue-1" text-color="primary">
+                <q-icon name="person" size="15px" />
+              </q-avatar>
 
-            {{ props.row.responsavel }}
+              {{ props.row.responsavel }}
 
-          </div>
+            </div>
 
-        </q-td>
+          </q-td>
 
-        <!-- ==============================
+          <!-- ==============================
            STATUS
       ============================== -->
 
-        <q-td key="status">
+          <q-td key="status" :props="props">
 
-          <q-chip dense :class="statusClass(props.row.status)">
-            {{ props.row.status }}
-          </q-chip>
+            <q-chip dense :class="statusClass(props.row.status)">
+              {{ props.row.status }}
+            </q-chip>
 
-        </q-td>
+          </q-td>
 
-        <!-- ==============================
+          <!-- ==============================
            AÇÕES
       ============================== -->
 
-        <q-td key="acoes" class="text-center">
+          <q-td key="acoes" :props="props" class="text-center">
 
-          <q-btn flat round dense class="acao-btn" @click="visualizarBem(props.row.id)">
+            <q-btn flat round dense class="acao-btn" @click="visualizarBem(props.row.id)">
 
-            <q-icon name="visibility" size="18px" />
+              <q-icon name="visibility" size="18px" />
 
-          </q-btn>
+            </q-btn>
 
-          <q-btn flat round dense class="acao-btn" @click="movimentarBem(props.row.id)">
+            <q-btn flat round dense class="acao-btn" @click="movimentarBem(props.row.id)">
 
-            <q-icon name="sync_alt" size="18px" />
+              <q-icon name="sync_alt" size="18px" />
 
-          </q-btn>
+            </q-btn>
 
-        </q-td>
-
-      </q-tr>
-    </template>
+          </q-td>
+        </q-tr>
+      </template>
+    </q-table>
 
     <!-- =======================================================
          RODAPÉ
@@ -218,7 +218,7 @@
 
 
 <script setup>
-import { computed } from 'vue'
+import { ref,computed } from 'vue'
 
 /* ==========================================================
    BACKEND
@@ -250,34 +250,22 @@ o array utilizando a API.
  
 ========================================================== */
 
-const bens = [
 
+const bens = ref([
   {
     id: 'BEM-0041',
-
     descricao: 'Trator Agrícola MF 275',
-
     serie: 'MF275-2023-001',
-
     categoria: 'Veículo',
-
     marca: 'Massey Ferguson • MF 275',
-
     departamento: 'Operações',
-
     responsavel: 'Carlos Andrade',
-
     status: 'Ativo',
-
     icon: 'agriculture',
-
     avatarColor: 'green-1',
-
     iconColor: 'green-8'
   }
-
-]
-
+])
 /* ==========================================================
    COLUNAS DA TABELA
 ========================================================== */
@@ -373,19 +361,19 @@ function statusClass(status) {
 ========================================================== */
 
 const totalAtivos = computed(() =>
-  bens.filter(b => b.status === 'Ativo').length
+  bens.value.filter(b => b.status === 'Ativo').length
 )
 
 const totalManutencao = computed(() =>
-  bens.filter(b => b.status === 'Em Manutenção').length
+  bens.value.filter(b => b.status === 'Em Manutenção').length
 )
 
 const totalInativos = computed(() =>
-  bens.filter(b => b.status === 'Inativo').length
+  bens.value.filter(b => b.status === 'Inativo').length
 )
 
 const totalDescartados = computed(() =>
-  bens.filter(b => b.status === 'Descartado').length
+  bens.value.filter(b => b.status === 'Descartado').length
 )
 
 /* ==========================================================
