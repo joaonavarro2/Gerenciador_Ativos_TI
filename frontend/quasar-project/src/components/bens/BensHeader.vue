@@ -55,7 +55,7 @@
           outlined
           dense
           style="width: 140px"
-          :options="['Tipo de Bem']"
+          :options="['PC', 'Notebook', 'Monitor', 'Impressora', 'Scanner', 'Perifericos', 'Infraestrutura']"
           model-value="Tipo de Bem"
         />
       </div>
@@ -65,7 +65,7 @@
           outlined
           dense
           style="width: 140px"
-          :options="['Status']"
+          :options="['Ativo', 'Inativo', 'Manutenção', 'Descartado']"
           model-value="Status"
         />
       </div>
@@ -75,7 +75,26 @@
           outlined
           dense
           style="width: 160px"
-          :options="['Departamento']"
+          :options="[
+          'Assessoria da Diretoria',
+          'Controle Interno',
+          'Comitê Técnico Ambiental',
+          'Diretoria Geral',
+          'Assessoria de Comunicação',
+          'Assessoria Jurídica',
+          'Dep.Recursos Humanos',
+          'Dep.Administrativo',
+          'Dep.Convênios e Contratos',
+          'Dep.Financeiro',
+          'Dep.Licitações',
+          'Dep.Capacitação',
+          'Dep.Engenharia',
+          'Coord.Água para Todos',
+          'Coord.Pró-Semiárido',
+          'Coord.Bahia Produtiva',
+          'Coord.Projetos Especiais',
+          'Coord.Articulação de Políticas',
+          ]"
           model-value="Departamento"
         />
       </div>

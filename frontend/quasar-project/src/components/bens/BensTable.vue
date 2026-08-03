@@ -155,6 +155,12 @@
 
             </q-btn>
 
+            <q-btn flat round dense class="acao-btn" @click="deletarBem(props.row.id)">
+
+              <q-icon name="delete" size="18px" />
+
+            </q-btn>
+
           </q-td>
         </q-tr>
       </template>
@@ -207,6 +213,10 @@
     </div>
 
   </q-card>
+  <BemDetailsDialog
+    v-model="dialogDetalhes"
+    :bem-id="bemSelecionado"
+   />
 
 </template>
 
@@ -219,6 +229,7 @@
 
 <script setup>
 import { ref,computed } from 'vue'
+import BemDetailsDialog from './cards/BensDialogs.vue'
 
 /* ==========================================================
    BACKEND
@@ -253,14 +264,14 @@ o array utilizando a API.
 
 const bens = ref([
   {
-    id: 'BEM-0041',
+    id: 'BEM-001',
     descricao: 'Trator Agrícola MF 275',
     serie: 'MF275-2023-001',
     categoria: 'Veículo',
     marca: 'Massey Ferguson • MF 275',
     departamento: 'Operações',
     responsavel: 'Carlos Andrade',
-    status: 'Ativo',
+    status: 'Inativo',
     icon: 'agriculture',
     avatarColor: 'green-1',
     iconColor: 'green-8'
@@ -376,11 +387,18 @@ const totalDescartados = computed(() =>
   bens.value.filter(b => b.status === 'Descartado').length
 )
 
+
+
 /* ==========================================================
    BOTÕES
 ========================================================== */
 
+const dialogDetalhes = ref(false)
+const bemSelecionado = ref(null)
+
 function visualizarBem(id) {
+
+  bemSelecionado.value = id
 
   /*
   =====================================
@@ -394,7 +412,9 @@ function visualizarBem(id) {
   =====================================
   */
 
-  console.log('Visualizar', id)
+  
+
+  dialogDetalhes.value = true
 
 }
 
@@ -413,6 +433,25 @@ function movimentarBem(id) {
   */
 
   console.log('Movimentar', id)
+
+}
+
+function deletarBem(id) {
+
+  /*
+  =====================================
+
+  BACKEND
+
+  DELETE /api/bens/{id}
+
+  Antes da exclusão será aberto
+  o diálogo de confirmação.
+
+  =====================================
+  */
+
+  console.log('Excluir', id)
 
 }
 
