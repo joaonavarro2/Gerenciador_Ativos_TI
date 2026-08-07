@@ -155,7 +155,12 @@
 
             </q-btn>
 
-            <q-btn flat round dense class="acao-btn" @click="deletarBem(props.row.id)">
+            <q-btn flat round dense class="acao-btn" @click="editarBem(props.row.id)">
+
+              <q-icon name="edit" size="18px" />
+
+            </q-btn>
+             <q-btn flat round dense class="acao-btn" @click="deletarBem(props.row.id)">
 
               <q-icon name="delete" size="18px" />
 
@@ -217,7 +222,15 @@
     v-model="dialogDetalhes"
     :bem-id="bemSelecionado"
    />
-
+  <MovimentacaoRegister
+    v-model="dialogMovimentacao"
+    :bem-id="bemMovimentacao"
+  />
+  <DeleteDialog
+    v-model="dialogDelete"
+    :bem="bemExcluir"
+    @remover-bem="removerBem"
+    />
 </template>
 
 
@@ -230,6 +243,8 @@
 <script setup>
 import { ref,computed } from 'vue'
 import BemDetailsDialog from './cards/BensDialogs.vue'
+import MovimentacaoRegister from './cards/MovimentacaoRegister.vue'
+import DeleteDialog from './cards/DeleteDialog.vue'
 
 /* ==========================================================
    BACKEND
@@ -395,6 +410,10 @@ const totalDescartados = computed(() =>
 
 const dialogDetalhes = ref(false)
 const bemSelecionado = ref(null)
+const dialogMovimentacao = ref(false)
+const bemMovimentacao = ref(null)
+const dialogDelete = ref(false)
+const bemExcluir = ref(null)
 
 function visualizarBem(id) {
 
@@ -433,26 +452,54 @@ function movimentarBem(id) {
   */
 
   console.log('Movimentar', id)
+  dialogMovimentacao.value = true
+    bemMovimentacao.value = id
+
 
 }
 
 function deletarBem(id) {
 
   /*
-  =====================================
+  =====================================================
+
+  BACKEND
+
+  GET /api/bens/{id}
+
+  Buscará o bem antes
+  de abrir a confirmação.
+
+  =====================================================
+  */
+
+  bemExcluir.value = bens.value.find(
+    bem => bem.id === id
+  )
+
+  dialogDelete.value = true
+
+}
+
+function removerBem(id){
+
+  /*
+  =====================================================
 
   BACKEND
 
   DELETE /api/bens/{id}
 
-  Antes da exclusão será aberto
-  o diálogo de confirmação.
+  Após excluir:
 
-  =====================================
+  atualizar tabela
+
+  =====================================================
   */
 
-  console.log('Excluir', id)
+  bens.value = bens.value.filter(
+    bem => bem.id !== id
+  )
 
 }
-
 </script>

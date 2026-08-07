@@ -17,20 +17,25 @@
       <div class="row q-gutter-sm">
 
         <q-btn
+        @click="exportarBem"
           outline
           color="grey-8"
           icon="download"
           label="Exportar"
           no-caps
         />
+        <ExportarRelatorio 
+          v-model="dialogExportar"/>
 
-        <q-btn
+        <q-btn  @click="cadastrarBem"
           color="positive"
           icon="add"
           label="Novo Bem"
           no-caps
         />
-
+        <BemCadastro 
+          v-model="dialogCadastro "
+        />
       </div>
 
     </div>
@@ -105,4 +110,51 @@
 </template>
 
 <script setup>
+  import { ref } from 'vue'
+  import BemCadastro from './cadastro/Cadastro.vue'
+  import ExportarRelatorio from './exportacao/ExportarRelatorio.vue'
+  const dialogCadastro = ref(false)
+  const dialogExportar = ref(false)
+
+  function cadastrarBem() {
+
+  /*
+  ===================================== 
+
+  BACKEND
+
+  Apenas abre o formulário vazio.
+
+  POST /api/bens
+
+  O envio será realizado quando
+  o usuário clicar em "Cadastrar Bem".
+
+  =====================================
+  */
+  console.log('clicou')
+  dialogCadastro.value = true
+
+}
+
+function exportarBem() {
+  /*
+  ===================================== 
+
+  BACKEND
+
+  Apenas abre o formulário de exportação.
+
+  GET /api/bens/exportar
+
+  O envio será realizado quando
+  o usuário clicar em "Exportar".
+
+  =====================================
+  */
+  console.log('clicou')
+  dialogExportar.value = true
+}
+
+
 </script>

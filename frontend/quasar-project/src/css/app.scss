@@ -1740,3 +1740,1247 @@ body {
   }
 
 }
+
+/* ======================================================
+   DIALOG MOVIMENTAÇÃO
+====================================================== */
+
+.mov-dialog{
+  
+    width:1100px;
+    height:760px;
+
+    display:flex;
+    flex-direction:column;
+  
+  
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.mov-header{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+
+  padding:20px 24px 16px;
+
+}
+
+.mov-title{
+
+  font-size:22px;
+  font-weight:700;
+
+  color:#1F2937;
+
+}
+
+.mov-subtitle{
+
+  margin-top:4px;
+
+  color:#667085;
+
+  font-size:13px;
+
+}
+
+.mov-patrimonio{
+
+  color:#0F766E;
+
+  font-size:13px;
+  font-weight:700;
+
+}
+
+/* ======================================================
+   CONTEÚDO
+====================================================== */
+
+.mov-content{
+
+  padding:18px 24px;
+
+}
+
+.mov-content .q-field{
+
+  margin-bottom:2px;
+
+}
+
+/* Labels */
+
+.mov-content .q-field__label{
+
+  font-size:13px;
+  font-weight:600;
+
+}
+
+/* Inputs */
+
+.mov-content .q-field__native,
+.mov-content .q-field__input{
+
+  font-size:14px;
+
+}
+
+/* Altura dos campos */
+
+.mov-content .q-field--outlined .q-field__control{
+
+  min-height:46px;
+  border-radius:8px;
+
+}
+
+/* Ícones */
+
+.mov-content .q-icon{
+
+  font-size:18px;
+
+}
+
+/* ======================================================
+   TEXTAREA
+====================================================== */
+
+.mov-content textarea{
+
+  min-height:72px;
+  font-size:14px;
+
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.mov-footer{
+
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+
+  padding:16px 24px;
+
+}
+
+/* ======================================================
+   BOTÕES
+====================================================== */
+
+.mov-footer .q-btn{
+
+  height:40px;
+
+  min-height:40px;
+
+  padding:0 18px;
+
+  border-radius:8px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+}
+
+/* ======================================================
+   RESPONSIVO
+====================================================== */
+
+@media (max-width:900px){
+
+  .mov-dialog{
+
+    width:100vw;
+    height:100vh;
+
+    max-width:100vw;
+
+    border-radius:0;
+
+  }
+
+  .mov-header{
+
+    padding:16px 18px;
+
+  }
+
+  .mov-title{
+
+    font-size:22px;
+
+  }
+
+  .mov-subtitle{
+
+    font-size:13px;
+
+  }
+
+  .mov-content{
+
+    padding:16px 18px;
+
+  }
+
+  /* Labels */
+
+  .mov-content .q-field__label{
+
+    font-size:12px;
+
+  }
+
+  /* Texto digitado */
+
+  .mov-content .q-field__native,
+  .mov-content .q-field__input{
+
+    font-size:13px;
+
+  }
+
+  /* Campos */
+
+  .mov-content .q-field__control{
+
+    min-height:42px;
+
+  }
+
+  .mov-content textarea{
+
+    min-height:70px;
+
+  }
+
+  .mov-footer{
+
+    padding:16px 18px;
+
+    flex-direction:column-reverse;
+
+    gap:10px;
+
+  }
+
+  .mov-footer .q-btn{
+
+    width:100%;
+
+    height:38px;
+
+    min-height:38px;
+
+    font-size:13px;
+
+    border-radius:8px;
+
+  }
+
+}
+/* ======================================================
+   DIALOG DELETE
+====================================================== */
+
+.delete-dialog{
+
+  width:720px;
+  max-width:95vw;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.delete-header{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+
+  padding:28px 30px 22px;
+
+}
+
+.delete-header-left{
+
+  display:flex;
+  align-items:center;
+  gap:18px;
+
+}
+
+.delete-title{
+
+  font-size:24px;
+  font-weight:700;
+
+  color:#111827;
+
+}
+
+.delete-subtitle{
+
+  margin-top:6px;
+
+  font-size:14px;
+
+  color:#667085;
+
+}
+
+.delete-close{
+
+  background:#F8FAFC;
+
+}
+
+/* ======================================================
+   CONTEÚDO
+====================================================== */
+
+.delete-content{
+
+  padding:28px 30px;
+
+}
+
+/* ======================================================
+   ALERTA
+====================================================== */
+
+.warning-box{
+
+  display:flex;
+  align-items:flex-start;
+
+  gap:16px;
+
+  background:#FEF3C7;
+
+  border:1px solid #FCD34D;
+
+  border-radius:18px;
+
+  padding:18px;
+
+  margin-bottom:24px;
+
+}
+
+.warning-title{
+
+  font-size:17px;
+
+  font-weight:700;
+
+  color:#92400E;
+
+}
+
+.warning-text{
+
+  margin-top:6px;
+
+  font-size:14px;
+
+  color:#92400E;
+
+  line-height:22px;
+
+}
+
+/* ======================================================
+   CARD DO BEM
+====================================================== */
+
+.delete-item-card{
+
+  padding:22px;
+
+  border-radius:14px;
+
+}
+
+.item-header{
+
+  display:flex;
+  align-items:center;
+
+  gap:16px;
+
+  margin-bottom:22px;
+
+}
+
+.item-patrimonio{
+
+  color:#0F766E;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  letter-spacing:.04em;
+
+}
+
+.item-nome{
+
+  margin-top:4px;
+
+  font-size:20px;
+
+  font-weight:700;
+
+  color:#1F2937;
+
+}
+
+/* ======================================================
+   GRID
+====================================================== */
+
+.item-grid{
+
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:18px;
+
+}
+
+.item-info{
+
+  display:flex;
+
+  flex-direction:column;
+
+}
+
+.info-label{
+
+  font-size:12px;
+
+  font-weight:700;
+
+  color:#98A2B3;
+
+  text-transform:uppercase;
+
+  letter-spacing:.06em;
+
+}
+
+.info-value{
+
+  margin-top:5px;
+
+  font-size:15px;
+
+  color:#344054;
+
+  font-weight:600;
+
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.delete-footer{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:14px;
+
+  padding:20px 30px;
+
+}
+
+.delete-footer .q-btn{
+
+  height:42px;
+
+  padding:0 20px;
+
+  border-radius:10px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+}
+
+/* ======================================================
+   RESPONSIVO
+====================================================== */
+
+@media (max-width:768px){
+
+  .delete-dialog{
+
+    width:100vw;
+
+    height:100vh;
+
+    max-width:100vw;
+
+    border-radius:0;
+
+  }
+
+  .delete-header{
+
+    padding:20px;
+
+  }
+
+  .delete-header-left{
+
+    align-items:flex-start;
+
+  }
+
+  .delete-content{
+
+    padding:20px;
+
+  }
+
+  .warning-box{
+
+    padding:14px;
+
+  }
+
+  .item-grid{
+
+    grid-template-columns:1fr;
+
+    gap:16px;
+
+  }
+
+  .delete-footer{
+
+    flex-direction:column-reverse;
+
+    padding:20px;
+
+  }
+
+  .delete-footer .q-btn{
+
+    width:100%;
+
+    height:42px;
+
+  }
+
+}
+
+/* ======================================================
+   CADASTRO DE BENS
+====================================================== */
+
+.cadastro-modal{
+
+  width:900px;
+
+  max-width:95vw;
+
+  border-radius:18px;
+
+  overflow:hidden;
+
+}
+
+.formulario-area{
+
+  max-height:70vh;
+
+  overflow-y:auto;
+
+  padding:24px 28px;
+
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.cadastro-header{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:24px 28px;
+
+}
+
+.cadastro-header-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:16px;
+
+}
+
+.cadastro-title{
+
+  font-size:28px;
+
+  font-weight:700;
+
+  color:#1F2937;
+
+}
+
+.cadastro-subtitle{
+
+  margin-top:4px;
+
+  font-size:14px;
+
+  color:#6B7280;
+
+}
+
+/* ======================================================
+   SEÇÕES
+====================================================== */
+
+.titulo-secao{
+
+  margin-top:22px;
+
+  margin-bottom:18px;
+
+  padding-bottom:10px;
+
+  border-bottom:1px solid #ECECEC;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  color:#98A2B3;
+
+  text-transform:uppercase;
+
+  letter-spacing:.08em;
+
+}
+
+/* ======================================================
+   GRID
+====================================================== */
+
+.form-grid{
+
+  display:grid;
+
+  grid-template-columns:repeat(2,1fr);
+
+  gap:18px;
+
+}
+
+.form-grid-full{
+
+  grid-column:1 / -1;
+
+}
+
+/* ======================================================
+   CAMPOS
+====================================================== */
+
+.q-field{
+
+  margin-bottom:6px;
+
+}
+
+.q-field__control{
+
+  min-height:50px;
+
+  border-radius:10px !important;
+
+}
+
+.q-field__native,
+
+.q-field__input{
+
+  font-size:15px;
+
+}
+
+.q-field__label{
+
+  font-weight:600;
+
+}
+
+/* ======================================================
+   TEXTAREA
+====================================================== */
+
+textarea{
+
+  min-height:120px !important;
+
+}
+
+/* ======================================================
+   UPLOAD
+====================================================== */
+
+.q-file{
+
+  margin-top:10px;
+
+}
+
+.q-file .q-field__control{
+
+  border:2px dashed #D1D5DB;
+
+  background:#FAFAFA;
+
+  transition:.25s;
+
+}
+
+.q-file:hover .q-field__control{
+
+  border-color:#22C55E;
+
+  background:#F6FFF8;
+
+}
+
+/* ======================================================
+   SCROLL
+====================================================== */
+
+.formulario-area::-webkit-scrollbar{
+
+  width:8px;
+
+}
+
+.formulario-area::-webkit-scrollbar-thumb{
+
+  background:#C9C9C9;
+
+  border-radius:20px;
+
+}
+
+.formulario-area::-webkit-scrollbar-track{
+
+  background:transparent;
+
+}
+
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.cadastro-footer{
+
+  display:flex;
+
+  justify-content:flex-end;
+
+  gap:14px;
+
+  padding:20px 28px;
+
+  border-top:1px solid #ECECEC;
+
+}
+
+.cadastro-footer .q-btn{
+
+  height:42px;
+
+  padding:0 22px;
+
+  border-radius:10px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+  text-transform:none;
+
+}
+
+/* ======================================================
+   BOTÃO POSITIVO
+====================================================== */
+
+.bg-positive{
+
+  background:#22C55E !important;
+
+}
+
+.bg-positive:hover{
+
+  background:#16A34A !important;
+
+}
+
+/* ======================================================
+   RESPONSIVO
+====================================================== */
+
+@media (max-width:768px){
+
+  .cadastro-modal{
+
+    width:100vw;
+
+    height:100vh;
+
+    max-width:100vw;
+
+    border-radius:0;
+
+  }
+
+  .cadastro-header{
+
+    padding:20px;
+
+  }
+
+  .cadastro-header-left{
+
+    align-items:flex-start;
+
+  }
+
+  .formulario-area{
+
+    max-height:calc(100vh - 150px);
+
+    padding:20px;
+
+  }
+
+  .form-grid{
+
+    grid-template-columns:1fr;
+
+    gap:16px;
+
+  }
+
+  .cadastro-footer{
+
+    flex-direction:column-reverse;
+
+    padding:20px;
+
+  }
+
+  .cadastro-footer .q-btn{
+
+    width:100%;
+
+    height:42px;
+
+  }
+
+}
+
+/* ======================================================
+   DIALOG EXPORTAR RELATÓRIO
+====================================================== */
+
+.exportar-dialog{
+  width: 720px;
+  max-width: 95vw;
+
+  border-radius: 16px;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #FFFFFF;
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
+.exportar-header{
+
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+
+  padding:28px 28px 24px;
+
+  background:#FFFFFF;
+
+}
+
+.exportar-header-left{
+
+  display:flex;
+  align-items:center;
+  gap:18px;
+
+}
+
+.exportar-header-avatar{
+
+  width:58px;
+  height:58px;
+
+  border-radius:14px;
+
+  background:#E6F4FA;
+
+}
+
+.exportar-header-info{
+
+  display:flex;
+  flex-direction:column;
+
+}
+
+.exportar-title{
+
+  font-size:32px;
+  font-weight:700;
+
+  color:#101828;
+
+  line-height:1.2;
+
+}
+
+.exportar-subtitle{
+
+  margin-top:6px;
+
+  font-size:15px;
+
+  color:#667085;
+
+}
+
+.exportar-close{
+
+  width:42px;
+  height:42px;
+
+  border-radius:10px;
+
+  color:#667085;
+
+}
+
+.exportar-close:hover{
+
+  background:#F2F4F7;
+
+}
+
+/* ======================================================
+   CONTEÚDO
+====================================================== */
+
+.exportar-content{
+
+  flex:1;
+
+  max-height:600px;
+
+  overflow-y:auto;
+
+  padding:28px;
+
+  background:#FAFBFC;
+
+}
+
+/* ======================================================
+   TÍTULOS DAS SEÇÕES
+====================================================== */
+
+.titulo-secao{
+
+  margin-bottom:16px;
+  padding-bottom:10px;
+
+  border-bottom:1px solid #EAECF0;
+
+  font-size:14px;
+  font-weight:700;
+
+  color:#344054;
+
+  letter-spacing:.8px;
+
+}
+
+/* ======================================================
+   OPTION GROUP
+====================================================== */
+
+.exportar-content .q-option-group{
+
+  display:flex;
+  flex-direction:column;
+
+  gap:18px;
+
+}
+
+/* ======================================================
+   LISTA
+====================================================== */
+
+.exportar-content .q-list{
+
+  background:#FFFFFF;
+
+  border:1px solid #EAECF0;
+  border-radius:12px;
+
+}
+
+.exportar-content .q-item{
+
+  min-height:68px;
+
+}
+
+.exportar-content .q-item__label{
+
+  font-size:14px;
+
+}
+
+.exportar-content .q-item__label--caption{
+
+  margin-top:4px;
+
+  font-size:13px;
+
+  color:#667085;
+
+}
+
+/* ======================================================
+   BANNER
+====================================================== */
+
+.exportar-content .q-banner{
+
+  border-radius:12px;
+
+  padding:18px;
+
+}
+
+/* ======================================================
+   AVATAR
+====================================================== */
+
+.exportar-dialog .q-avatar{
+
+  border-radius:14px;
+
+}
+
+/* ======================================================
+   BOTÕES
+====================================================== */
+
+.exportar-dialog .q-btn{
+
+  height:42px;
+
+  padding:0 20px;
+
+  border-radius:10px;
+
+  font-weight:600;
+
+}
+
+/* ======================================================
+   RODAPÉ
+====================================================== */
+
+.exportar-dialog .q-card__actions{
+
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+
+  gap:12px;
+
+  padding:20px 28px;
+
+  border-top:1px solid #EAECF0;
+
+  background:#FFFFFF;
+
+}
+
+/* ======================================================
+   SCROLL
+====================================================== */
+
+.exportar-content::-webkit-scrollbar{
+
+  width:8px;
+
+}
+
+.exportar-content::-webkit-scrollbar-thumb{
+
+  background:#D0D5DD;
+
+  border-radius:10px;
+
+}
+
+/* ======================================================
+   RESPONSIVO
+====================================================== */
+
+@media (max-width:900px){
+
+  .exportar-dialog{
+
+    width:96vw;
+
+  }
+
+  .exportar-header{
+
+    padding:20px;
+
+  }
+
+  .exportar-title{
+
+    font-size:26px;
+
+  }
+
+  .exportar-content{
+
+    padding:20px;
+
+  }
+
+  .exportar-dialog .q-card__actions{
+
+    flex-direction:column-reverse;
+
+    gap:12px;
+
+    align-items:stretch;
+
+  }
+
+  .exportar-dialog .q-btn{
+
+    width:100%;
+
+  }
+
+}
+
+@media (max-width:600px){
+
+  .exportar-dialog{
+
+    width:100vw;
+    max-width:100vw;
+
+    border-radius:0;
+
+  }
+
+  .exportar-header{
+
+    padding:16px;
+
+  }
+
+  .exportar-header-left{
+
+    gap:12px;
+
+  }
+
+  .exportar-title{
+
+    font-size:22px;
+
+  }
+
+  .exportar-subtitle{
+
+    font-size:14px;
+
+  }
+
+  .exportar-content{
+
+    max-height:70vh;
+
+    padding:16px;
+
+  }
+
+  .titulo-secao{
+
+    font-size:13px;
+
+  }
+
+}
