@@ -2631,355 +2631,564 @@ textarea{
    DIALOG EXPORTAR RELATÓRIO
 ====================================================== */
 
-.exportar-dialog{
+.exportar-dialog {
+
   width: 720px;
   max-width: 95vw;
 
+  max-height: 90vh;
+
   border-radius: 16px;
+
   overflow: hidden;
 
   display: flex;
   flex-direction: column;
 
   background: #FFFFFF;
+
 }
+
 
 /* ======================================================
    HEADER
 ====================================================== */
 
-.exportar-header{
+.exportar-header {
 
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
+  position: relative;
 
-  padding:28px 28px 24px;
+  display: flex;
+  align-items: flex-start;
 
-  background:#FFFFFF;
+  width: 100%;
 
-}
+  padding: 28px 80px 24px 28px;
 
-.exportar-header-left{
+  background: #FFFFFF;
 
-  display:flex;
-  align-items:center;
-  gap:18px;
+  box-sizing: border-box;
 
 }
 
-.exportar-header-avatar{
 
-  width:58px;
-  height:58px;
+/* ======================================================
+   ÁREA ESQUERDA DO HEADER
+====================================================== */
 
-  border-radius:14px;
+.exportar-header-left {
 
-  background:#E6F4FA;
+  display: flex;
 
-}
+  align-items: center;
 
-.exportar-header-info{
+  gap: 18px;
 
-  display:flex;
-  flex-direction:column;
-
-}
-
-.exportar-title{
-
-  font-size:32px;
-  font-weight:700;
-
-  color:#101828;
-
-  line-height:1.2;
+  min-width: 0;
 
 }
 
-.exportar-subtitle{
 
-  margin-top:6px;
+/* ======================================================
+   ÍCONE DO HEADER
+====================================================== */
 
-  font-size:15px;
+.exportar-header-avatar {
 
-  color:#667085;
+  flex-shrink: 0;
 
-}
+  width: 58px;
+  height: 58px;
 
-.exportar-close{
+  border-radius: 14px;
 
-  width:42px;
-  height:42px;
-
-  border-radius:10px;
-
-  color:#667085;
+  background: #E6F4FA;
 
 }
 
-.exportar-close:hover{
 
-  background:#F2F4F7;
+/* ======================================================
+   INFORMAÇÕES DO HEADER
+====================================================== */
+
+.exportar-header-info {
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
 
 }
+
+
+/* ======================================================
+   TÍTULO
+====================================================== */
+
+.exportar-title {
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  color: #101828;
+
+  line-height: 1.2;
+
+}
+
+
+/* ======================================================
+   SUBTÍTULO
+====================================================== */
+
+.exportar-subtitle {
+
+  margin-top: 6px;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+  color: #667085;
+
+}
+
+
+/* ======================================================
+   BOTÃO FECHAR
+====================================================== */
+
+.exportar-close {
+
+  position: absolute !important;
+
+  top: 22px;
+
+  right: 22px;
+
+  width: 42px;
+  height: 42px;
+
+  min-width: 42px;
+
+  padding: 0;
+
+  border-radius: 10px;
+
+  color: #667085;
+
+  z-index: 10;
+
+}
+
+
+/* Hover */
+
+.exportar-close:hover {
+
+  background: #F2F4F7;
+
+}
+
+
+/* ======================================================
+   LINHA ENTRE HEADER E CONTEÚDO
+====================================================== */
+
+.exportar-dialog > .q-separator {
+
+  background: #EAECF0;
+
+}
+
 
 /* ======================================================
    CONTEÚDO
 ====================================================== */
 
-.exportar-content{
+.exportar-content {
 
-  flex:1;
+  flex: 1;
 
-  max-height:600px;
+  min-height: 0;
 
-  overflow-y:auto;
+  max-height: 600px;
 
-  padding:28px;
+  overflow-y: auto;
 
-  background:#FAFBFC;
+  padding: 28px;
 
-}
+  background: #FAFBFC;
 
-/* ======================================================
-   TÍTULOS DAS SEÇÕES
-====================================================== */
-
-.titulo-secao{
-
-  margin-bottom:16px;
-  padding-bottom:10px;
-
-  border-bottom:1px solid #EAECF0;
-
-  font-size:14px;
-  font-weight:700;
-
-  color:#344054;
-
-  letter-spacing:.8px;
+  box-sizing: border-box;
 
 }
 
-/* ======================================================
-   OPTION GROUP
-====================================================== */
-
-.exportar-content .q-option-group{
-
-  display:flex;
-  flex-direction:column;
-
-  gap:18px;
-
-}
-
-/* ======================================================
-   LISTA
-====================================================== */
-
-.exportar-content .q-list{
-
-  background:#FFFFFF;
-
-  border:1px solid #EAECF0;
-  border-radius:12px;
-
-}
-
-.exportar-content .q-item{
-
-  min-height:68px;
-
-}
-
-.exportar-content .q-item__label{
-
-  font-size:14px;
-
-}
-
-.exportar-content .q-item__label--caption{
-
-  margin-top:4px;
-
-  font-size:13px;
-
-  color:#667085;
-
-}
-
-/* ======================================================
-   BANNER
-====================================================== */
-
-.exportar-content .q-banner{
-
-  border-radius:12px;
-
-  padding:18px;
-
-}
-
-/* ======================================================
-   AVATAR
-====================================================== */
-
-.exportar-dialog .q-avatar{
-
-  border-radius:14px;
-
-}
-
-/* ======================================================
-   BOTÕES
-====================================================== */
-
-.exportar-dialog .q-btn{
-
-  height:42px;
-
-  padding:0 20px;
-
-  border-radius:10px;
-
-  font-weight:600;
-
-}
-
-/* ======================================================
-   RODAPÉ
-====================================================== */
-
-.exportar-dialog .q-card__actions{
-
-  display:flex;
-  justify-content:flex-end;
-  align-items:center;
-
-  gap:12px;
-
-  padding:20px 28px;
-
-  border-top:1px solid #EAECF0;
-
-  background:#FFFFFF;
-
-}
 
 /* ======================================================
    SCROLL
 ====================================================== */
 
-.exportar-content::-webkit-scrollbar{
+.exportar-content::-webkit-scrollbar {
 
-  width:8px;
+  width: 8px;
+
+}
+
+.exportar-content::-webkit-scrollbar-track {
+
+  background: transparent;
 
 }
 
-.exportar-content::-webkit-scrollbar-thumb{
+.exportar-content::-webkit-scrollbar-thumb {
 
-  background:#D0D5DD;
+  background: #D0D5DD;
 
-  border-radius:10px;
+  border-radius: 10px;
 
 }
+
+
+/* Firefox */
+
+.exportar-content {
+
+  scrollbar-width: thin;
+
+  scrollbar-color: #D0D5DD transparent;
+
+}
+
+
+/* ======================================================
+   TÍTULOS DAS SEÇÕES
+====================================================== */
+
+.titulo-secao {
+
+  margin-bottom: 16px;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid #EAECF0;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  color: #344054;
+
+  letter-spacing: .8px;
+
+}
+
+
+/* ======================================================
+   OPTION GROUP
+====================================================== */
+
+.exportar-content .q-option-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+}
+
+
+/* ======================================================
+   OPÇÕES
+====================================================== */
+
+.exportar-content .q-radio {
+
+  min-height: 40px;
+
+}
+
+
+/* ======================================================
+   LISTA DE FILTROS
+====================================================== */
+
+.exportar-content .q-list {
+
+  background: #FFFFFF;
+
+  border: 1px solid #EAECF0;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+}
+
+
+/* ======================================================
+   ITEM DA LISTA
+====================================================== */
+
+.exportar-content .q-item {
+
+  min-height: 68px;
+
+  padding: 12px 16px;
+
+}
+
+
+/* ======================================================
+   ÍCONES DOS FILTROS
+====================================================== */
+
+.exportar-content .q-item__section--avatar {
+
+  min-width: 48px;
+
+  color: #667085;
+
+}
+
+
+/* ======================================================
+   TEXTO
+====================================================== */
+
+.exportar-content .q-item__label {
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  color: #344054;
+
+}
+
+
+.exportar-content .q-item__label--caption {
+
+  margin-top: 4px;
+
+  font-size: 13px;
+
+  color: #667085;
+
+}
+
+
+/* ======================================================
+   BANNER DE RESUMO
+====================================================== */
+
+.exportar-content .q-banner {
+
+  border-radius: 12px;
+
+  padding: 18px;
+
+}
+
+
+/* ======================================================
+   RODAPÉ
+====================================================== */
+
+.exportar-footer {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 18px 28px;
+
+  background: #FFFFFF;
+
+  border-top: 1px solid #EAECF0;
+
+}
+
+
+/* ======================================================
+   BOTÕES
+====================================================== */
+
+.exportar-dialog .q-btn {
+
+  height: 42px;
+
+  padding: 0 20px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
 
 /* ======================================================
    RESPONSIVO
 ====================================================== */
 
-@media (max-width:900px){
+@media (max-width: 900px) {
 
-  .exportar-dialog{
+  .exportar-dialog {
 
-    width:96vw;
+    width: 96vw;
 
-  }
-
-  .exportar-header{
-
-    padding:20px;
+    max-width: 96vw;
 
   }
 
-  .exportar-title{
 
-    font-size:26px;
+  .exportar-header {
 
-  }
-
-  .exportar-content{
-
-    padding:20px;
+    padding: 22px 70px 22px 20px;
 
   }
 
-  .exportar-dialog .q-card__actions{
 
-    flex-direction:column-reverse;
+  .exportar-header-left {
 
-    gap:12px;
-
-    align-items:stretch;
+    gap: 14px;
 
   }
 
-  .exportar-dialog .q-btn{
 
-    width:100%;
+  .exportar-title {
+
+    font-size: 26px;
+
+  }
+
+
+  .exportar-subtitle {
+
+    font-size: 14px;
+
+  }
+
+
+  .exportar-content {
+
+    padding: 20px;
+
+  }
+
+
+  .exportar-footer {
+
+    padding: 16px 20px;
 
   }
 
 }
 
-@media (max-width:600px){
 
-  .exportar-dialog{
+/* ======================================================
+   MOBILE
+====================================================== */
 
-    width:100vw;
-    max-width:100vw;
+@media (max-width: 600px) {
 
-    border-radius:0;
+  .exportar-dialog {
 
-  }
+    width: 100vw;
 
-  .exportar-header{
+    max-width: 100vw;
 
-    padding:16px;
+    max-height: 100vh;
 
-  }
-
-  .exportar-header-left{
-
-    gap:12px;
+    border-radius: 0;
 
   }
 
-  .exportar-title{
 
-    font-size:22px;
+  .exportar-header {
 
-  }
-
-  .exportar-subtitle{
-
-    font-size:14px;
+    padding: 18px 60px 18px 16px;
 
   }
 
-  .exportar-content{
 
-    max-height:70vh;
+  .exportar-header-avatar {
 
-    padding:16px;
+    width: 48px;
+    height: 48px;
 
   }
 
-  .titulo-secao{
 
-    font-size:13px;
+  .exportar-header-left {
+
+    gap: 12px;
+
+  }
+
+
+  .exportar-title {
+
+    font-size: 22px;
+
+  }
+
+
+  .exportar-subtitle {
+
+    font-size: 13px;
+
+  }
+
+
+  .exportar-close {
+
+    top: 16px;
+
+    right: 16px;
+
+  }
+
+
+  .exportar-content {
+
+    max-height: 70vh;
+
+    padding: 16px;
+
+  }
+
+
+  .exportar-footer {
+
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+
+    padding: 16px;
+
+  }
+
+
+  .exportar-footer .q-btn {
+
+    width: 100%;
+
+  }
+
+
+  .titulo-secao {
+
+    font-size: 13px;
 
   }
 
