@@ -22,10 +22,10 @@ const routes = [
       component:() => import('@/pages/movimentacoes/MovimentacoesPage.vue')
     },
 
-    // {
-    //   path:'historicos',
-    //   component:() => import('@/pages/historicos/HistoricosPage.vue')
-    // },
+    {
+      path:'historicos',
+      component:() => import('@/pages/historico/HistoricoPage.vue')
+    },
 
     // {
     //   path:'consertos',

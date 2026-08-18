@@ -328,6 +328,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 /*
 |--------------------------------------------------------------------------
 | PROPS
@@ -438,5 +440,5 @@ const columns = [
 |--------------------------------------------------------------------------
 */
 
-const movimentacoes = props.movimentacoes
+const movimentacoes = computed(() => props.movimentacoes)
 </script>

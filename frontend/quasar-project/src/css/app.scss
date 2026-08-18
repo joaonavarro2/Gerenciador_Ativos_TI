@@ -3203,7 +3203,7 @@ textarea{
   padding: 28px;
   border-radius: 16px;
   background: #ffffff;
-  margin-top: 24px;
+  
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 24px;
@@ -3416,6 +3416,249 @@ textarea{
 
 .movimentacoes-filtro-data :deep(.q-icon) {
   color: #98a2b3;
+}
+
+/* ==========================================================
+   FILTROS ATIVOS
+========================================================== */
+
+.movimentacoes-filtros-ativos {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.movimentacoes-filtros-ativos-label {
+  color: #667085;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.movimentacoes-filtro-ativo-chip {
+  margin: 0;
+  background: #e6f5f4;
+  color: #08666f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.movimentacoes-limpar-filtros {
+  color: #08666f;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ==========================================================
+   CADASTRO DE MOVIMENTAÇÃO
+========================================================== */
+
+.cadastro-movimentacao-dialog {
+  width: 900px;
+  max-width: 96vw;
+  border-radius: 60px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* Sobrescreve o limite padrão de 560px aplicado pelo q-dialog do Quasar. */
+.cadastro-movimentacao-modal .q-dialog__inner--minimized > div {
+  width: 900px;
+  max-width: 96vw;
+}
+
+.cadastro-movimentacao-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 20px 28px;
+  border-bottom: 1px solid #eaecf0;
+}
+
+.cadastro-movimentacao-title {
+  color: #1d2939;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.cadastro-movimentacao-subtitle {
+  margin-top: 4px;
+  color: #98a2b3;
+  font-size: 14px;
+}
+
+.cadastro-movimentacao-close {
+  width: 34px;
+  height: 34px;
+  color: #667085;
+  background: #f2f4f7;
+  border-radius: 10px;
+}
+
+.cadastro-movimentacao-content {
+  padding: 20px 28px;
+}
+
+.cadastro-movimentacao-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.cadastro-movimentacao-field-full {
+  grid-column: 1 / -1;
+}
+
+.cadastro-movimentacao-field .q-field__label {
+  color: #475467;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.cadastro-movimentacao-field .q-field__control {
+  min-height: 42px;
+  border-radius: 9px;
+}
+
+.cadastro-movimentacao-field .q-field__native,
+.cadastro-movimentacao-field .q-field__input,
+.cadastro-movimentacao-field .q-field__marginal {
+  color: #98a2b3;
+  font-size: 14px;
+}
+
+.cadastro-movimentacao-footer {
+  gap: 10px;
+  padding: 14px 28px;
+  border-top: 1px solid #eaecf0;
+}
+
+.cadastro-movimentacao-footer .q-btn {
+  min-height: 40px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.cadastro-movimentacao-cancelar {
+  min-width: 100px;
+  color: #475467;
+  border-color: #d0d5dd;
+}
+
+.cadastro-movimentacao-salvar {
+  min-width: 218px;
+  color: #ffffff;
+  background: #0f5d63;
+}
+
+.cadastro-movimentacao-salvar.q-btn--disabled {
+  color: #ffffff !important;
+  background: #98a2b3 !important;
+  opacity: 1 !important;
+}
+
+/* ==========================================================
+   HISTÓRICO DE ATIVOS
+========================================================== */
+
+.historico-page {
+  padding: 28px;
+  background: #f5f7fa;
+}
+
+.historico-page-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.historico-page-title {
+  margin: 0;
+  color: #101828;
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.historico-page-subtitle {
+  margin: 6px 0 0;
+  color: #667085;
+  font-size: 14px;
+}
+
+.historico-page-actions { display: flex; gap: 10px; }
+.historico-page-actions .q-btn { min-height: 40px; border-radius: 8px; font-size: 14px; font-weight: 600; }
+.historico-exportar { color: #344054; border-color: #d0d5dd; background: #fff; }
+.historico-relatorio { color: #fff; background: #36bd76; }
+
+.historico-filtros-card { padding: 18px 20px; border-radius: 16px; background: #fff; }
+.historico-busca .q-field__control,
+.historico-filtro .q-field__control { min-height: 42px; border-radius: 8px; }
+.historico-busca .q-field__native,
+.historico-filtro .q-field__native,
+.historico-filtro .q-field__label { color: #98a2b3; font-size: 14px; }
+.historico-filtros-grid { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.historico-filtro { width: 158px; }
+.historico-filtro-departamento { width: 202px; }
+.historico-data { width: 155px; }
+.historico-ate { color: #98a2b3; font-size: 14px; }
+
+.historico-table-card { min-height: 405px; margin-top: 24px; border-radius: 16px; overflow: hidden; background: #fff; }
+.historico-table-header { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 0 20px; border-bottom: 1px solid #eaecf0; }
+.historico-table-title { display: flex; align-items: center; gap: 8px; color: #101828; font-size: 14px; font-weight: 700; }
+.historico-table-title .q-icon { color: #087f8c; }
+.historico-filtro-status { display: flex; align-items: center; gap: 7px; color: #667085; font-size: 13px; }
+.historico-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px; padding: 32px 20px; text-align: center; }
+.historico-empty-icon { display: flex; align-items: center; justify-content: center; width: 72px; height: 72px; margin-bottom: 18px; color: #c6d4da; background: #e8fbf1; border-radius: 22px; }
+.historico-empty-state h2 { margin: 0; color: #101828; font-size: 17px; font-weight: 700; }
+.historico-empty-state p { margin: 10px 0 0; color: #98a2b3; font-size: 14px; line-height: 1.55; }
+
+@media (max-width: 800px) {
+  .historico-page-top { flex-direction: column; }
+  .historico-page-actions { width: 100%; }
+  .historico-page-actions .q-btn { flex: 1; }
+}
+
+@media (max-width: 600px) {
+  .historico-page { padding: 16px; }
+  .historico-page-title { font-size: 22px; }
+  .historico-filtros-card { padding: 16px; }
+  .historico-filtros-grid { display: grid; grid-template-columns: 1fr; }
+  .historico-filtro, .historico-filtro-departamento, .historico-data { width: 100%; }
+  .historico-ate { display: none; }
+}
+
+@media (max-width: 600px) {
+  .cadastro-movimentacao-header,
+  .cadastro-movimentacao-content,
+  .cadastro-movimentacao-footer {
+    padding-right: 18px;
+    padding-left: 18px;
+  }
+
+  .cadastro-movimentacao-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cadastro-movimentacao-field-full {
+    grid-column: auto;
+  }
+
+  .cadastro-movimentacao-field-empty {
+    display: none;
+  }
+
+  .cadastro-movimentacao-footer {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .cadastro-movimentacao-footer .q-btn {
+    width: 100%;
+  }
 }
 
 

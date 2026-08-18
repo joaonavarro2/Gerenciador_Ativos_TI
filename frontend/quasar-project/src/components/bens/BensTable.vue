@@ -382,8 +382,7 @@
 
 import {
   ref,
-  computed,
-  onMounted
+  computed
 } from 'vue'
 
 
@@ -404,6 +403,7 @@ import BemCadastroDialog
    MOCKS
 ========================================================== */
 
+/* Dados migrados para BensPage.vue.
 const bens = ref([
 
   {
@@ -533,6 +533,16 @@ const bens = ref([
   }
 
 ])
+*/
+
+const props = defineProps({
+  bens: {
+    type: Array,
+    default: () => []
+  }
+})
+
+const bens = computed(() => props.bens)
 
 
 /* ==========================================================
@@ -542,16 +552,6 @@ const bens = ref([
 const emit = defineEmits([
   'bens-atualizados'
 ])
-
-
-onMounted(() => {
-
-  emit(
-    'bens-atualizados',
-    bens.value
-  )
-
-})
 
 
 /* ==========================================================
@@ -766,23 +766,11 @@ function bemSalvo(bemAtualizado) {
    * Procura o bem antigo pelo ID.
    */
 
-  const indice = bens.value.findIndex(
-    bem => bem.id === bemAtualizado.id
+  const bensAtualizados = bens.value.map(bem =>
+    bem.id === bemAtualizado.id
+      ? { ...bem, ...bemAtualizado }
+      : bem
   )
-
-
-  /*
-   * Se encontrou, substitui o mock.
-   */
-
-  if (indice !== -1) {
-
-    bens.value[indice] = {
-      ...bens.value[indice],
-      ...bemAtualizado
-    }
-
-  }
 
 
   /*
@@ -792,7 +780,7 @@ function bemSalvo(bemAtualizado) {
 
   emit(
     'bens-atualizados',
-    bens.value
+    bensAtualizados
   )
 
 }
@@ -872,14 +860,14 @@ function removerBem(id) {
    =========================================================
    */
 
-  bens.value = bens.value.filter(
+  const bensAtualizados = bens.value.filter(
     bem => bem.id !== id
   )
 
 
   emit(
     'bens-atualizados',
-    bens.value
+    bensAtualizados
   )
 
 }

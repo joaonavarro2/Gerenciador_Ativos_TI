@@ -84,7 +84,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/historicos" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="schedule"
