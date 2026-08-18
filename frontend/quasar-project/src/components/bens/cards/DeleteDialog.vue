@@ -35,15 +35,11 @@
           <div>
 
             <div class="delete-title">
-
               Excluir Bem
-
             </div>
 
             <div class="delete-subtitle">
-
               Esta ação é permanente e não poderá ser desfeita.
-
             </div>
 
           </div>
@@ -56,12 +52,13 @@
           dense
           icon="close"
           class="delete-close"
-          @click="$emit('update:modelValue', false)"
+          @click="fecharDialog"
         />
 
       </div>
 
       <q-separator />
+
 
       <!-- =======================================================
            CONTEÚDO
@@ -80,27 +77,25 @@
           <div>
 
             <div class="warning-title">
-
               Tem certeza que deseja excluir este bem?
-
             </div>
 
             <div class="warning-text">
-
               Depois da confirmação o bem será removido
               permanentemente do sistema.
-
             </div>
 
           </div>
 
         </div>
 
-        <!-- ==========================================
+
+        <!-- =====================================================
              CARD DO BEM
-        =========================================== -->
+        ====================================================== -->
 
         <q-card
+          v-if="bem"
           flat
           bordered
           class="delete-item-card"
@@ -111,12 +106,12 @@
             <q-avatar
               rounded
               size="52px"
-              :color="bem.avatarColor"
-              :text-color="bem.iconColor"
+              :color="bem.avatarColor || 'grey-2'"
+              :text-color="bem.iconColor || 'grey-8'"
             >
 
               <q-icon
-                :name="bem.icon"
+                :name="bem.icon || 'inventory_2'"
                 size="22px"
               />
 
@@ -125,88 +120,71 @@
             <div>
 
               <div class="item-patrimonio">
-
-                {{ bem.patrimonio }}
-
+                {{ bem.patrimonio || bem.id }}
               </div>
 
               <div class="item-nome">
-
-                {{ bem.nome }}
-
+                {{ bem.nome || bem.descricao }}
               </div>
 
             </div>
 
           </div>
 
+
           <div class="item-grid">
 
             <div class="item-info">
 
               <span class="info-label">
-
                 Categoria
-
               </span>
 
               <span class="info-value">
-
-                {{ bem.categoria }}
-
+                {{ bem.categoria || '-' }}
               </span>
 
             </div>
 
+
             <div class="item-info">
 
               <span class="info-label">
-
                 Departamento
-
               </span>
 
               <span class="info-value">
-
-                {{ bem.departamento }}
-
+                {{ bem.departamento || '-' }}
               </span>
 
             </div>
 
+
             <div class="item-info">
 
               <span class="info-label">
-
                 Responsável
-
               </span>
 
               <span class="info-value">
-
-                {{ bem.responsavel }}
-
+                {{ bem.responsavel || '-' }}
               </span>
 
             </div>
 
+
             <div class="item-info">
 
               <span class="info-label">
-
                 Status
-
               </span>
 
               <q-chip
                 dense
                 square
-                color="green-1"
-                text-color="green-8"
+                :class="statusClass(bem.status)"
               >
-
-                {{ bem.status }}
-
+                {{ bem.status || '-' }}
               </q-chip>
 
             </div>
@@ -217,7 +195,9 @@
 
       </div>
 
+
       <q-separator />
+
 
       <!-- =======================================================
            FOOTER
@@ -229,13 +209,14 @@
           outline
           color="grey-7"
           label="Cancelar"
-          @click="$emit('update:modelValue', false)"
+          @click="fecharDialog"
         />
 
         <q-btn
           color="negative"
           icon="delete"
           label="Excluir Bem"
+          :disable="!bem || !bem.id"
           @click="confirmarDelete"
         />
 
@@ -247,121 +228,197 @@
 
 </template>
 
+
 <script setup>
 
-import { ref } from 'vue'
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
+
 
 /* ==========================================================
    PROPS
 ========================================================== */
 
-defineProps({
+const props = defineProps({
 
-  modelValue: Boolean,
+  /*
+   * Controla a abertura do diálogo.
+   */
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
 
+  /*
+   * Bem selecionado na tabela.
+   *
+   * IMPORTANTE:
+   *
+   * Agora NÃO existe mais mock
+   * dentro deste componente.
+   *
+   * O bem vem diretamente do BensTable.
+   */
   bem: {
     type: Object,
-    default: () => ({})
+    default: null
   }
 
 })
 
+
+/* ==========================================================
+   EMITS
+========================================================== */
+
 const emit = defineEmits([
+
   'update:modelValue',
-  'deleted'
+
+  /*
+   * Envia o ID do bem para o BensTable.
+   */
+  'remover-bem'
+
 ])
 
+
 /* ==========================================================
-   MOCK
-==========================================================
-
-BACKEND
-
-GET /api/bens/{id}
-
-Quando o backend estiver pronto,
-este objeto será removido e todas
-as informações serão recebidas
-através da prop "bem".
-
+   FECHAR
 ========================================================== */
 
-const mockBem = ref({
+function fecharDialog() {
 
-  id: 1,
+  emit(
+    'update:modelValue',
+    false
+  )
 
-  patrimonio: 'BEM-0041',
+}
 
-  nome: 'Trator Agrícola MF 275',
-
-  categoria: 'Veículo',
-
-  departamento: 'Operações',
-
-  responsavel: 'Carlos Andrade',
-
-  status: 'Ativo',
-
-  icon: 'agriculture',
-
-  avatarColor: 'green-1',
-
-  iconColor: 'green-8'
-
-})
 
 /* ==========================================================
-   DADOS EXIBIDOS
-==========================================================
-
-Enquanto não existir backend,
-utilizamos o mock.
-
-Posteriormente:
-
-const dadosBem = computed(() => bem)
-
+   STATUS
 ========================================================== */
 
-// eslint-disable-next-line vue/no-dupe-keys
-const bem = mockBem
+function statusClass(status) {
+
+  switch (status) {
+
+    case 'Ativo':
+      return 'status-chip status-ativo'
+
+    case 'Em Manutenção':
+      return 'status-chip status-manutencao'
+
+    case 'Inativo':
+      return 'status-chip status-inativo'
+
+    case 'Descartado':
+      return 'status-chip status-descartado'
+
+    default:
+      return 'status-chip'
+
+  }
+
+}
+
 
 /* ==========================================================
-   EXCLUIR
+   CONFIRMAR EXCLUSÃO
 ========================================================== */
 
 function confirmarDelete() {
 
   /*
-  =====================================================
+   * Segurança:
+   *
+   * Se nenhum bem estiver selecionado,
+   * não fazemos nada.
+   */
 
-  BACKEND
+  if (!props.bem || !props.bem.id) {
 
-  DELETE /api/bens/{id}
+    $q.notify({
 
-  Exemplo:
+      type: 'negative',
 
-  await api.delete(`/bens/${bem.value.id}`)
+      message: 'Nenhum bem selecionado para exclusão.'
 
-  Após sucesso:
+    })
 
-  emit('deleted', bem.value.id)
+    return
 
-  emit('update:modelValue', false)
+  }
 
-  Notify.create({
-      type:'positive',
-      message:'Bem excluído com sucesso.'
+
+  const id = props.bem.id
+
+
+  /* ========================================================
+     BACKEND — FUTURO
+  ========================================================
+
+  Quando o Spring Boot estiver funcionando,
+  esta parte poderá ser substituída por:
+
+  await api.delete(`/bens/${id}`)
+
+  ou:
+
+  await axios.delete(`/api/bens/${id}`)
+
+  Depois do sucesso:
+
+  emit('remover-bem', id)
+
+  ======================================================== */
+
+
+  console.log(
+    'Excluindo bem mock:',
+    id
+  )
+
+
+  /*
+   * MOCK
+   *
+   * Envia o ID para o BensTable.
+   *
+   * O BensTable será responsável por
+   * remover o objeto do array "bens".
+   */
+
+  emit(
+    'remover-bem',
+    id
+  )
+
+
+  /*
+   * Fecha o diálogo.
+   */
+
+  emit(
+    'update:modelValue',
+    false
+  )
+
+
+  /*
+   * Feedback para o usuário.
+   */
+
+  $q.notify({
+
+    type: 'positive',
+
+    message: 'Bem excluído com sucesso.'
+
   })
-
-  =====================================================
-  */
-
-  console.log('Excluir bem:', bem.value.id)
-
-  emit('deleted', bem.value.id)
-
-  emit('update:modelValue', false)
 
 }
 

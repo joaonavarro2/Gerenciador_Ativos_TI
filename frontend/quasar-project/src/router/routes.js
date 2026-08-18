@@ -17,10 +17,10 @@ const routes = [
       component:() => import('@/pages/bens/BensPage.vue')
     },
 
-    // {
-    //   path:'movimentacoes',
-    //   component:() => import('@/pages/movimentacoes/MovimentacoesPage.vue')
-    // },
+    {
+      path:'movimentacoes',
+      component:() => import('@/pages/movimentacoes/MovimentacoesPage.vue')
+    },
 
     // {
     //   path:'historicos',

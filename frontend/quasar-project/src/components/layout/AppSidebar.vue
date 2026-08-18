@@ -66,7 +66,9 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable to="/movimentacoes">
+        <q-item clickable
+                v-ripple
+                @click="irPara('/movimentacoes')">
           <q-item-section avatar>
             <q-icon
               name="sync_alt"
@@ -219,6 +221,7 @@
 
 <script setup>
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
 
 const $q = useQuasar()
 defineProps({
@@ -229,5 +232,11 @@ defineProps({
 defineEmits([
   'update:modelValue'
 ])
+
+const router = useRouter()
+
+function irPara(caminho) {
+  router.push(caminho)
+}
 
 </script>

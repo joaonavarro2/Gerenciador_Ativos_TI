@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<template>
 
+<template>
   <q-dialog
     :model-value="props.modelValue"
     persistent
@@ -8,19 +8,19 @@
     transition-hide="fade"
     @update:model-value="emit('update:modelValue', $event)"
   >
+    <q-card
+      class="cadastro-modal"
+      style="
+        width: 900px;
+        max-width: 95vw;
+        border-radius: 18px;
+        overflow: hidden;
+      "
+    >
 
-    <q-card class="cadastro-modal" style="
-    width:900px;
-
-  max-width:95vw;
-
-  border-radius:18px;
-
-  overflow:hidden;">
-
-      <!-- ======================================================
+      <!-- =====================================================
            CABEÇALHO
-      ======================================================= -->
+      ====================================================== -->
 
       <q-card-section class="row items-center justify-between q-pb-sm">
 
@@ -29,18 +29,22 @@
           <q-avatar
             color="green-1"
             text-color="teal"
-            icon="inventory_2"
+            :icon="modoEdicao ? 'edit' : 'inventory_2'"
             size="48px"
           />
 
           <div class="q-ml-md">
 
             <div class="text-h5 text-weight-bold">
-              Cadastrar Novo Bem
+              {{ modoEdicao ? 'Editar Bem' : 'Cadastrar Novo Bem' }}
             </div>
 
             <div class="text-grey-7">
-              Registre um novo bem organizacional no sistema de inventário.
+              {{
+                modoEdicao
+                  ? 'Altere as informações do bem selecionado.'
+                  : 'Registre um novo bem organizacional no sistema de inventário.'
+              }}
             </div>
 
           </div>
@@ -52,20 +56,24 @@
           round
           dense
           icon="close"
-          @click="emit('update:modelValue', false)"
+          @click="fecharFormulario"
         />
 
       </q-card-section>
 
       <q-separator />
 
-      <!-- ======================================================
+
+      <!-- =====================================================
            CONTEÚDO
-      ======================================================= -->
+      ====================================================== -->
 
       <q-card-section class="scroll formulario-area">
 
-        <!-- IDENTIFICAÇÃO -->
+
+        <!-- =====================================================
+             IDENTIFICAÇÃO
+        ====================================================== -->
 
         <div class="titulo-secao">
           IDENTIFICAÇÃO BÁSICA
@@ -80,10 +88,11 @@
               dense
               v-model="form.nome"
               label="Nome do Bem *"
-              placeholder="Ex: Trator Agrícola MF 275"
+              placeholder="Ex: Computador Dell"
             />
 
           </div>
+
 
           <div class="col-12 col-md-6">
 
@@ -97,6 +106,7 @@
 
           </div>
 
+
           <div class="col-12 col-md-6">
 
             <q-input
@@ -109,6 +119,7 @@
 
           </div>
 
+
           <div class="col-12 col-md-6">
 
             <q-input
@@ -120,6 +131,7 @@
             />
 
           </div>
+
 
           <div class="col-12">
 
@@ -135,7 +147,10 @@
 
         </div>
 
-        <!-- FABRICANTE -->
+
+        <!-- =====================================================
+             FABRICANTE
+        ====================================================== -->
 
         <div class="titulo-secao q-mt-lg">
           INFORMAÇÕES DO FABRICANTE
@@ -154,6 +169,7 @@
 
           </div>
 
+
           <div class="col-12 col-md-6">
 
             <q-input
@@ -167,7 +183,10 @@
 
         </div>
 
-        <!-- DESCRIÇÃO -->
+
+        <!-- =====================================================
+             DESCRIÇÃO
+        ====================================================== -->
 
         <div class="titulo-secao q-mt-lg">
           DETALHES DO ATIVO
@@ -181,7 +200,10 @@
           label="Descrição do Bem"
         />
 
-        <!-- ADMINISTRATIVO -->
+
+        <!-- =====================================================
+             ADMINISTRATIVO
+        ====================================================== -->
 
         <div class="titulo-secao q-mt-lg">
           INFORMAÇÕES ADMINISTRATIVAS
@@ -200,6 +222,7 @@
             />
 
           </div>
+
 
           <div class="col-12 col-md-6">
 
@@ -251,6 +274,7 @@
 
           </div>
 
+
           <div class="col-12 col-md-6">
 
             <q-select
@@ -263,6 +287,7 @@
 
           </div>
 
+
           <div class="col-12 col-md-6">
 
             <q-select
@@ -274,6 +299,7 @@
             />
 
           </div>
+
 
           <div class="col-12">
 
@@ -292,7 +318,10 @@
 
         </div>
 
-        <!-- ANEXOS -->
+
+        <!-- =====================================================
+             ANEXOS
+        ====================================================== -->
 
         <div class="titulo-secao q-mt-lg">
           ANEXOS
@@ -316,11 +345,13 @@
 
       </q-card-section>
 
+
       <q-separator />
 
-      <!-- ======================================================
+
+      <!-- =====================================================
            RODAPÉ
-      ======================================================= -->
+      ====================================================== -->
 
       <q-card-actions
         align="right"
@@ -331,14 +362,14 @@
           flat
           color="grey-8"
           label="Cancelar"
-          @click="emit('update:modelValue', false)"
+          @click="fecharFormulario"
         />
 
         <q-btn
           color="positive"
           unelevated
-          icon="check_circle"
-          label="Cadastrar Bem"
+          :icon="modoEdicao ? 'save' : 'check_circle'"
+          :label="modoEdicao ? 'Salvar Alterações' : 'Cadastrar Bem'"
           @click="salvarBem"
         />
 
@@ -347,27 +378,68 @@
     </q-card>
 
   </q-dialog>
-
 </template>
 
 
 <script setup>
-import { ref } from 'vue'
+
+import {
+  ref,
+  computed,
+  watch
+} from 'vue'
+
 import { useQuasar } from 'quasar'
 
 const $q = useQuasar()
+
 
 /* ==========================================================
    PROPS / EMITS
 ========================================================== */
 
 const props = defineProps({
-  modelValue: Boolean
+
+  /*
+   * Controla abertura do modal.
+   */
+  modelValue: {
+    type: Boolean,
+    default: false
+  },
+
+  /*
+   * Bem que será editado.
+   *
+   * Quando for null:
+   * → cadastro
+   *
+   * Quando possuir um objeto:
+   * → edição
+   */
+  bem: {
+    type: Object,
+    default: null
+  }
+
 })
 
 const emit = defineEmits([
-  'update:modelValue'
+  'update:modelValue',
+  'salvo'
 ])
+
+
+/* ==========================================================
+   MODO
+========================================================== */
+
+const modoEdicao = computed(() => {
+
+  return !!props.bem
+
+})
+
 
 /* ==========================================================
    FORMULÁRIO
@@ -375,9 +447,10 @@ const emit = defineEmits([
 
 const form = ref({
 
+  id: null,
+
   nome: '',
   categoria: null,
-
   codigo: '',
   patrimonio: '',
   serie: '',
@@ -398,11 +471,13 @@ const form = ref({
 
 })
 
+
 /* ==========================================================
-   MOCKS
+   MOcks
 ========================================================== */
 
 const categorias = [
+
   'Computadores',
   'Notebooks',
   'Monitores',
@@ -414,45 +489,79 @@ const categorias = [
   'Ferramentas',
   'Celulares',
   'Outros'
+
 ]
 
+
 const statusOptions = [
+
   'Ativo',
   'Em Manutenção',
   'Inativo',
   'Descartado'
+
 ]
+
 
 const escritorios = [
-  'Matriz',
-  'Filial Norte',
-  'Filial Sul',
-  'Filial Leste',
-  'Filial Oeste'
+
+  'Alagoinhas',
+  'Amargosa',
+  'Barreiras',
+  'Bom Jesus da Lapa',
+  'Caetité',
+  'Salvador',
+  'Cruz das Almas',
+  'Eunápolis',
+  'Ribeira do Pombal',
+  'Feira de Santana',
+  'Irecê',
+  'Itaberaba',
+  'Itabuna',
+  'Itapetinga',
+  'Jacobina',
+  'Jequié',
+  'Juazeiro',
+  'Macaúbas',
+  'Paulo Afonso',
+  'Riachão do Jacuípe',
+  'Santa Maria da Vitória',
+  'Seabra',
+  'Senhor do Bonfim',
+  'Serrinha',
+  'Teixeira de Freitas',
+  'Valença',
+  'Vitória da Conquista'
+
 ]
+
 
 const departamentos = [
-          'Assessoria da Diretoria',
-          'Controle Interno',
-          'Comitê Técnico Ambiental',
-          'Diretoria Geral',
-          'Assessoria de Comunicação',
-          'Assessoria Jurídica',
-          'Dep.Recursos Humanos',
-          'Dep.Administrativo',
-          'Dep.Convênios e Contratos',
-          'Dep.Financeiro',
-          'Dep.Licitações',
-          'Dep.Capacitação',
-          'Dep.Engenharia',
-          'Coord.Água para Todos',
-          'Coord.Pró-Semiárido',
-          'Coord.Bahia Produtiva',
-          'Coord.Projetos Especiais',
-          'Coord.Articulação de Políticas',
+
+  'Assessoria da Diretoria',
+  'Controle Interno',
+  'Comitê Técnico Ambiental',
+  'Diretoria Geral',
+  'Assessoria de Comunicação',
+  'Assessoria Jurídica',
+  'Dep.Recursos Humanos',
+  'Dep.Administrativo',
+  'Dep.Convênios e Contratos',
+  'Dep.Financeiro',
+  'Dep.Licitações',
+  'Dep.Capacitação',
+  'Dep.Engenharia',
+  'Coord.Água para Todos',
+  'Coord.Pró-Semiárido',
+  'Coord.Bahia Produtiva',
+  'Coord.Projetos Especiais',
+  'Coord.Articulação de Políticas'
+
 ]
 
+
 const responsaveis = [
+
   'Carlos Andrade',
   'Mariana Silva',
   'João Mendes',
@@ -460,61 +569,223 @@ const responsaveis = [
   'Pedro Lima',
   'Fernanda Rocha',
   'Rafael Oliveira'
+
 ]
+
 
 /* ==========================================================
    LIMPAR FORMULÁRIO
 ========================================================== */
 
-function limparFormulario(){
+function limparFormulario() {
 
-  form.value={
+  form.value = {
 
-    nome:'',
-    categoria:null,
+    id: null,
 
-    codigo:'',
-    patrimonio:'',
-    serie:'',
+    nome: '',
+    categoria: null,
+    codigo: '',
+    patrimonio: '',
+    serie: '',
 
-    fabricante:'',
-    modelo:'',
+    fabricante: '',
+    modelo: '',
 
-    descricao:'',
+    descricao: '',
 
-    status:null,
-    dataAquisicao:'',
+    status: null,
+    dataAquisicao: '',
 
-    escritorio:null,
-    departamento:null,
-    responsavel:null,
+    escritorio: null,
+    departamento: null,
+    responsavel: null,
 
-    anexos:[]
+    anexos: []
 
   }
 
 }
 
+
+/* ==========================================================
+   CARREGAR BEM PARA EDIÇÃO
+========================================================== */
+
+/*
+ * Quando o usuário clicar no botão de editar,
+ * o componente pai enviará o objeto do bem através
+ * da prop "bem".
+ *
+ * Exemplo:
+ *
+ * bem = {
+ *   id: 15,
+ *   nome: 'Notebook Dell',
+ *   categoria: 'Notebooks',
+ *   ...
+ * }
+ *
+ * O formulário será preenchido automaticamente.
+ */
+
+function carregarBem(bem) {
+
+  if (!bem) {
+
+    limparFormulario()
+
+    return
+
+  }
+
+  form.value = {
+
+    id: bem.id ?? null,
+
+    nome: bem.nome ?? bem.nomeItem ?? '',
+
+    categoria:
+      bem.categoria ??
+      bem.categoriaBem ??
+      bem.tipo ??
+      null,
+
+    codigo:
+      bem.codigo ??
+      bem.codigoInterno ??
+      '',
+
+    patrimonio:
+      bem.patrimonio ??
+      '',
+
+    serie:
+      bem.serie ??
+      bem.serial ??
+      bem.numeroSerie ??
+      '',
+
+    fabricante:
+      bem.fabricante ??
+      bem.marca ??
+      '',
+
+    modelo:
+      bem.modelo ??
+      '',
+
+    descricao:
+      bem.descricao ??
+      bem.descricaoBem ??
+      '',
+
+    status:
+      bem.status ??
+      null,
+
+    dataAquisicao:
+      bem.dataAquisicao ??
+      '',
+
+    escritorio:
+      bem.escritorio ??
+      null,
+
+    departamento:
+      bem.departamento ??
+      bem.nomeDepartamento ??
+      null,
+
+    responsavel:
+      bem.responsavel ??
+      bem.nomeResponsavel ??
+      null,
+
+    anexos:
+      bem.anexos ??
+      []
+
+  }
+
+}
+
+
+/* ==========================================================
+   WATCH
+========================================================== */
+
+/*
+ * Observa o bem recebido pelo componente.
+ *
+ * Se o usuário clicar em editar:
+ *
+ * bem muda
+ * ↓
+ * carregarBem()
+ * ↓
+ * formulário é preenchido
+ */
+
+watch(
+
+  () => props.bem,
+
+  novoBem => {
+
+    carregarBem(novoBem)
+
+  },
+
+  {
+    immediate: true
+  }
+
+)
+
+
+/* ==========================================================
+   FECHAR
+========================================================== */
+
+function fecharFormulario() {
+
+  emit(
+    'update:modelValue',
+    false
+  )
+
+}
+
+
 /* ==========================================================
    SALVAR
 ========================================================== */
 
-function salvarBem(){
+function salvarBem() {
 
-  if(
+  /* ========================================================
+     VALIDAÇÃO
+  ======================================================== */
+
+  if (
 
     !form.value.nome ||
+
     !form.value.categoria ||
+
     !form.value.codigo ||
+
     !form.value.patrimonio
 
-  ){
+  ) {
 
     $q.notify({
 
-      type:'negative',
+      type: 'negative',
 
-      message:'Preencha os campos obrigatórios.'
+      message:
+        'Preencha os campos obrigatórios.'
 
     })
 
@@ -522,39 +793,119 @@ function salvarBem(){
 
   }
 
-  /*
-  ========================================
 
-  BACKEND
+  /* ========================================================
+     CADASTRO
+  ======================================================== */
 
-  POST /api/bens
+  if (!modoEdicao.value) {
 
-  Enviar o objeto "form"
+    /*
+     * ================================================
+     * BACKEND — CADASTRO
+     * ================================================
+     *
+     * Futuramente:
+     *
+     * POST /api/bens
+     *
+     * Body:
+     *
+     * {
+     *   nome: form.value.nome,
+     *   categoria: form.value.categoria,
+     *   codigo: form.value.codigo,
+     *   patrimonio: form.value.patrimonio,
+     *   ...
+     * }
+     *
+     * O Axios fará:
+     *
+     * await api.post('/bens', form.value)
+     *
+     * ================================================
+     */
 
-  Após sucesso:
+    console.log(
+      'MOCK — Cadastro:',
+      form.value
+    )
 
-  - atualizar tabela
+    $q.notify({
 
-  - fechar modal
+      type: 'positive',
 
-  - limpar formulário
+      message:
+        'Bem cadastrado com sucesso.'
 
-  ========================================
-  */
+    })
 
-  console.log(form.value)
+  }
 
-  $q.notify({
 
-    type:'positive',
+  /* ========================================================
+     EDIÇÃO
+  ======================================================== */
 
-    message:'Bem cadastrado com sucesso.'
+  else {
 
-  })
+    /*
+     * ================================================
+     * BACKEND — EDIÇÃO
+     * ================================================
+     *
+     * Futuramente:
+     *
+     * PUT /api/bens/{id}
+     *
+     * Exemplo:
+     *
+     * await api.put(
+     *
+     *   `/bens/${form.value.id}`,
+     *
+     *   form.value
+     *
+     * )
+     *
+     * ================================================
+     */
 
-  emit('update:modelValue',false)
+    console.log(
+      'MOCK — Edição:',
+      form.value
+    )
+
+    $q.notify({
+
+      type: 'positive',
+
+      message:
+        'Bem atualizado com sucesso.'
+
+    })
+
+  }
+
+
+  /* ========================================================
+     AVISAR COMPONENTE PAI
+  ======================================================== */
+
+  emit(
+    'salvo',
+    { ...form.value }
+  )
+
+
+  /* ========================================================
+     FECHAR
+  ======================================================== */
+
+  fecharFormulario()
 
   limparFormulario()
 
 }
+
 </script>

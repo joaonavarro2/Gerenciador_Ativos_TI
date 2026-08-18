@@ -30,19 +30,26 @@
 
     </div>
 
+
     <!-- =======================================================
          TABELA
          ======================================================= -->
 
-    <q-table flat :rows="bens" :columns="columns" row-key="id" 
->
-
-      <!-- ==============================
-           ID
-      ============================== -->
+    <q-table
+      flat
+      :rows="bens"
+      :columns="columns"
+      row-key="id"
+    >
 
       <template #body="props">
+
         <q-tr :props="props">
+
+          <!-- ==============================
+               ID
+          ============================== -->
+
           <q-td key="id" :props="props">
 
             <q-badge class="badge-id">
@@ -52,17 +59,26 @@
           </q-td>
 
 
-
           <!-- ==============================
-           DESCRIÇÃO
-      ============================== -->
+               DESCRIÇÃO
+          ============================== -->
 
-          <q-td key="descricao">
+          <q-td key="descricao" :props="props">
 
             <div class="descricao-cell">
 
-              <q-avatar rounded :color="props.row.avatarColor" :text-color="props.row.iconColor" size="38px">
-                <q-icon :name="props.row.icon" size="18px" />
+              <q-avatar
+                rounded
+                :color="props.row.avatarColor"
+                :text-color="props.row.iconColor"
+                size="38px"
+              >
+
+                <q-icon
+                  :name="props.row.icon"
+                  size="18px"
+                />
+
               </q-avatar>
 
               <div class="descricao-title">
@@ -75,31 +91,36 @@
 
           </q-td>
 
+
           <!-- ==============================
-           CATEGORIA
-      ============================== -->
+               CATEGORIA
+          ============================== -->
 
           <q-td key="categoria" :props="props">
 
             <q-chip dense square class="categoria-chip">
+
               {{ props.row.categoria }}
+
             </q-chip>
 
           </q-td>
 
-          <!-- ==============================
-           MARCA
-      ============================== -->
 
-          <q-td key="marca">
+          <!-- ==============================
+               MARCA
+          ============================== -->
+
+          <q-td key="marca" :props="props">
 
             {{ props.row.marca }}
 
           </q-td>
 
+
           <!-- ==============================
-           DEPARTAMENTO
-      ============================== -->
+               DEPARTAMENTO
+          ============================== -->
 
           <q-td key="departamento" :props="props">
 
@@ -107,16 +128,26 @@
 
           </q-td>
 
-          <!-- ==============================
-           RESPONSÁVEL
-      ============================== -->
 
-          <q-td key="responsavel">
+          <!-- ==============================
+               RESPONSÁVEL
+          ============================== -->
+
+          <q-td key="responsavel" :props="props">
 
             <div class="responsavel-cell">
 
-              <q-avatar size="28px" color="blue-1" text-color="primary">
-                <q-icon name="person" size="15px" />
+              <q-avatar
+                size="28px"
+                color="blue-1"
+                text-color="primary"
+              >
+
+                <q-icon
+                  name="person"
+                  size="15px"
+                />
+
               </q-avatar>
 
               {{ props.row.responsavel }}
@@ -125,51 +156,122 @@
 
           </q-td>
 
+
           <!-- ==============================
-           STATUS
-      ============================== -->
+               STATUS
+          ============================== -->
 
           <q-td key="status" :props="props">
 
-            <q-chip dense :class="statusClass(props.row.status)">
+            <q-chip
+              dense
+              :class="statusClass(props.row.status)"
+            >
+
               {{ props.row.status }}
+
             </q-chip>
 
           </q-td>
 
+
           <!-- ==============================
-           AÇÕES
-      ============================== -->
+               AÇÕES
+          ============================== -->
 
-          <q-td key="acoes" :props="props" class="text-center">
+          <q-td
+            key="acoes"
+            :props="props"
+            class="text-center"
+          >
 
-            <q-btn flat round dense class="acao-btn" @click="visualizarBem(props.row.id)">
+            <!-- VISUALIZAR -->
 
-              <q-icon name="visibility" size="18px" />
+            <q-btn
+              flat
+              round
+              dense
+              class="acao-btn"
+              @click="visualizarBem(props.row.id)"
+            >
+
+              <q-icon
+                name="visibility"
+                size="18px"
+              />
 
             </q-btn>
 
-            <q-btn flat round dense class="acao-btn" @click="movimentarBem(props.row.id)">
 
-              <q-icon name="sync_alt" size="18px" />
+            <!-- MOVIMENTAR -->
+
+            <q-btn
+              flat
+              round
+              dense
+              class="acao-btn"
+              @click="movimentarBem(props.row.id)"
+            >
+
+              <q-icon
+                name="sync_alt"
+                size="18px"
+              />
 
             </q-btn>
 
-            <q-btn flat round dense class="acao-btn" @click="editarBem(props.row.id)">
 
-              <q-icon name="edit" size="18px" />
+            <!-- EDITAR -->
+
+            <q-btn
+              flat
+              round
+              dense
+              class="acao-btn"
+              @click="editarBem(props.row)"
+            >
+
+              <q-icon
+                name="edit"
+                size="18px"
+              />
+
+              <q-tooltip>
+                Editar bem
+              </q-tooltip>
 
             </q-btn>
-             <q-btn flat round dense class="acao-btn" @click="deletarBem(props.row.id)">
 
-              <q-icon name="delete" size="18px" />
+
+            <!-- EXCLUIR -->
+
+            <q-btn
+              flat
+              round
+              dense
+              class="acao-btn"
+              @click="deletarBem(props.row.id)"
+            >
+
+              <q-icon
+                name="delete"
+                size="18px"
+              />
+
+              <q-tooltip>
+                Excluir bem
+              </q-tooltip>
 
             </q-btn>
 
           </q-td>
+
         </q-tr>
+
       </template>
+
     </q-table>
+
 
     <!-- =======================================================
          RODAPÉ
@@ -191,26 +293,38 @@
 
       </div>
 
+
       <div class="footer-right">
 
         <q-chip dense class="status-ativo">
+
           Ativo:
           {{ totalAtivos }}
+
         </q-chip>
+
 
         <q-chip dense class="status-manutencao">
+
           Em Manutenção:
           {{ totalManutencao }}
+
         </q-chip>
+
 
         <q-chip dense class="status-inativo">
+
           Inativo:
           {{ totalInativos }}
+
         </q-chip>
 
+
         <q-chip dense class="status-descartado">
+
           Descartado:
           {{ totalDescartados }}
+
         </q-chip>
 
       </div>
@@ -218,67 +332,81 @@
     </div>
 
   </q-card>
+
+
+  <!-- =======================================================
+       MODAL DE DETALHES
+       ======================================================= -->
+
   <BemDetailsDialog
     v-model="dialogDetalhes"
     :bem-id="bemSelecionado"
-   />
+  />
+
+
+  <!-- =======================================================
+       MODAL DE MOVIMENTAÇÃO
+       ======================================================= -->
+
   <MovimentacaoRegister
     v-model="dialogMovimentacao"
     :bem-id="bemMovimentacao"
   />
+
+
+  <!-- =======================================================
+       MODAL DE EXCLUSÃO
+       ======================================================= -->
+
   <DeleteDialog
     v-model="dialogDelete"
     :bem="bemExcluir"
     @remover-bem="removerBem"
-    />
+  />
+
+
+  <!-- =======================================================
+       MODAL DE CADASTRO / EDIÇÃO
+       ======================================================= -->
+
+  <BemCadastroDialog
+    v-model="dialogCadastro"
+    :bem="bemEditando"
+    @salvo="bemSalvo"
+  />
+
 </template>
 
 
-
-
-
-
-
-
 <script setup>
-import { ref,computed,onMounted } from 'vue'
-import BemDetailsDialog from './cards/BensDialogs.vue'
-import MovimentacaoRegister from './cards/MovimentacaoRegister.vue'
-import DeleteDialog from './cards/DeleteDialog.vue'
+
+import {
+  ref,
+  computed,
+  onMounted
+} from 'vue'
+
+
+import BemDetailsDialog
+  from './cards/BensDialogs.vue'
+
+import MovimentacaoRegister
+  from './cards/MovimentacaoRegister.vue'
+
+import DeleteDialog
+  from './cards/DeleteDialog.vue'
+
+import BemCadastroDialog
+  from './cadastro/Cadastro.vue'
+
 
 /* ==========================================================
-   BACKEND
-   ==========================================================
- 
-GET /api/bens
- 
-Resposta esperada:
- 
-[
-  {
-    id,
-    descricao,
-    serie,
-    categoria,
-    marca,
-    departamento,
-    responsavel,
-    status,
-    icon,
-    avatarColor,
-    iconColor
-  }
-]
- 
-Quando o backend estiver pronto,
-remover o exemplo abaixo e preencher
-o array utilizando a API.
- 
+   MOCKS
 ========================================================== */
 
-
 const bens = ref([
-   {
+
+  {
     id: 'BEM-001',
     descricao: 'Trator Agrícola MF 275',
     serie: 'MF275-2023-001',
@@ -403,12 +531,18 @@ const bens = ref([
     avatarColor: 'teal-1',
     iconColor: 'teal-8'
   }
+
 ])
 
+
+/* ==========================================================
+   EVENTO
+========================================================== */
 
 const emit = defineEmits([
   'bens-atualizados'
 ])
+
 
 onMounted(() => {
 
@@ -418,8 +552,10 @@ onMounted(() => {
   )
 
 })
+
+
 /* ==========================================================
-   COLUNAS DA TABELA
+   COLUNAS
 ========================================================== */
 
 const columns = [
@@ -481,6 +617,7 @@ const columns = [
 
 ]
 
+
 /* ==========================================================
    STATUS
 ========================================================== */
@@ -508,96 +645,208 @@ function statusClass(status) {
 
 }
 
+
 /* ==========================================================
-   RESUMO DO RODAPÉ
+   RESUMO
 ========================================================== */
 
 const totalAtivos = computed(() =>
-  bens.value.filter(b => b.status === 'Ativo').length
+  bens.value.filter(
+    b => b.status === 'Ativo'
+  ).length
 )
 
 const totalManutencao = computed(() =>
-  bens.value.filter(b => b.status === 'Em Manutenção').length
+  bens.value.filter(
+    b => b.status === 'Em Manutenção'
+  ).length
 )
 
 const totalInativos = computed(() =>
-  bens.value.filter(b => b.status === 'Inativo').length
+  bens.value.filter(
+    b => b.status === 'Inativo'
+  ).length
 )
 
 const totalDescartados = computed(() =>
-  bens.value.filter(b => b.status === 'Descartado').length
+  bens.value.filter(
+    b => b.status === 'Descartado'
+  ).length
 )
 
 
-
 /* ==========================================================
-   BOTÕES
+   DIALOGS
 ========================================================== */
 
 const dialogDetalhes = ref(false)
 const bemSelecionado = ref(null)
+
 const dialogMovimentacao = ref(false)
 const bemMovimentacao = ref(null)
+
 const dialogDelete = ref(false)
 const bemExcluir = ref(null)
 
-function visualizarBem(id) {
 
-  bemSelecionado.value = id
+/* ==========================================================
+   EDITAR
+========================================================== */
+
+/*
+ * Bem que será enviado para o modal
+ * de cadastro/edição.
+ */
+
+const dialogCadastro = ref(false)
+
+const bemEditando = ref(null)
+
+
+function editarBem(bem) {
 
   /*
-  =====================================
- 
-  BACKEND
- 
-  GET /api/bens/{id}
- 
-  Abrirá o modal de visualização
- 
-  =====================================
-  */
+   * Guarda o objeto completo do bem.
+   *
+   * O CadastroDialog receberá esse objeto
+   * através da prop :bem.
+   */
 
-  
+  bemEditando.value = {
+    ...bem
+  }
+
+  /*
+   * Abre o modal.
+   */
+
+  dialogCadastro.value = true
+
+
+  /*
+   =========================================================
+   BACKEND — FUTURO
+   =========================================================
+
+   Atualmente:
+
+   MOCK
+     ↓
+   bens.value
+     ↓
+   bemEditando
+     ↓
+   BemCadastroDialog
+
+   Futuramente:
+
+   GET /api/bens/{id}
+     ↓
+   Spring Boot
+     ↓
+   Axios
+     ↓
+   bemEditando
+     ↓
+   BemCadastroDialog
+
+   =========================================================
+   */
+
+}
+
+
+/* ==========================================================
+   BEM SALVO
+========================================================== */
+
+function bemSalvo(bemAtualizado) {
+
+  /*
+   * Procura o bem antigo pelo ID.
+   */
+
+  const indice = bens.value.findIndex(
+    bem => bem.id === bemAtualizado.id
+  )
+
+
+  /*
+   * Se encontrou, substitui o mock.
+   */
+
+  if (indice !== -1) {
+
+    bens.value[indice] = {
+      ...bens.value[indice],
+      ...bemAtualizado
+    }
+
+  }
+
+
+  /*
+   * Atualiza quem estiver escutando
+   * a lista de bens.
+   */
+
+  emit(
+    'bens-atualizados',
+    bens.value
+  )
+
+}
+
+
+/* ==========================================================
+   VISUALIZAR
+========================================================== */
+
+function visualizarBem(id) {
+
+  /*
+   =========================================================
+   BACKEND — FUTURO
+
+   GET /api/bens/{id}
+
+   =========================================================
+   */
+
+  bemSelecionado.value = id
 
   dialogDetalhes.value = true
 
 }
 
+
+/* ==========================================================
+   MOVIMENTAR
+========================================================== */
+
 function movimentarBem(id) {
 
   /*
-  =====================================
- 
-  BACKEND
- 
-  POST /api/movimentacoes
- 
-  Abrirá o modal de movimentação
- 
-  =====================================
-  */
+   =========================================================
+   BACKEND — FUTURO
 
-  console.log('Movimentar', id)
+   POST /api/movimentacoes
+
+   =========================================================
+   */
+
+  bemMovimentacao.value = id
+
   dialogMovimentacao.value = true
-    bemMovimentacao.value = id
-
 
 }
 
+
+/* ==========================================================
+   EXCLUIR
+========================================================== */
+
 function deletarBem(id) {
-
-  /*
-  =====================================================
-
-  BACKEND
-
-  GET /api/bens/{id}
-
-  Buscará o bem antes
-  de abrir a confirmação.
-
-  =====================================================
-  */
 
   bemExcluir.value = bens.value.find(
     bem => bem.id === id
@@ -607,25 +856,32 @@ function deletarBem(id) {
 
 }
 
-function removerBem(id){
+
+/* ==========================================================
+   REMOVER MOCK
+========================================================== */
+
+function removerBem(id) {
 
   /*
-  =====================================================
+   =========================================================
+   BACKEND — FUTURO
 
-  BACKEND
+   DELETE /api/bens/{id}
 
-  DELETE /api/bens/{id}
-
-  Após excluir:
-
-  atualizar tabela
-
-  =====================================================
-  */
+   =========================================================
+   */
 
   bens.value = bens.value.filter(
     bem => bem.id !== id
   )
 
+
+  emit(
+    'bens-atualizados',
+    bens.value
+  )
+
 }
+
 </script>

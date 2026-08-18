@@ -3193,3 +3193,851 @@ textarea{
   }
 
 }
+
+
+/* ==========================================================
+   HEADER DA PÁGINA
+========================================================== */
+
+.movimentacoes-header {
+  padding: 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  margin-top: 24px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 24px;
+}
+
+
+/* ==========================================================
+   TOPO
+========================================================== */
+
+.movimentacoes-header-title {
+  min-width: 0;
+}
+
+.movimentacoes-title {
+  color: #102a43;
+  line-height: 1.2;
+}
+
+.movimentacoes-subtitle {
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+
+/* ==========================================================
+   BOTÃO NOVA MOVIMENTAÇÃO
+========================================================== */
+
+.movimentacoes-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.movimentacoes-btn-nova {
+  min-height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  background: #f5df00 !important;
+  color: #263238 !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.movimentacoes-btn-nova:hover {
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ==========================================================
+   CARDS DE RESUMO
+========================================================== */
+
+.movimentacoes-resumo {
+  margin-top: 4px;
+}
+
+.movimentacoes-resumo-card {
+  min-width: 104px;
+  height: 50px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #eaecf0;
+  border-radius: 11px;
+
+  box-shadow: 0 2px 5px rgba(16, 24, 40, 0.05);
+}
+
+.movimentacoes-resumo-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* ==========================================================
+   NÚMEROS DOS CARDS
+========================================================== */
+
+.movimentacoes-resumo-numero {
+  min-width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+/* TOTAL */
+
+.movimentacoes-resumo-total {
+  background: #f2f4f7;
+  color: #344054;
+}
+
+
+/* EM ABERTO */
+
+.movimentacoes-resumo-aberto {
+  background: #fff0e6;
+  color: #e76f00;
+}
+
+
+/* PENDENTE */
+
+.movimentacoes-resumo-pendente {
+  background: #fff7cc;
+  color: #b78103;
+}
+
+
+/* CONCLUÍDO */
+
+.movimentacoes-resumo-concluido {
+  background: #dff7e9;
+  color: #159447;
+}
+
+
+/* ==========================================================
+   TEXTO DOS CARDS
+========================================================== */
+
+.movimentacoes-resumo-label {
+  color: #667085;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ÁREA DE FILTROS
+========================================================== */
+
+.movimentacoes-filtros {
+  width: 100%;
+}
+
+.movimentacoes-filtro-pesquisa {
+  width: 100%;
+}
+
+.movimentacoes-filtro-pesquisa :deep(.q-field__control) {
+  height: 40px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.movimentacoes-filtro-pesquisa :deep(.q-field__native) {
+  font-size: 13px;
+}
+
+.movimentacoes-filtro-pesquisa :deep(.q-icon) {
+  color: #98a2b3;
+}
+
+
+/* ==========================================================
+   FILTRO DE TIPO
+========================================================== */
+
+.movimentacoes-filtro-tipo {
+  width: 180px;
+  
+}
+
+.movimentacoes-filtro-tipo :deep(.q-field__control) {
+  height: 40px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.movimentacoes-filtro-tipo :deep(.q-field__native),
+.movimentacoes-filtro-tipo :deep(.q-field__label) {
+  font-size: 13px;
+}
+
+
+/* ==========================================================
+   FILTRO DE DATA
+========================================================== */
+
+.movimentacoes-filtro-data {
+  width: 160px;
+}
+
+.movimentacoes-filtro-data :deep(.q-field__control) {
+  height: 40px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.movimentacoes-filtro-data :deep(.q-field__native) {
+  font-size: 13px;
+}
+
+.movimentacoes-filtro-data :deep(.q-icon) {
+  color: #98a2b3;
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .movimentacoes-header {
+    padding: 20px;
+  }
+
+  .movimentacoes-header .row.items-start.justify-between {
+    gap: 20px;
+  }
+
+  .movimentacoes-filtros {
+    flex-wrap: wrap;
+  }
+
+  .movimentacoes-filtro-pesquisa {
+    min-width: 100%;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .movimentacoes-header {
+    padding: 16px;
+  }
+
+  .movimentacoes-header .row.items-start.justify-between {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .movimentacoes-header-actions {
+    width: 100%;
+  }
+
+  .movimentacoes-btn-nova {
+    width: 100%;
+  }
+
+  .movimentacoes-resumo {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .movimentacoes-resumo-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .movimentacoes-filtros {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .movimentacoes-filtros > .col,
+  .movimentacoes-filtros > .col-auto {
+    width: 100%;
+    flex: none;
+  }
+
+  .movimentacoes-filtro-pesquisa,
+  .movimentacoes-filtro-tipo,
+  .movimentacoes-filtro-data {
+    width: 100%;
+  }
+
+}
+
+/* ==========================================================
+   CARD PRINCIPAL DO BODY
+========================================================== */
+
+.movimentacoes-body {
+  width: 100%;
+  margin-top: 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #eaecf0;
+  border-radius: 16px;
+
+  overflow: hidden;
+
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
+}
+
+
+/* ==========================================================
+   CABEÇALHO DA TABELA
+========================================================== */
+
+.movimentacoes-body-header {
+  min-height: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  border-bottom: 1px solid #eaecf0;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   TÍTULO
+========================================================== */
+
+.movimentacoes-body-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.movimentacoes-body-title-main {
+  color: #101828;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.movimentacoes-body-title-count {
+  color: #98a2b3;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================================
+   ATUALIZAÇÃO
+========================================================== */
+
+.movimentacoes-body-atualizacao {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #98a2b3;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+.movimentacoes-table {
+  width: 100%;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   CABEÇALHO DAS COLUNAS
+========================================================== */
+
+.movimentacoes-table :deep(thead tr) {
+  height: 40px;
+
+  background: #f8fafc;
+}
+
+.movimentacoes-table :deep(thead th) {
+  padding: 0 16px;
+
+  color: #667085;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+
+  border-bottom: 1px solid #eaecf0;
+}
+
+
+/* ==========================================================
+   LINHAS
+========================================================== */
+
+.movimentacoes-table :deep(tbody tr) {
+  height: 67px;
+
+  background: #ffffff;
+
+  transition: background 0.15s ease;
+}
+
+.movimentacoes-table :deep(tbody tr:nth-child(even)) {
+  background: #fafafa;
+}
+
+.movimentacoes-table :deep(tbody tr:hover) {
+  background: #f5fbfb;
+}
+
+
+/* ==========================================================
+   CÉLULAS
+========================================================== */
+
+.movimentacoes-table :deep(tbody td) {
+  padding: 8px 16px;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  border-bottom: 1px solid #f2f4f7;
+}
+
+
+/* ==========================================================
+   ID DO BEM
+========================================================== */
+
+.movimentacoes-id-bem {
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.movimentacoes-patrimonio {
+  width: fit-content;
+
+  padding: 3px 6px;
+
+  background: #ecfdf3;
+
+  border-radius: 5px;
+
+  color: #087443;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.movimentacoes-id {
+  color: #98a2b3;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================================
+   NOME DO BEM
+========================================================== */
+
+.movimentacoes-nome-bem {
+  color: #101828;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   CHIP DE TIPO
+========================================================== */
+
+.movimentacoes-tipo-chip {
+  height: 24px;
+
+  padding: 0 9px;
+
+  border-radius: 12px;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+
+/* ==========================================================
+   TIPO — MANUTENÇÃO
+========================================================== */
+
+.movimentacoes-tipo-manutencao {
+  background: #fff0df !important;
+
+  color: #d85b00 !important;
+}
+
+
+/* ==========================================================
+   TIPO — CESSÃO
+========================================================== */
+
+.movimentacoes-tipo-cessao {
+  background: #dcfce7 !important;
+
+  color: #16803c !important;
+}
+
+
+/* ==========================================================
+   TIPO — TRANSFERÊNCIA
+========================================================== */
+
+.movimentacoes-tipo-transferencia {
+  background: #dbeafe !important;
+
+  color: #2563eb !important;
+}
+
+
+/* ==========================================================
+   LOCAL / ORIGEM
+========================================================== */
+
+.movimentacoes-local {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #667085;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+.movimentacoes-local-ponto {
+  width: 6px;
+  height: 6px;
+
+  flex-shrink: 0;
+
+  background: #d0d5dd;
+
+  border-radius: 50%;
+}
+
+
+/* ==========================================================
+   DESTINO
+========================================================== */
+
+.movimentacoes-destino-icone {
+  color: #087f8c;
+}
+
+
+/* ==========================================================
+   DATA
+========================================================== */
+
+.movimentacoes-data {
+  color: #475467;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   RESPONSÁVEL
+========================================================== */
+
+.movimentacoes-responsavel {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #344054;
+
+  font-size: 13px;
+
+  white-space: nowrap;
+}
+
+.movimentacoes-responsavel-avatar {
+  width: 24px;
+  height: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #e0ecff;
+
+  color: #2563eb;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.movimentacoes-status-chip {
+  height: 24px;
+
+  padding: 0 9px;
+
+  border-radius: 12px;
+
+  font-size: 11px;
+  font-weight: 500;
+}
+
+
+/* ==========================================================
+   STATUS — APROVADO
+========================================================== */
+
+.movimentacoes-status-aprovado {
+  background: #ccfbf1 !important;
+
+  color: #087f73 !important;
+}
+
+
+/* ==========================================================
+   STATUS — PENDENTE
+========================================================== */
+
+.movimentacoes-status-pendente {
+  background: #fff5bf !important;
+
+  color: #a16207 !important;
+}
+
+
+/* ==========================================================
+   STATUS — CONCLUÍDO
+========================================================== */
+
+.movimentacoes-status-concluido {
+  background: #dcfce7 !important;
+
+  color: #16803c !important;
+}
+
+
+/* ==========================================================
+   STATUS — ABERTO
+========================================================== */
+
+.movimentacoes-status-aberto {
+  background: #ffedd5 !important;
+
+  color: #c2410c !important;
+}
+
+
+/* ==========================================================
+   SEM DADOS
+========================================================== */
+
+.movimentacoes-sem-dados {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 50px 20px;
+
+  color: #98a2b3;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================================
+   RODAPÉ
+========================================================== */
+
+.movimentacoes-body-footer {
+  min-height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  border-top: 1px solid #eaecf0;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   QUANTIDADE DE REGISTROS
+========================================================== */
+
+.movimentacoes-registros {
+  color: #98a2b3;
+
+  font-size: 12px;
+}
+
+.movimentacoes-registros strong {
+  color: #667085;
+
+  font-weight: 500;
+}
+
+
+/* ==========================================================
+   PAGINAÇÃO
+========================================================== */
+
+.movimentacoes-paginacao {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+}
+
+.movimentacoes-paginacao-btn {
+  min-width: 32px;
+  min-height: 32px;
+
+  color: #667085;
+
+  border: 1px solid #eaecf0;
+
+  border-radius: 8px;
+}
+
+.movimentacoes-paginacao-atual {
+  min-width: 32px;
+  min-height: 32px;
+
+  background: #08666f !important;
+
+  color: #ffffff !important;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 1100px) {
+
+  .movimentacoes-table {
+    overflow-x: auto;
+  }
+
+  .movimentacoes-table :deep(table) {
+    min-width: 1000px;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .movimentacoes-body {
+    border-radius: 12px;
+  }
+
+  .movimentacoes-body-header {
+    padding: 0 16px;
+  }
+
+  .movimentacoes-body-atualizacao {
+    display: none;
+  }
+
+  .movimentacoes-body-footer {
+    padding: 0 16px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .movimentacoes-body-footer {
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+  }
+
+  .movimentacoes-paginacao {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+
+}
+
+
+
+
