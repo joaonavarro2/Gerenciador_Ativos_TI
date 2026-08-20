@@ -3601,11 +3601,27 @@ textarea{
 .historico-filtro .q-field__native,
 .historico-filtro .q-field__label { color: #98a2b3; font-size: 14px; }
 .historico-filtros-grid { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.historico-filtro { width: 158px; }
-.historico-filtro-departamento { width: 202px; }
-.historico-data { width: 155px; }
+.historico-filtro { min-width: 200px; flex: 0 0 200px; }
+.historico-filtro-departamento { min-width: 260px; flex: 0 0 260px; }
+.historico-data { min-width: 180px; flex: 0 0 180px; }
+
+.historico-filtros-grid .q-field__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.historico-filtros-grid .q-select .q-field__control,
+.historico-filtros-grid .q-input .q-field__control { min-height: 42px; }
+
+/* Linha separada para campos de data (ficam abaixo dos filtros, alinhados com 'até') */
+.historico-datas-row { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 8px; }
+.historico-datas-row .historico-filtro { min-width: 180px; flex: 0 0 180px; }
+.historico-datas-row .historico-ate { margin: 0 6px; }
 .historico-ate { color: #98a2b3; font-size: 14px; }
 
+/* Tornar labels e controles dentro dos filtros mais escuros e em negrito */
+.historico-filtros-grid { color: #101828; }
+.historico-filtros-grid .historico-filtro .q-field__label,
+.historico-filtros-grid .q-field__label,
+.historico-filtros-grid .q-item__label,
+.historico-filtros-grid .q-btn__content { color: #101828; font-weight: 700; }
+.historico-filtros-grid .q-field__native { color: #0b1220; font-weight: 600; }
 .historico-table-card { min-height: 405px; margin-top: 24px; border-radius: 16px; overflow: hidden; background: #fff; }
 .historico-table-header { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 0 20px; border-bottom: 1px solid #eaecf0; }
 .historico-table-title { display: flex; align-items: center; gap: 8px; color: #101828; font-size: 14px; font-weight: 700; }

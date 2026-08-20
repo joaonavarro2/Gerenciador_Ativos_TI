@@ -27,10 +27,10 @@ const routes = [
       component:() => import('@/pages/historico/HistoricoPage.vue')
     },
 
-    // {
-    //   path:'consertos',
-    //   component:() => import('@/pages/consertos/ConsertosPage.vue')
-    // },
+    {
+      path:'consertos',
+      component:() => import('@/pages/consertos/ConsertosPage.vue')
+    },
 
     // {
     //   path:'escritorios',

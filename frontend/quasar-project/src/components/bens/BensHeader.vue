@@ -188,7 +188,7 @@
 <script setup>
 import { ref,computed } from 'vue'
 import BemCadastro from './cadastro/Cadastro.vue'
-import ExportarRelatorio from './exportacao/ExportarRelatorio.vue'
+import ExportarRelatorio from '@/components/common/ExportarRelatorio.vue'
 const dialogCadastro = ref(false)
 const dialogExportar = ref(false)
 

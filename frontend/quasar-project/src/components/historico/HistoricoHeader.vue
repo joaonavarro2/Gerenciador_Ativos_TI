@@ -9,8 +9,8 @@
       </div>
 
       <div class="historico-page-actions">
-        <q-btn outline no-caps icon="file_download" label="Exportar Histórico" class="historico-exportar" />
-        <q-btn unelevated no-caps icon="description" label="Gerar Relatório" class="historico-relatorio" />
+        <q-btn @click="dialogExportar = true" outline no-caps icon="file_download" label="Exportar Histórico" class="historico-exportar" />
+        <ExportarRelatorio v-model="dialogExportar" :filtros="props.filtros" :itens="[]" />
       </div>
     </div>
 
@@ -30,20 +30,26 @@
         <q-select v-model="escritorio" outlined dense :options="escritorios" label="Todos os Escritórios" class="historico-filtro" clearable />
         <q-select v-model="departamento" outlined dense :options="departamentos" label="Todos os Departamentos" class="historico-filtro historico-filtro-departamento" clearable />
         <q-select v-model="usuario" outlined dense :options="usuarios" label="Todos os Usuários" class="historico-filtro" clearable />
-        <q-input v-model="dataInicial" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
-          <template #prepend><q-icon name="event" /></template>
-        </q-input>
-        <span class="historico-ate">até</span>
-        <q-input v-model="dataFinal" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
-          <template #prepend><q-icon name="event" /></template>
-        </q-input>
+
+        <div class="historico-datas-row">
+          <q-input v-model="dataInicial" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
+            <template #prepend><q-icon name="event" /></template>
+          </q-input>
+
+          <span class="historico-ate">até</span>
+
+          <q-input v-model="dataFinal" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
+            <template #prepend><q-icon name="event" /></template>
+          </q-input>
+        </div>
       </div>
     </q-card>
   </section>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import ExportarRelatorio from '@/components/common/ExportarRelatorio.vue'
 
 const props = defineProps({
   filtros: { type: Object, required: true },
@@ -68,4 +74,6 @@ const eventos = ['Cadastro', 'Movimentação', 'Manutenção', 'Alteração de S
 const escritorios = ['Alagoinhas', 'Amargosa', 'Barreiras', 'Salvador', 'Vitória da Conquista']
 const departamentos = ['Assessoria da Diretoria', 'Controle Interno', 'Diretoria Geral', 'Dep. Financeiro']
 const usuarios = ['Carlos Andrade', 'Mariana Silva', 'João Mendes', 'Fernanda Rocha']
+
+const dialogExportar = ref(false)
 </script>

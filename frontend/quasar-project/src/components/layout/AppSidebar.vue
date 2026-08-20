@@ -100,7 +100,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/consertos" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="build"
