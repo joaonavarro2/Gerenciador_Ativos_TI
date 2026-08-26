@@ -33,8 +33,9 @@
           <q-td key="data" :props="props">{{ props.row.data }}</q-td>
 
           <q-td key="acoes" :props="props" class="text-center">
-            <q-btn flat round dense class="acao-btn"><q-icon name="visibility" size="18px" /></q-btn>
-            <q-btn flat round dense class="acao-btn"><q-icon name="edit" size="18px" /></q-btn>
+            <q-btn flat round dense class="acao-btn" @click="$emit('visualizar', props.row)"><q-icon name="visibility" size="18px" /></q-btn>
+            <q-btn flat round dense class="acao-btn" @click="$emit('editar', props.row)"><q-icon name="edit" size="18px" /></q-btn>
+            <q-btn flat round dense class="acao-btn" @click="$emit('excluir', props.row)"><q-icon name="delete" size="18px" /></q-btn>
           </q-td>
         </q-tr>
       </template>
@@ -59,6 +60,8 @@ defineProps({
   possuiFiltros: Boolean,
   filtros: Object,
 })
+
+defineEmits(['visualizar', 'editar'])
 
 const columns = computed(() => [
   { name: 'id', label: 'ID', field: 'id' },

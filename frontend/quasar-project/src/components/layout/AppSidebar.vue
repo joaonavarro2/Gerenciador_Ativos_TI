@@ -127,7 +127,7 @@
           CADASTROS
         </div>
 
-        <q-item clickable>
+        <q-item clickable to="/escritorios" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="business"

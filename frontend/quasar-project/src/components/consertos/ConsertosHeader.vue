@@ -50,6 +50,7 @@
         <q-select v-model="tipo" outlined dense :options="tipos" clearable class="historico-filtro" label="Tipo de Reparo" />
       </div>
 
+
       <div class="col-auto">
         <q-select v-model="status" outlined dense :options="statusOptions" clearable class="historico-filtro" label="Status" />
       </div>
@@ -90,8 +91,60 @@ const dataFinal = criarFiltro('dataFinal')
 
 const tipos = ['Reparo', 'Substituição', 'Instalação']
 const statusOptions = ['Pendente', 'Em andamento', 'Concluído']
-const escritorios = ['Alagoinhas', 'Amargosa', 'Barreiras', 'Salvador', 'Vitória da Conquista']
-const departamentos = ['Assessoria da Diretoria','Controle Interno','Diretoria Geral','Dep. Financeiro']
+const escritorios = ['Alagoinhas',
+  'Amargosa',
+  'Barreiras',
+  'Bom Jesus da Lapa',
+  'Caetité',
+  'Salvador',
+  'Cruz das Almas',
+  'Eunápolis',
+  'Ribeira do Pombal',
+  'Feira de Santana',
+  'Irecê',
+  'Itaberaba',
+  'Itabuna',
+  'Itapetinga',
+  'Jacobina',
+  'Jequié',
+  'Juazeiro',
+  'Macaúbas',
+  'Paulo Afonso',
+  'Riachão do Jacuípe',
+  'Santa Maria da Vitória',
+  'Seabra',
+  'Senhor do Bonfim',
+  'Serrinha',
+  'Teixeira de Freitas',
+  'Valença',
+  'Vitória da Conquista']
+const departamentos = ['Alagoinhas',
+  'Amargosa',
+  'Barreiras',
+  'Bom Jesus da Lapa',
+  'Caetité',
+  'Salvador',
+  'Cruz das Almas',
+  'Eunápolis',
+  'Ribeira do Pombal',
+  'Feira de Santana',
+  'Irecê',
+  'Itaberaba',
+  'Itabuna',
+  'Itapetinga',
+  'Jacobina',
+  'Jequié',
+  'Juazeiro',
+  'Macaúbas',
+  'Paulo Afonso',
+  'Riachão do Jacuípe',
+  'Santa Maria da Vitória',
+  'Seabra',
+  'Senhor do Bonfim',
+  'Serrinha',
+  'Teixeira de Freitas',
+  'Valença',
+  'Vitória da Conquista']
 </script>
 
 <style scoped>

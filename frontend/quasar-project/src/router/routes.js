@@ -32,10 +32,10 @@ const routes = [
       component:() => import('@/pages/consertos/ConsertosPage.vue')
     },
 
-    // {
-    //   path:'escritorios',
-    //   component:() => import('@/pages/escritorios/EscritoriosPage.vue')
-    // },
+    {
+      path:'escritorios',
+      component:() => import('@/pages/escritorios/EscritoriosPage.vue')
+    },
 
     // {
     //   path:'departamentos',

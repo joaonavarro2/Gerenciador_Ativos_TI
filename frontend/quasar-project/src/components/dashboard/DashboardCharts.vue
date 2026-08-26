@@ -1,124 +1,85 @@
 <template>
-
-  <!-- ==========================================================
-       BACKEND
-
-       GET /api/dashboard/charts
-
-       {
-          monthlyActivity: [],
-          categoryDistribution: []
-       }
-
-       Os gráficos serão alimentados pela API.
-
-       Inicialmente o componente apenas reserva o espaço.
-  =========================================================== -->
-
   <div class="dashboard-charts">
-
-    <!-- ============================= -->
-    <!-- Atividade Mensal -->
-    <!-- ============================= -->
-
     <q-card class="dashboard-chart-card">
-
       <div class="dashboard-chart-header">
-
         <div>
-
-          <h3 class="dashboard-chart-title">
-            Atividade Mensal
-          </h3>
-
-          <p class="dashboard-chart-subtitle">
-            Movimentações e consertos por mês — 2026
-          </p>
-
+          <h3 class="dashboard-chart-title">Atividade Mensal</h3>
+          <p class="dashboard-chart-subtitle">Movimentações e consertos por mês — 2026</p>
         </div>
-
       </div>
 
       <div class="dashboard-chart-body">
-
-        <!-- Gráfico virá aqui -->
-
-        <div class="chart-placeholder">
-
-          <q-icon
-            name="bar_chart"
-            size="70px"
-            class="chart-placeholder-icon"
-          />
-
-          <span>
-            Gráfico aguardando dados do servidor
-          </span>
-
+        <div class="monthly-bars">
+          <div v-for="item in monthlyActivity" :key="item.month" class="bar-group">
+            <div class="bar-label">{{ item.month }}</div>
+            <div class="bar-stack">
+              <div class="bar bar-movimentacoes" :style="{ height: `${(item.movimentacoes / maxMonthlyValue) * 100}%` }" />
+              <div class="bar bar-consertos" :style="{ height: `${(item.consertos / maxMonthlyValue) * 100}%` }" />
+            </div>
+            <div class="bar-values">
+              <span>{{ item.movimentacoes }}</span>
+              <span>{{ item.consertos }}</span>
+            </div>
+          </div>
         </div>
-
       </div>
-
     </q-card>
 
-    <!-- ============================= -->
-    <!-- Distribuição -->
-    <!-- ============================= -->
-
     <q-card class="dashboard-chart-card">
-
       <div class="dashboard-chart-header">
-
         <div>
-
-          <h3 class="dashboard-chart-title">
-            Distribuição por Categoria
-          </h3>
-
-          <p class="dashboard-chart-subtitle">
-            Composição do patrimônio ativo
-          </p>
-
+          <h3 class="dashboard-chart-title">Distribuição por Categoria</h3>
+          <p class="dashboard-chart-subtitle">Composição do patrimônio ativo</p>
         </div>
-
       </div>
 
       <div class="dashboard-chart-body">
-
-        <div class="chart-placeholder">
-
-          <q-icon
-            name="donut_large"
-            size="70px"
-            class="chart-placeholder-icon"
-          />
-
-          <span>
-            Gráfico aguardando dados do servidor
-          </span>
-
+        <div class="category-list">
+          <div v-for="item in categoryDistribution" :key="item.name" class="category-row">
+            <div class="category-meta">
+              <span class="category-dot" :style="{ background: itemColor(item.name) }" />
+              <span>{{ item.name }}</span>
+            </div>
+            <div class="category-stat">
+              <div class="category-progress">
+                <div :style="{ width: `${(item.value / maxCategoryValue) * 100}%`, background: itemColor(item.name) }" />
+              </div>
+              <span>{{ item.value }}%</span>
+            </div>
+          </div>
         </div>
-
       </div>
-
     </q-card>
-
   </div>
-
 </template>
 
 <script setup>
+import { computed } from 'vue'
 
-/*
+const props = defineProps({
+  monthlyActivity: {
+    type: Array,
+    default: () => [],
+  },
+  categoryDistribution: {
+    type: Array,
+    default: () => [],
+  },
+})
 
-Futuramente:
+const maxMonthlyValue = computed(() => {
+  const values = props.monthlyActivity.flatMap(item => [item.movimentacoes, item.consertos])
+  return values.length ? Math.max(...values) : 1
+})
 
-import ApexCharts from 'vue3-apexcharts'
+const maxCategoryValue = computed(() => {
+  const values = props.categoryDistribution.map(item => item.value)
+  return values.length ? Math.max(...values) : 1
+})
 
-ou
-
-import Chart from 'chart.js'
-
-*/
-
+function itemColor(name) {
+  const palette = ['#4caf50', '#f4b740', '#3b82f6', '#ef4444', '#8b5cf6']
+  const index = ['Computadores', 'Periféricos', 'Rede', 'Impressão', 'Outros'].indexOf(name)
+  return palette[index >= 0 ? index : 0]
+}
 </script>

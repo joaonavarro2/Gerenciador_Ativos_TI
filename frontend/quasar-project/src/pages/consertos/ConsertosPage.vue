@@ -1,8 +1,18 @@
 <template>
   <q-page class="consertos-page">
-    <ConsertosHeader v-model:filtros="filtros" />
+    <ConsertosHeader v-model:filtros="filtros" @novo="abrirModalNovoReparo" />
 
-    <ConsertosTable :consertos="consertosFiltrados" :possui-filtros="possuiFiltros" :filtros="filtros" />
+    <ConsertosTable
+      :consertos="consertosFiltrados"
+      :possui-filtros="possuiFiltros"
+      :filtros="filtros"
+      @visualizar="abrirModalVisualizacao"
+      @editar="abrirModalEdicao"
+    />
+
+    <NovoReparo v-model="dialogNovoReparo" @salvar="adicionarReparo" />
+    <EditarReparo v-model="dialogEditarReparo" :reparo="reparoSelecionado" @salvar="atualizarReparo" />
+    <VisualizarReparo v-model="dialogVisualizarReparo" :reparo="reparoSelecionado" />
   </q-page>
 </template>
 
@@ -11,6 +21,14 @@ import { ref, computed } from 'vue'
 
 import ConsertosHeader from '@/components/consertos/ConsertosHeader.vue'
 import ConsertosTable from '@/components/consertos/ConsertosTable.vue'
+import NovoReparo from '@/components/consertos/card/NovoReparo.vue'
+import EditarReparo from '@/components/consertos/card/EditarReparo.vue'
+import VisualizarReparo from '@/components/consertos/card/VisualizarReparo.vue'
+
+const dialogNovoReparo = ref(false)
+const dialogEditarReparo = ref(false)
+const dialogVisualizarReparo = ref(false)
+const reparoSelecionado = ref({})
 
 const consertos = ref([
   { id: 1, ativoId: 'ATV-2001', problema: 'Quebra da tela', tipo: 'Reparo', status: 'Pendente', tecnico: 'Lucas', descricao: 'Tela trincada por queda', data: '2024-06-02', escritorio: 'Salvador', departamento: 'Diretoria Geral' },
@@ -21,6 +39,51 @@ const consertos = ref([
 const filtros = ref({ busca: '', tipo: null, status: null, tecnico: null, departamento: null, escritorio: null, dataInicial: '', dataFinal: '' })
 
 const possuiFiltros = computed(() => Object.values(filtros.value).some(Boolean))
+
+function abrirModalNovoReparo() {
+  dialogNovoReparo.value = true
+}
+
+function abrirModalEdicao(reparo) {
+  reparoSelecionado.value = reparo
+  dialogEditarReparo.value = true
+}
+
+function abrirModalVisualizacao(reparo) {
+  reparoSelecionado.value = reparo
+  dialogVisualizarReparo.value = true
+}
+
+function adicionarReparo(novoReparo) {
+  const novoItem = {
+    id: Date.now(),
+    ativoId: novoReparo.ativoId,
+    problema: novoReparo.problema,
+    tipo: novoReparo.tipo,
+    status: novoReparo.status || 'Pendente',
+    tecnico: novoReparo.tecnico,
+    descricao: novoReparo.descricao || novoReparo.problema,
+    data: novoReparo.data || novoReparo.dataInicio || new Date().toISOString().slice(0, 10),
+    escritorio: novoReparo.escritorio || 'Não informado',
+    departamento: novoReparo.departamento || 'Não informado',
+    dataInicio: novoReparo.dataInicio,
+    dataConclusao: novoReparo.dataConclusao,
+  }
+
+  consertos.value.unshift(novoItem)
+}
+
+function atualizarReparo(reparoAtualizado) {
+  consertos.value = consertos.value.map(item =>
+    item.id === reparoAtualizado.id
+      ? {
+          ...item,
+          ...reparoAtualizado,
+          data: reparoAtualizado.data || reparoAtualizado.dataInicio || item.data,
+        }
+      : item,
+  )
+}
 
 function texto(valor) {
   if (valor === null || valor === undefined) return ''

@@ -71,8 +71,51 @@ const dataInicial = criarFiltro('dataInicial')
 const dataFinal = criarFiltro('dataFinal')
 
 const eventos = ['Cadastro', 'Movimentação', 'Manutenção', 'Alteração de Status']
-const escritorios = ['Alagoinhas', 'Amargosa', 'Barreiras', 'Salvador', 'Vitória da Conquista']
-const departamentos = ['Assessoria da Diretoria', 'Controle Interno', 'Diretoria Geral', 'Dep. Financeiro']
+const escritorios = ['Alagoinhas',
+  'Amargosa',
+  'Barreiras',
+  'Bom Jesus da Lapa',
+  'Caetité',
+  'Salvador',
+  'Cruz das Almas',
+  'Eunápolis',
+  'Ribeira do Pombal',
+  'Feira de Santana',
+  'Irecê',
+  'Itaberaba',
+  'Itabuna',
+  'Itapetinga',
+  'Jacobina',
+  'Jequié',
+  'Juazeiro',
+  'Macaúbas',
+  'Paulo Afonso',
+  'Riachão do Jacuípe',
+  'Santa Maria da Vitória',
+  'Seabra',
+  'Senhor do Bonfim',
+  'Serrinha',
+  'Teixeira de Freitas',
+  'Valença',
+  'Vitória da Conquista']
+const departamentos = ['Assessoria da Diretoria',
+            'Controle Interno',
+            'Comitê Técnico Ambiental',
+            'Diretoria Geral',
+            'Assessoria de Comunicação',
+            'Assessoria Jurídica',
+            'Dep.Recursos Humanos',
+            'Dep.Administrativo',
+            'Dep.Convênios e Contratos',
+            'Dep.Financeiro',
+            'Dep.Licitações',
+            'Dep.Capacitação',
+            'Dep.Engenharia',
+            'Coord.Água para Todos',
+            'Coord.Pró-Semiárido',
+            'Coord.Bahia Produtiva',
+            'Coord.Projetos Especiais',
+            'Coord.Articulação de Políticas']
 const usuarios = ['Carlos Andrade', 'Mariana Silva', 'João Mendes', 'Fernanda Rocha']
 
 const dialogExportar = ref(false)
