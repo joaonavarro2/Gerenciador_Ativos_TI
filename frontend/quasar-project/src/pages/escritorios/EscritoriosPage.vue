@@ -1,11 +1,12 @@
 <template>
   <q-page class="escritorios-page">
-    <EscritoriosHeader v-model:filtros="filtros" />
+    <EscritoriosHeader v-model:filtros="filtros" @novo-escritorio="abrirNovoEscritorio"/>
     <EscritoriosTable
       :escritorios="escritoriosFiltrados"
       :possui-filtros="possuiFiltros"
       :filtros="filtros"
     />
+    <NovoEscritorio v-model="NovoEscritorios" @salvar="adicionarEscritorio"/>
   </q-page>
 </template>
 
@@ -13,6 +14,9 @@
 import { computed, ref } from 'vue'
 import EscritoriosHeader from '@/components/escritorios/EscritoriosHeader.vue'
 import EscritoriosTable from '@/components/escritorios/EscritoriosTable.vue'
+import NovoEscritorio from '@/components/escritorios/cards/NovoEscritorio.vue'
+
+
 
 const escritorios = ref([
   {
@@ -78,7 +82,15 @@ const filtros = ref({
   status: null,
 })
 
+const NovoEscritorios = ref(false)
+
 const possuiFiltros = computed(() => Object.values(filtros.value).some(value => value !== null && value !== ''))
+
+
+function abrirNovoEscritorio() {
+  NovoEscritorios.value = true 
+}
+
 
 function texto(valor) {
   if (valor === null || valor === undefined) return ''

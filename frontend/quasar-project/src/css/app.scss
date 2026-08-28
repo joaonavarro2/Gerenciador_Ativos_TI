@@ -4410,6 +4410,382 @@ textarea{
 
 }
 
+/* ==========================================================
+   DIALOG DE CADASTRO DE ESCRITÓRIO
+========================================================== */
 
+.escritorio-cadastro-dialog {
+
+  // width: 680px;
+  // max-width: 90vw;
+
+  // max-height: 90vh;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+}
+
+
+/* ==========================================================
+   CABEÇALHO
+========================================================== */
+
+.escritorio-cadastro-header {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  padding: 24px 28px;
+
+  background: #ffffff;
+
+}
+
+
+.escritorio-cadastro-titulo-area {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+}
+
+
+.escritorio-cadastro-titulo {
+
+  color: #1e293b;
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+
+}
+
+
+.escritorio-cadastro-subtitulo {
+
+  color: #94a3b8;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
+}
+
+
+/* ==========================================================
+   BOTÃO FECHAR
+========================================================== */
+
+.escritorio-cadastro-fechar {
+
+  width: 34px;
+
+  height: 34px;
+
+  min-width: 34px;
+
+  border-radius: 9px;
+
+  background: #f1f5f9;
+
+  color: #64748b;
+
+}
+
+
+.escritorio-cadastro-fechar:hover {
+
+  background: #e2e8f0;
+
+}
+
+
+/* ==========================================================
+   CONTEÚDO
+========================================================== */
+
+.escritorio-cadastro-content {
+
+  max-height: calc(90vh - 150px);
+
+  overflow-y: auto;
+
+  padding: 22px 28px;
+
+}
+
+
+/* ==========================================================
+   FORMULÁRIO
+========================================================== */
+
+.escritorio-form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+}
+
+
+.escritorio-form-group {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  flex: 1;
+
+}
+
+
+.escritorio-form-row {
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 14px;
+
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.escritorio-form-label {
+
+  color: #475569;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  line-height: 1.3;
+
+}
+
+
+.campo-obrigatorio {
+
+  color: #ef4444;
+
+  margin-left: 2px;
+
+}
+
+
+/* ==========================================================
+   INPUTS
+========================================================== */
+
+.escritorio-input {
+
+  width: 100%;
+
+}
+
+
+.escritorio-input :deep(.q-field__control) {
+
+  min-height: 40px;
+
+  border-radius: 9px;
+
+  color: #334155;
+
+}
+
+
+.escritorio-input :deep(.q-field__native) {
+
+  color: #334155;
+
+  font-size: 13px;
+
+}
+
+
+.escritorio-input :deep(.q-field__native::placeholder) {
+
+  color: #a0a9b8;
+
+  opacity: 1;
+
+}
+
+
+.escritorio-input :deep(.q-field__control:before) {
+
+  border-color: #dbe1e8;
+
+}
+
+
+.escritorio-input :deep(.q-field__control:hover:before) {
+
+  border-color: #b8c1cc;
+
+}
+
+
+/* ==========================================================
+   RODAPÉ
+========================================================== */
+
+.escritorio-cadastro-footer {
+
+  display: flex;
+
+  justify-content: flex-end;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px 28px;
+
+  background: #ffffff;
+
+}
+
+
+/* ==========================================================
+   BOTÃO CANCELAR
+========================================================== */
+
+.escritorio-btn-cancelar {
+
+  min-height: 40px;
+
+  padding: 0 20px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+}
+
+
+/* ==========================================================
+   BOTÃO SALVAR
+========================================================== */
+
+.escritorio-btn-salvar {
+
+  min-height: 40px;
+
+  padding: 0 22px;
+
+  border-radius: 9px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  box-shadow:
+    0 4px 12px rgba(16, 185, 129, 0.20);
+
+}
+
+
+/* ==========================================================
+   SCROLL
+========================================================== */
+
+.escritorio-cadastro-content::-webkit-scrollbar {
+
+  width: 8px;
+
+}
+
+
+.escritorio-cadastro-content::-webkit-scrollbar-track {
+
+  background: #f8fafc;
+
+}
+
+
+.escritorio-cadastro-content::-webkit-scrollbar-thumb {
+
+  background: #cbd5e1;
+
+  border-radius: 10px;
+
+}
+
+
+.escritorio-cadastro-content::-webkit-scrollbar-thumb:hover {
+
+  background: #94a3b8;
+
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 600px) {
+
+  .escritorio-cadastro-dialog {
+
+    width: 95vw;
+
+    max-width: 95vw;
+
+    border-radius: 16px;
+
+  }
+
+
+  .escritorio-cadastro-header {
+
+    padding: 20px;
+
+  }
+
+
+  .escritorio-cadastro-content {
+
+    padding: 20px;
+
+  }
+
+
+  .escritorio-cadastro-footer {
+
+    padding: 14px 20px;
+
+  }
+
+
+  .escritorio-form-row {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
 
 

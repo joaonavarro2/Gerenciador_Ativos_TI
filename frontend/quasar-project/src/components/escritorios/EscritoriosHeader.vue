@@ -102,7 +102,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:filtros, novo-escritorio'])
+const emit = defineEmits(['update:filtros', 'novo-escritorio'])
 
 const criarFiltro = (chave) => computed({
   get: () => props.filtros[chave],
