@@ -166,19 +166,23 @@
 
 <script setup>
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import BemInfoTab from '../cards/BemInfoTab.vue'
 import BemMaintenanceTab from '../cards/BemMaintenanceTab.vue'
 import BemMovementsTab from '../cards/BemMovementsTab.vue'
 
-// eslint-disable-next-line no-unused-vars
 const props = defineProps({
 
   modelValue: Boolean,
 
   bemId: {
     type: String,
+    default: null
+  },
+
+  bem: {
+    type: Object,
     default: null
   }
 
@@ -189,6 +193,23 @@ defineEmits([
 ])
 
 const tab = ref('informacoes')
+
+const bem = computed(() => {
+  if (props.bem) return props.bem
+
+  return {
+    id: 1,
+    patrimonio: 'BEM-0041',
+    nome: 'Trator Agrícola MF 275',
+    status: 'Ativo',
+    escritorio: 'Sede',
+    departamento: 'Operações',
+    localizacao: 'Galpão Central',
+    icon: 'agriculture',
+    avatarColor: 'green-1',
+    iconColor: 'green-8',
+  }
+})
 
 /* ==========================================================
    BACKEND
@@ -201,30 +222,6 @@ este objeto será substituído
 pela resposta da API.
 
 ========================================================== */
-
-const bem = ref({
-
-  id: 1,
-
-  patrimonio: 'BEM-0041',
-
-  nome: 'Trator Agrícola MF 275',
-
-  status: 'Ativo',
-
-  escritorio: 'Sede',
-
-  departamento: 'Operações',
-
-  localizacao: 'Galpão Central',
-
-  icon: 'agriculture',
-
-  avatarColor: 'green-1',
-
-  iconColor: 'green-8'
-
-})
 
 /* ==========================================================
    STATUS

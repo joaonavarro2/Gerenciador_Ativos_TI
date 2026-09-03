@@ -143,7 +143,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/departamentos" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="hub"
@@ -159,7 +159,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/pessoas" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="group"
@@ -175,7 +175,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable>
+        <q-item clickable to="/outros-itens" active-class="menu-active">
           <q-item-section avatar>
             <q-icon
               name="folder_open"
@@ -195,7 +195,7 @@
 
       <div class="sidebar-footer">
 
-        <q-item clickable>
+        <q-item clickable to="/login">
 
           <q-item-section avatar>
             <q-icon

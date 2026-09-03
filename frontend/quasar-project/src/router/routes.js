@@ -1,12 +1,24 @@
 const routes = [
   {
     path: '/',
+    component: () => import('@/pages/login/LoginPage.vue')
+  },
+  {
+    path: '/login',
+    component: () => import('@/pages/login/LoginPage.vue')
+  },
+  {
+    path: '/recuperar-senha',
+    component: () => import('@/pages/login/RecuperarSenhaPage.vue')
+  },
+  {
+    path: '/cadastro-usuario',
+    component: () => import('@/pages/login/CadastroUsuarioPage.vue')
+  },
+  {
+    path: '/',
     component: () => import('@/layouts/MainLayout.vue'),
     children: [
-    {
-      path:'',
-      component:() => import('@/pages/dashboard/DashboardPage.vue')
-    }, 
     {
       path:'dashboard',
       component:() => import('@/pages/dashboard/DashboardPage.vue')
@@ -36,21 +48,20 @@ const routes = [
       path:'escritorios',
       component:() => import('@/pages/escritorios/EscritoriosPage.vue')
     },
+    {
+      path:'departamentos',
+      component:() => import('@/pages/departamentos/DepartamentosPages.vue')
+    },
 
-    // {
-    //   path:'departamentos',
-    //   component:() => import('@/pages/departamentos/DepartamentosPage.vue')
-    // },
+    {
+      path:'pessoas',
+      component:() => import('@/pages/pessoas/PessoasPage.vue')
+    },
 
-    // {
-    //   path:'pessoas',
-    //   component:() => import('@/pages/pessoas/PessoasPage.vue')
-    // },
-
-    // {
-    //   path:'outros-itens',
-    //   component:() => import('@/pages/outros-itens/OutrosItensPage.vue')
-    // }
+    {
+      path:'outros-itens',
+      component:() => import('@/pages/outrosItens/OutrosItensPagge.vue')
+    }
     ]
   },
 

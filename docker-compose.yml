@@ -1,0 +1,41 @@
+services:
+  frontend:
+    build:
+      context: ./frontend/quasar-project
+      dockerfile: Dockerfile
+    container_name: ativos-ti-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - ativos-ti
+
+  database:
+    image: postgres:16-alpine
+    container_name: ativos-ti-database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-ativos_ti}
+      POSTGRES_USER: ${POSTGRES_USER:-ativos_ti}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ativos_ti_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks:
+      - ativos-ti
+
+volumes:
+  postgres_data:
+
+networks:
+  ativos-ti:
+    driver: bridge

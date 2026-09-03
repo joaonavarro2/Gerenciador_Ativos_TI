@@ -85,6 +85,349 @@
 }
 
 /* =====================================================
+   LOGIN
+===================================================== */
+
+.login-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(135deg, #8edbd2 0%, #78d6ad 52%, #88d99b 100%) !important;
+}
+
+.login-card {
+  z-index: 1;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  padding: 44px 40px 38px;
+  border-radius: 20px;
+  background: #006267 !important;
+  box-shadow: 0 20px 36px rgba(0, 71, 73, 0.28);
+}
+
+.login-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.login-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, #08b68e, #00a8b0);
+}
+
+.login-brand-name {
+  margin-top: 10px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.login-brand-name strong {
+  color: #42dc9b;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.login-field .q-field__control {
+  min-height: 48px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.login-field .q-field__native,
+.login-field .q-field__input,
+.login-field .q-field__marginal {
+  color: #344054;
+  font-size: 14px;
+}
+
+.login-field .q-icon {
+  color: #56adbc;
+}
+
+.login-password-toggle {
+  color: #56adbc;
+}
+
+.login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: -5px;
+}
+
+.login-remember {
+  color: #b9e4dd;
+  font-size: 13px;
+}
+
+.login-remember .q-checkbox__inner {
+  color: #38c9a0;
+}
+
+.login-link {
+  min-height: auto;
+  padding: 0;
+  color: #42dc9b;
+  font-size: 13px;
+  text-decoration: underline;
+}
+
+.login-submit {
+  min-height: 44px;
+  border-radius: 9px;
+  color: #fff;
+  background: #18bd82 !important;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 8px 16px rgba(13, 142, 101, 0.25);
+}
+
+.login-register {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: -5px;
+  color: #b9e4dd;
+  font-size: 13px;
+}
+
+.login-footer {
+  margin-top: 30px;
+  color: rgba(126, 202, 199, 0.72);
+  font-size: 11px;
+  text-align: center;
+}
+
+.login-decoration {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.login-decoration-top {
+  top: -90px;
+  right: 6%;
+  width: 180px;
+  height: 180px;
+}
+
+.login-decoration-bottom {
+  bottom: -120px;
+  left: 8%;
+  width: 260px;
+  height: 260px;
+}
+
+@media (max-width: 520px) {
+  .login-card {
+    padding: 34px 24px 30px;
+  }
+}
+
+.auth-page {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  overflow: auto;
+  padding: 24px 16px;
+  background: linear-gradient(135deg, #8edbd2 0%, #78d6ad 52%, #88d99b 100%);
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 400px;
+  max-width: 100%;
+  padding: 42px 40px 34px;
+  border-radius: 20px;
+  color: #fff;
+  background: #006267;
+  box-shadow: 0 20px 36px rgba(0, 71, 73, 0.28);
+}
+
+.auth-card-register {
+  width: 540px;
+}
+
+.auth-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.auth-brand-compact {
+  margin-bottom: 22px;
+}
+
+.auth-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  color: #fff;
+  background: linear-gradient(135deg, #08b68e, #00a8b0);
+}
+
+.auth-brand-name {
+  margin-top: 10px;
+  color: #fff;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.auth-brand-name strong {
+  color: #42dc9b;
+}
+
+.auth-heading {
+  margin-bottom: 20px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.auth-subheading {
+  margin-top: -14px;
+  margin-bottom: 22px;
+  color: #b9e4dd;
+  font-size: 12px;
+}
+
+.auth-info-box {
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  border-radius: 9px;
+  color: #d2f0e9;
+  background: rgba(0, 48, 51, 0.58);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-field-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.auth-field .q-field__control {
+  min-height: 48px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.auth-field .q-field__native,
+.auth-field .q-field__input,
+.auth-field .q-field__marginal {
+  color: #344054;
+  font-size: 14px;
+}
+
+.auth-field .q-icon,
+.auth-password-toggle {
+  color: #56adbc;
+}
+
+.auth-field-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: -14px;
+  color: #b9e4dd;
+  font-size: 11px;
+}
+
+.auth-submit {
+  min-height: 44px;
+  border-radius: 9px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.auth-submit-secondary {
+  background: #0795a3 !important;
+}
+
+.auth-submit-register {
+  background: #fbc532 !important;
+  color: #143c3c;
+}
+
+.auth-back {
+  display: flex;
+  margin: 24px auto 0;
+  color: #b9e4dd;
+  font-size: 13px;
+}
+
+.auth-footer {
+  margin-top: 30px;
+  color: rgba(126, 202, 199, 0.72);
+  font-size: 11px;
+  text-align: center;
+}
+
+.auth-decoration {
+  position: absolute;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.auth-decoration-top {
+  top: -90px;
+  right: 6%;
+  width: 180px;
+  height: 180px;
+}
+
+.auth-decoration-bottom {
+  bottom: -120px;
+  left: 8%;
+  width: 260px;
+  height: 260px;
+}
+
+@media (max-width: 600px) {
+  .auth-card {
+    padding: 34px 24px 30px;
+  }
+
+  .auth-field-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =====================================================
    LOGO DO SISTEMA
 ===================================================== */
 
@@ -129,6 +472,139 @@
   color: #4AD66D;
 }
 
+
+.pessoas-page {
+  padding: 32px;
+}
+
+.pessoas-header {
+  padding: 28px;
+}
+
+.pessoas-btn-nova {
+  min-width: 180px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.field-label {
+  font-weight: 700;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #334155;
+}
+
+.pessoas-busca,
+.pessoas-select {
+  width: 100%;
+}
+
+.pessoas-table-card {
+  margin-top: 24px;
+}
+
+.outros-itens-page {
+  padding: 32px;
+}
+
+.outros-itens-header {
+  padding: 28px;
+}
+
+.outros-itens-btn-novo {
+  min-width: 132px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.outros-itens-busca {
+  width: 100%;
+}
+
+.outros-itens-filtro {
+  min-width: 132px;
+}
+
+.outros-itens-table-card {
+  margin-top: 24px;
+}
+
+.outros-itens-empty-state {
+  min-height: 350px;
+}
+
+.outros-itens-empty-icon {
+  background: #f2f4f7;
+  color: #d0d5dd;
+}
+
+.pessoas-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  padding: 32px 20px;
+  text-align: center;
+}
+
+.pessoas-empty-icon {
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eef2ff;
+  color: #4338ca;
+  margin-bottom: 16px;
+}
+
+.pessoas-empty-state h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.pessoas-empty-state p {
+  margin: 10px 0 0;
+  color: #98a2b3;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pessoas-empty-btn {
+  margin-top: 20px;
+  border-radius: 10px;
+  min-width: 180px;
+  font-weight: 700;
+}
+
+.acao-btn {
+  margin: 0 2px;
+}
+
+.status-chip {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0 10px;
+}
+
+.status-ativo {
+  background: #ecfdf3;
+  color: #027a48;
+}
+
+.status-inativo {
+  background: #f2f4f7;
+  color: #475467;
+}
+
+.status-default {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
 
 /* =====================================================
    DASHBOARD
@@ -4788,4 +5264,1148 @@ textarea{
 
 }
 
+/* ==========================================================
+   HEADER DE DEPARTAMENTOS
+========================================================== */
 
+.departamentos-header {
+
+  padding: 28px;
+  
+  
+  background: #ffffff;
+
+  border-radius: 12px;
+
+}
+
+
+/* ==========================================================
+   BOTÃO NOVO DEPARTAMENTO
+========================================================== */
+
+.departamentos-btn-novo {
+
+  min-height: 40px;
+
+  padding: 0 20px;
+
+  font-weight: 600;
+
+  border-radius: 8px;
+
+}
+
+
+/* ==========================================================
+   CARDS DE RESUMO
+========================================================== */
+
+.departamentos-resumo-card {
+
+  min-width: 210px;
+
+  min-height: 62px;
+
+  padding: 12px 16px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+}
+
+
+/* ==========================================================
+   ÍCONES DOS CARDS
+========================================================== */
+
+.departamentos-resumo-icone {
+
+  width: 34px;
+
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 8px;
+
+}
+
+
+/* TOTAL */
+
+.departamentos-icone-total {
+
+  background: #f1f3f5;
+
+  color: #334155;
+
+}
+
+
+/* BENS */
+
+.departamentos-icone-bens {
+
+  background: #dcfce7;
+
+  color: #16a34a;
+
+}
+
+
+/* GESTORES */
+
+.departamentos-icone-gestores {
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+}
+
+
+/* ==========================================================
+   NÚMEROS DOS CARDS
+========================================================== */
+
+.departamentos-resumo-numero {
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  color: #111827;
+
+}
+
+
+/* ==========================================================
+   LABEL DOS CARDS
+========================================================== */
+
+.departamentos-resumo-label {
+
+  margin-top: 3px;
+
+  font-size: 12px;
+
+  color: #64748b;
+
+  white-space: nowrap;
+
+}
+
+
+/* ==========================================================
+   LABEL DOS FILTROS
+========================================================== */
+
+.departamentos-field-label {
+
+  margin-bottom: 6px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: #334155;
+
+}
+
+
+/* ==========================================================
+   CAMPO DE BUSCA
+========================================================== */
+
+.departamentos-busca {
+
+  width: 100%;
+
+}
+
+
+/* ==========================================================
+   FILTROS
+========================================================== */
+
+.departamentos-filtro {
+
+  width: 150px;
+
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 768px) {
+
+  .departamentos-header {
+
+    padding: 20px;
+
+  }
+
+  .departamentos-resumo-card {
+
+    min-width: 180px;
+
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .departamentos-header {
+
+    padding: 16px;
+
+  }
+
+
+  .departamentos-resumo-card {
+
+    width: 100%;
+
+  }
+
+
+  .departamentos-btn-novo {
+
+    margin-top: 12px;
+
+  }
+
+}
+
+
+
+/* ==========================================================
+   DEPARTAMENTOS TABLE
+========================================================== */
+
+.departamentos-table {
+  width: 100%;
+
+  margin-top: 20px;
+}
+
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.departamentos-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 18px;
+
+  width: 100%;
+}
+
+
+/* ==========================================================
+   CARD DO DEPARTAMENTO
+========================================================== */
+
+.departamento-card {
+
+  position: relative;
+
+  min-height: 212px;
+
+  padding: 22px 22px 18px;
+
+  border-radius: 15px;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+}
+
+
+/* ==========================================================
+   HOVER
+========================================================== */
+
+.departamento-card:hover {
+
+  transform: translateY(-2px);
+
+  border-color: #d8dee8;
+
+  box-shadow:
+    0 7px 18px rgba(15, 23, 42, 0.08);
+
+}
+
+
+/* ==========================================================
+   SIGLA
+========================================================== */
+
+.departamento-sigla {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  margin-bottom: 11px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+/* ==========================================================
+   NOME
+========================================================== */
+
+.departamento-nome {
+
+  color: #0f172a;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+
+  margin-bottom: 5px;
+}
+
+
+/* ==========================================================
+   DESCRIÇÃO
+========================================================== */
+
+.departamento-descricao {
+
+  color: #64748b;
+
+  font-size: 12px;
+
+  line-height: 1.45;
+
+  min-height: 35px;
+
+  max-width: 100%;
+}
+
+
+/* ==========================================================
+   INFORMAÇÕES
+========================================================== */
+
+.departamento-informacoes {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-top: 17px;
+
+  padding-top: 13px;
+
+  border-top: 1px solid #eef1f5;
+}
+
+
+/* ==========================================================
+   INFORMAÇÃO INDIVIDUAL
+========================================================== */
+
+.departamento-informacao {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  min-width: 0;
+}
+
+
+/* ==========================================================
+   ÍCONE DOS BENS
+========================================================== */
+
+.departamento-informacao-icone {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 7px;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================
+   ÍCONE DOS CONSERTOS
+========================================================== */
+
+.departamento-consertos-icone {
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  border-radius: 7px;
+
+  background: #eff6ff;
+
+  color: #3b82f6;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================
+   TEXTO DA INFORMAÇÃO
+========================================================== */
+
+.departamento-informacao-texto {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   VALOR
+========================================================== */
+
+.departamento-informacao-texto strong {
+
+  color: #334155;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.departamento-informacao-texto span {
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================================
+   BARRA INFERIOR
+========================================================== */
+
+.departamento-barra {
+
+  position: absolute;
+
+  left: 22px;
+  right: 22px;
+  bottom: 17px;
+
+  height: 3px;
+
+  border-radius: 10px;
+
+  opacity: 0.28;
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 1100px) {
+
+  .departamentos-grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .departamentos-grid {
+
+    grid-template-columns: 1fr;
+
+    gap: 14px;
+
+  }
+
+  .departamento-card {
+
+    min-height: 200px;
+
+  }
+
+}
+
+
+/* ==========================================================
+   ACESSIBILIDADE / INTERAÇÃO
+========================================================== */
+
+.departamento-card:active {
+
+  transform: translateY(0);
+
+}
+
+/* ==========================================================
+    VISUALIZAÇÃO DE DEPARTAMENTO
+========================================================== */
+
+.visualizacao-departamento-page {
+
+  background: #f5f7fa;
+
+  min-height: 100vh;
+
+  padding: 24px 26px;
+
+  color: #0f172a;
+
+}
+
+
+/* ==========================================================
+   CABEÇALHO
+========================================================== */
+
+.visualizacao-departamento-header {
+
+  margin-bottom: 22px;
+
+}
+
+
+/* ==========================================================
+   VOLTAR
+========================================================== */
+
+.visualizacao-departamento-voltar {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  width: fit-content;
+
+  margin-bottom: 18px;
+
+}
+
+
+.visualizacao-departamento-voltar:hover {
+
+  color: #0f172a;
+
+}
+
+
+/* ==========================================================
+   IDENTIFICAÇÃO
+========================================================== */
+
+.visualizacao-departamento-identificacao {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 14px;
+
+}
+
+
+.visualizacao-departamento-sigla {
+
+  width: 54px;
+
+  height: 54px;
+
+  border-radius: 12px;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+}
+
+
+.visualizacao-departamento-titulo {
+
+  font-size: 24px;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+}
+
+
+.visualizacao-departamento-subtitulo {
+
+  margin-top: 5px;
+
+  color: #64748b;
+
+  font-size: 14px;
+
+}
+
+
+/* ==========================================================
+   RESUMO
+========================================================== */
+
+.visualizacao-departamento-resumo {
+
+  display: flex;
+
+  gap: 14px;
+
+  margin-bottom: 24px;
+
+  flex-wrap: wrap;
+
+}
+
+
+.visualizacao-departamento-resumo-card {
+
+  width: 194px;
+
+  min-height: 136px;
+
+  padding: 20px;
+
+  border-radius: 16px;
+
+  background: white;
+
+}
+
+
+.visualizacao-departamento-resumo-icone {
+
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 11px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+}
+
+
+/* CORES DOS ÍCONES */
+
+.visualizacao-departamento-resumo-icone.total {
+
+  background: #f1f5f9;
+
+  color: #334155;
+
+}
+
+
+.visualizacao-departamento-resumo-icone.ativos {
+
+  background: #d1fae5;
+
+  color: #059669;
+
+}
+
+
+.visualizacao-departamento-resumo-icone.manutencao {
+
+  background: #ffedd5;
+
+  color: #ea580c;
+
+}
+
+
+.visualizacao-departamento-resumo-icone.concertos {
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+}
+
+
+.visualizacao-departamento-resumo-numero {
+
+  font-size: 26px;
+
+  font-weight: 700;
+
+  line-height: 1;
+
+}
+
+
+.visualizacao-departamento-resumo-label {
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  margin-top: 5px;
+
+}
+
+
+/* ==========================================================
+   FILTROS
+========================================================== */
+
+.visualizacao-departamento-filtros {
+
+  display: flex;
+
+  gap: 12px;
+
+  margin-bottom: 24px;
+
+}
+
+
+.visualizacao-departamento-busca {
+
+  flex: 1;
+
+}
+
+
+.visualizacao-departamento-filtro {
+
+  width: 150px;
+
+}
+
+
+/* ==========================================================
+   CARD DE BENS
+========================================================== */
+
+.visualizacao-departamento-bens {
+
+  background: white;
+
+  border-radius: 16px;
+
+  overflow: hidden;
+
+}
+
+
+/* ==========================================================
+   CABEÇALHO DOS BENS
+========================================================== */
+
+.visualizacao-departamento-bens-header {
+
+  min-height: 58px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 24px;
+
+  border-bottom: 1px solid #e5e7eb;
+
+}
+
+
+.visualizacao-departamento-bens-titulo {
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+}
+
+
+.visualizacao-departamento-bens-contador {
+
+  margin-left: 8px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+
+}
+
+
+.visualizacao-departamento-bens-total {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+
+}
+
+
+/* ==========================================================
+   TABELA
+========================================================== */
+
+.visualizacao-departamento-table {
+
+  background: white;
+
+}
+
+
+.visualizacao-departamento-table :deep(thead tr) {
+
+  background: #f8fafc;
+
+}
+
+
+.visualizacao-departamento-table :deep(th) {
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: .04em;
+
+}
+
+
+.visualizacao-departamento-table :deep(td) {
+
+  color: #475569;
+
+  font-size: 13px;
+
+}
+
+
+/* ==========================================================
+   ID
+========================================================== */
+
+.visualizacao-departamento-id {
+
+  color: #059669;
+
+  background: #ecfdf5;
+
+  padding: 4px 7px;
+
+  border-radius: 5px;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  width: fit-content;
+
+}
+
+
+/* ==========================================================
+   DESCRIÇÃO
+========================================================== */
+
+.visualizacao-departamento-descricao {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #1e293b;
+
+  font-weight: 500;
+
+}
+
+
+.visualizacao-departamento-produto-icone {
+
+  width: 28px;
+
+  height: 28px;
+
+  border-radius: 7px;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+/* ==========================================================
+   CATEGORIA
+========================================================== */
+
+.visualizacao-departamento-categoria {
+
+  border-radius: 6px;
+
+  padding: 5px 9px;
+
+  font-size: 11px;
+
+}
+
+
+/* ==========================================================
+   RESPONSÁVEL
+========================================================== */
+
+.visualizacao-departamento-responsavel {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+}
+
+
+.visualizacao-departamento-avatar {
+
+  width: 26px;
+
+  height: 26px;
+
+  border-radius: 50%;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.visualizacao-departamento-status {
+
+  border-radius: 12px;
+
+  padding: 5px 10px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+}
+
+
+/* ==========================================================
+   AÇÕES
+========================================================== */
+
+.visualizacao-departamento-acoes {
+
+  display: flex;
+
+  justify-content: center;
+
+  gap: 3px;
+
+}
+
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .visualizacao-departamento-resumo-card {
+
+    width: calc(50% - 7px);
+
+  }
+
+  .visualizacao-departamento-filtros {
+
+    flex-wrap: wrap;
+
+  }
+
+  .visualizacao-departamento-busca {
+
+    width: 100%;
+
+    flex-basis: 100%;
+
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .visualizacao-departamento-page {
+
+    padding: 18px 14px;
+
+  }
+
+  .visualizacao-departamento-titulo {
+
+    font-size: 20px;
+
+  }
+
+  .visualizacao-departamento-resumo-card {
+
+    width: 100%;
+
+  }
+
+  .visualizacao-departamento-filtro {
+
+    flex: 1;
+
+    width: auto;
+
+  }
+
+  .visualizacao-departamento-bens-header {
+
+    padding: 14px;
+
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+  }
+
+}

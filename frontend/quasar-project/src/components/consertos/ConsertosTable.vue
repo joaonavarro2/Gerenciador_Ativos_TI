@@ -61,10 +61,9 @@ defineProps({
   filtros: Object,
 })
 
-defineEmits(['visualizar', 'editar'])
+defineEmits(['visualizar', 'editar', 'excluir'])
 
 const columns = computed(() => [
-  { name: 'id', label: 'ID', field: 'id' },
   { name: 'ativoId', label: 'Ativo', field: 'ativoId' },
   { name: 'problema', label: 'Problema', field: 'problema' },
   { name: 'tecnico', label: 'Técnico', field: 'tecnico' },

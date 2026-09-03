@@ -5,8 +5,14 @@
       :escritorios="escritoriosFiltrados"
       :possui-filtros="possuiFiltros"
       :filtros="filtros"
+      @visualizar="abrirVisualizacaoEscritorio"
+      @editar="abrirEdicaoEscritorio"
+      @excluir="abrirExclusaoEscritorio"
     />
-    <NovoEscritorio v-model="NovoEscritorios" @salvar="adicionarEscritorio"/>
+    <NovoEscritorio v-model="NovoEscritorios" @salvo="adicionarEscritorio"/>
+    <VisualizarEscritorio v-model="dialogVisualizarEscritorio" :escritorio="escritorioSelecionado" />
+    <EditarEscritorio v-model="dialogEditarEscritorio" :escritorio="escritorioSelecionado" @salvar="atualizarEscritorio" />
+    <ExcluirEscritorio v-model="dialogExcluirEscritorio" :escritorio="escritorioSelecionado" @excluir="removerEscritorio" />
   </q-page>
 </template>
 
@@ -15,6 +21,9 @@ import { computed, ref } from 'vue'
 import EscritoriosHeader from '@/components/escritorios/EscritoriosHeader.vue'
 import EscritoriosTable from '@/components/escritorios/EscritoriosTable.vue'
 import NovoEscritorio from '@/components/escritorios/cards/NovoEscritorio.vue'
+import VisualizarEscritorio from '@/components/escritorios/cards/VisualizarEscritorio.vue'
+import EditarEscritorio from '@/components/escritorios/cards/EditarEscritorio.vue'
+import ExcluirEscritorio from '@/components/escritorios/cards/ExcluirEscritorio.vue'
 
 
 
@@ -83,14 +92,50 @@ const filtros = ref({
 })
 
 const NovoEscritorios = ref(false)
+const dialogVisualizarEscritorio = ref(false)
+const dialogEditarEscritorio = ref(false)
+const dialogExcluirEscritorio = ref(false)
+const escritorioSelecionado = ref({})
 
 const possuiFiltros = computed(() => Object.values(filtros.value).some(value => value !== null && value !== ''))
 
-
 function abrirNovoEscritorio() {
-  NovoEscritorios.value = true 
+  NovoEscritorios.value = true
 }
 
+function abrirVisualizacaoEscritorio(escritorio) {
+  escritorioSelecionado.value = escritorio
+  dialogVisualizarEscritorio.value = true
+}
+
+function abrirEdicaoEscritorio(escritorio) {
+  escritorioSelecionado.value = escritorio
+  dialogEditarEscritorio.value = true
+}
+
+function abrirExclusaoEscritorio(escritorio) {
+  escritorioSelecionado.value = escritorio
+  dialogExcluirEscritorio.value = true
+}
+
+function adicionarEscritorio(novoEscritorio) {
+  escritorios.value.unshift({
+    id: Date.now(),
+    ...novoEscritorio,
+  })
+}
+
+function atualizarEscritorio(escritorioAtualizado) {
+  escritorios.value = escritorios.value.map(item =>
+    item.id === escritorioAtualizado.id
+      ? { ...item, ...escritorioAtualizado }
+      : item,
+  )
+}
+
+function removerEscritorio(id) {
+  escritorios.value = escritorios.value.filter(item => item.id !== id)
+}
 
 function texto(valor) {
   if (valor === null || valor === undefined) return ''

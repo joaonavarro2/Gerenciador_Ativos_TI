@@ -8,11 +8,17 @@
       :filtros="filtros"
       @visualizar="abrirModalVisualizacao"
       @editar="abrirModalEdicao"
+      @excluir="abrirModalExclusao"
     />
 
     <NovoReparo v-model="dialogNovoReparo" @salvar="adicionarReparo" />
     <EditarReparo v-model="dialogEditarReparo" :reparo="reparoSelecionado" @salvar="atualizarReparo" />
     <VisualizarReparo v-model="dialogVisualizarReparo" :reparo="reparoSelecionado" />
+    <ExcluirReparo
+      v-model="dialogExcluirReparo"
+      :reparo="reparoSelecionado"
+      @excluir="excluirReparo"
+    />
   </q-page>
 </template>
 
@@ -24,10 +30,12 @@ import ConsertosTable from '@/components/consertos/ConsertosTable.vue'
 import NovoReparo from '@/components/consertos/card/NovoReparo.vue'
 import EditarReparo from '@/components/consertos/card/EditarReparo.vue'
 import VisualizarReparo from '@/components/consertos/card/VisualizarReparo.vue'
+import ExcluirReparo from '@/components/consertos/card/ExcluirReparo.vue'
 
 const dialogNovoReparo = ref(false)
 const dialogEditarReparo = ref(false)
 const dialogVisualizarReparo = ref(false)
+const dialogExcluirReparo = ref(false)
 const reparoSelecionado = ref({})
 
 const consertos = ref([
@@ -52,6 +60,15 @@ function abrirModalEdicao(reparo) {
 function abrirModalVisualizacao(reparo) {
   reparoSelecionado.value = reparo
   dialogVisualizarReparo.value = true
+}
+
+function abrirModalExclusao(reparo) {
+  reparoSelecionado.value = reparo
+  dialogExcluirReparo.value = true
+}
+
+function excluirReparo(id) {
+  consertos.value = consertos.value.filter(item => item.id !== id)
 }
 
 function adicionarReparo(novoReparo) {

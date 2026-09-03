@@ -1,0 +1,6 @@
+.git
+frontend/quasar-project/node_modules
+frontend/quasar-project/.quasar
+frontend/quasar-project/dist
+frontend/quasar-project/.vscode
+**/npm-debug.log*
