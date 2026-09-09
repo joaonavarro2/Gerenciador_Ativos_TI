@@ -61,6 +61,11 @@ const routes = [
     {
       path:'outros-itens',
       component:() => import('@/pages/outrosItens/OutrosItensPagge.vue')
+    },
+
+    {
+      path:'perfil',
+      component:() => import('@/pages/perfil/PerfilPage.vue')
     }
     ]
   },

@@ -26,6 +26,8 @@
         round
         icon="account_circle"
         class="header-user-button"
+        aria-label="Abrir perfil"
+        @click="$router.push('/perfil')"
       />
 
     </q-toolbar>

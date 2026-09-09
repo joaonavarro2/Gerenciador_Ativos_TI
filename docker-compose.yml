@@ -17,7 +17,7 @@ services:
     image: postgres:16-alpine
     container_name: ativos-ti-database
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-ativos_ti}
+      POSTGRES_DB: ${POSTGRES_DB:-stecar}
       POSTGRES_USER: ${POSTGRES_USER:-ativos_ti}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ativos_ti_dev}
     ports:
