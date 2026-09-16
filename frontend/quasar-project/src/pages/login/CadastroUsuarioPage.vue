@@ -1,5 +1,5 @@
 <template>
-  <div class="auth-page">
+  <div ref="authPage" class="auth-page">
     <div class="auth-decoration auth-decoration-top" />
     <div class="auth-decoration auth-decoration-bottom" />
 
@@ -31,7 +31,19 @@
           </q-input>
         </div>
 
-        <q-select v-model="form.funcao" class="auth-field" outlined dense label="Função" :options="funcoes" :rules="[obrigatorio]" hide-bottom-space>
+        <q-select
+          ref="funcaoSelect"
+          v-model="form.funcao"
+          class="auth-field"
+          outlined
+          dense
+          label="Função"
+          :options="funcoes"
+          :rules="[obrigatorio]"
+          hide-bottom-space
+          @popup-show="prenderMenu"
+          @popup-hide="soltarMenu"
+        >
           <template #prepend><q-icon name="badge" /></template>
         </q-select>
         <div class="auth-field-hint"><q-icon name="info_outline" /> As funções disponíveis serão carregadas do backend.</div>
@@ -46,20 +58,27 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onBeforeUnmount, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 
 const $q = useQuasar()
 const router = useRouter()
+const authPage = ref(null)
+const funcaoSelect = ref(null)
 const mostrarSenha = ref(false)
 const mostrarConfirmacao = ref(false)
-const funcoes = ['Administrador', 'Gestor', 'Técnico', 'Operador']
+const funcoes = ['Administrador', 'Administrador Geral']
 const form = ref({ nome: '', email: '', senha: '', confirmarSenha: '', funcao: null })
 
 function obrigatorio(valor) { return !!valor || 'Campo obrigatório' }
 function emailValido(valor) { return /.+@.+\..+/.test(valor) || 'Informe um e-mail válido' }
 function senhasIguais(valor) { return valor === form.value.senha || 'As senhas precisam ser iguais' }
+function fecharMenuAoRolar() { funcaoSelect.value?.hidePopup() }
+function prenderMenu() { authPage.value?.addEventListener('scroll', fecharMenuAoRolar, { passive: true }) }
+function soltarMenu() { authPage.value?.removeEventListener('scroll', fecharMenuAoRolar) }
 function cadastrar() { $q.notify({ type: 'positive', message: 'Usuário cadastrado com sucesso.' }); router.push('/login') }
 function voltar() { router.push('/login') }
+
+onBeforeUnmount(soltarMenu)
 </script>
