@@ -3,9 +3,13 @@ package br.com.stecar.stecar_backend.controller;
 import br.com.stecar.stecar_backend.dto.LoginRequestDTO;
 import br.com.stecar.stecar_backend.dto.LoginResponseDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioResponseDTO;
+import br.com.stecar.stecar_backend.dto.UsuarioCadastroRequestDTO;
+import br.com.stecar.stecar_backend.dto.RecuperarSenhaRequestDTO;
+import br.com.stecar.stecar_backend.dto.RedefinirSenhaRequestDTO;
 import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import br.com.stecar.stecar_backend.service.AuthService;
+import br.com.stecar.stecar_backend.service.UsuarioService;
 
 import jakarta.validation.Valid;
 
@@ -19,13 +23,22 @@ public class AuthController {
 
     private final AuthService authService;
     private final UsuarioRepository usuarioRepository;
+    private final UsuarioService usuarioService;
 
     public AuthController(
             AuthService authService,
-            UsuarioRepository usuarioRepository) {
+            UsuarioRepository usuarioRepository,
+            UsuarioService usuarioService) {
 
         this.authService = authService;
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
+    }
+
+    @PostMapping("/cadastro")
+    public ResponseEntity<UsuarioResponseDTO> cadastrar(
+            @Valid @RequestBody UsuarioCadastroRequestDTO dados) {
+        return ResponseEntity.status(201).body(usuarioService.cadastrarPublico(dados));
     }
 
     @PostMapping("/login")
@@ -33,6 +46,20 @@ public class AuthController {
             @Valid @RequestBody LoginRequestDTO dados) {
 
         return ResponseEntity.ok(authService.login(dados));
+    }
+
+    @PostMapping("/recuperar-senha")
+    public ResponseEntity<Void> recuperarSenha(
+            @Valid @RequestBody RecuperarSenhaRequestDTO dados) {
+        authService.solicitarRecuperacao(dados.getEmail());
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/redefinir-senha")
+    public ResponseEntity<Void> redefinirSenha(
+            @Valid @RequestBody RedefinirSenhaRequestDTO dados) {
+        authService.redefinirSenha(dados.getToken(), dados.getNovaSenha());
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")

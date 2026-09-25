@@ -3,6 +3,7 @@ package br.com.stecar.stecar_backend.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public class UsuarioRequestDTO {
 
@@ -19,8 +20,11 @@ public class UsuarioRequestDTO {
     @Size(min = 8, max = 100, message = "A senha deve ter entre 8 e 100 caracteres.")
     private String senha;
 
+    @Pattern(
+    regexp = "ADMINISTRADOR GERAL|ADMINISTRADOR",
+    message = "A função deve ser ADMINISTRADOR GERAL ou ADMINISTRADOR."
+    )
     @NotBlank(message = "A função é obrigatória.")
-    @Size(max = 50, message = "A função deve ter no máximo 50 caracteres.")
     private String funcao;
 
     public UsuarioRequestDTO() {

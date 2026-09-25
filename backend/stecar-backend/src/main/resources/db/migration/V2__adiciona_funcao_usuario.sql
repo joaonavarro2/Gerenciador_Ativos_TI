@@ -1,0 +1,6 @@
+ALTER TABLE usuario
+DROP CONSTRAINT IF EXISTS chk_usuario_funcao;
+
+ALTER TABLE usuario
+ADD CONSTRAINT chk_usuario_funcao
+CHECK (funcao IN ('ADMINISTRADOR GERAL', 'ADMINISTRADOR', 'USUARIO'));

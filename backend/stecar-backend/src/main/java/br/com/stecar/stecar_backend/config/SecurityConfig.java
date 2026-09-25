@@ -20,6 +20,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -34,6 +39,7 @@ public class SecurityConfig {
         http
             // Como a API utiliza JWT, não precisamos de sessão tradicional.
             .csrf(csrf -> csrf.disable())
+            .cors(Customizer.withDefaults())
 
             // Configura a aplicação para trabalhar de forma stateless.
             .sessionManagement(session ->
@@ -42,7 +48,14 @@ public class SecurityConfig {
 
             // Define quais endpoints precisam de autenticação.
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(
+                    "/api/auth/login",
+                    "/api/auth/cadastro",
+                    "/api/auth/recuperar-senha",
+                    "/api/auth/redefinir-senha",
+                    "/error"
+                ).permitAll()
+                .requestMatchers("/api/usuarios/**").hasAuthority("ADMINISTRADOR_GERAL")
                 .anyRequest().authenticated()
             )
 
@@ -52,6 +65,18 @@ public class SecurityConfig {
             );
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

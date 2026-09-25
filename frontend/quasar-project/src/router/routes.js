@@ -1,19 +1,28 @@
 const routes = [
   {
     path: '/',
-    component: () => import('@/pages/login/LoginPage.vue')
+    component: () => import('@/pages/login/LoginPage.vue'),
+    meta: { public: true }
   },
   {
     path: '/login',
-    component: () => import('@/pages/login/LoginPage.vue')
+    component: () => import('@/pages/login/LoginPage.vue'),
+    meta: { public: true }
   },
   {
     path: '/recuperar-senha',
-    component: () => import('@/pages/login/RecuperarSenhaPage.vue')
+    component: () => import('@/pages/login/RecuperarSenhaPage.vue'),
+    meta: { public: true }
+  },
+  {
+    path: '/redefinir-senha',
+    component: () => import('@/pages/login/RedefinirSenhaPage.vue'),
+    meta: { public: true }
   },
   {
     path: '/cadastro-usuario',
-    component: () => import('@/pages/login/CadastroUsuarioPage.vue')
+    component: () => import('@/pages/login/CadastroUsuarioPage.vue'),
+    meta: { public: true }
   },
   {
     path: '/',

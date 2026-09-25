@@ -104,16 +104,18 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { usuarioAtual } from '@/services/auth.js'
 
 const $q = useQuasar()
 const dialogEdicao = ref(false)
 const dialogSenha = ref(false)
 const mostrarSenhaAtual = ref(false)
 const mostrarSenhaNova = ref(false)
+const sessao = usuarioAtual()
 const perfil = reactive({
-  nome: localStorage.getItem('usuario_nome') || 'Mariana Oliveira',
-  email: localStorage.getItem('usuario_email') || 'mariana.oliveira@stecar.com.br',
-  cargo: localStorage.getItem('usuario_cargo') || 'Analista de TI',
+  nome: sessao?.nomeCompleto || localStorage.getItem('usuario_nome') || 'Usuário',
+  email: sessao?.email || localStorage.getItem('usuario_email') || '',
+  cargo: sessao?.funcao || localStorage.getItem('usuario_cargo') || 'USUÁRIO',
   telefone: localStorage.getItem('usuario_telefone') || '(71) 99999-1234',
   id: localStorage.getItem('usuario_id') || 'ST-2024-0187',
   escritorio: localStorage.getItem('usuario_escritorio') || 'Unidade Salvador',

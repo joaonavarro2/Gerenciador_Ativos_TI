@@ -6,6 +6,9 @@ import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.util.Locale;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,25 +45,34 @@ public class UsuarioService {
 
     // Cadastra um novo usuário
     public UsuarioResponseDTO cadastrar(UsuarioRequestDTO dados) {
+        return cadastrar(dados.getNomeCompleto(), dados.getEmail(), dados.getSenha(), dados.getFuncao());
+    }
+
+    public UsuarioResponseDTO cadastrarPublico(
+            br.com.stecar.stecar_backend.dto.UsuarioCadastroRequestDTO dados) {
+        return cadastrar(dados.getNomeCompleto(), dados.getEmail(), dados.getSenha(), "USUARIO");
+    }
+
+    private UsuarioResponseDTO cadastrar(String nomeCompleto, String email, String senha, String funcao) {
+        email = normalizarEmail(email);
 
         // Verifica se o e-mail já está cadastrado
-        if (usuarioRepository.existsByEmail(dados.getEmail())) {
-            throw new RuntimeException(
-                    "Já existe um usuário cadastrado com este e-mail."
-            );
+        if (usuarioRepository.existsByEmail(email)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Já existe um usuário cadastrado com este e-mail.");
         }
 
         Usuario usuario = new Usuario();
 
-        usuario.setNomeCompleto(dados.getNomeCompleto());
-        usuario.setEmail(dados.getEmail());
+        usuario.setNomeCompleto(nomeCompleto);
+        usuario.setEmail(email);
 
         // A senha nunca é salva em texto puro
         usuario.setSenha(
-                passwordEncoder.encode(dados.getSenha())
+                passwordEncoder.encode(senha)
         );
 
-        usuario.setFuncao(dados.getFuncao());
+        usuario.setFuncao(funcao);
 
         // Novo usuário começa ativo
         usuario.setStatus("ATIVO");
@@ -68,6 +80,10 @@ public class UsuarioService {
         Usuario usuarioSalvo = usuarioRepository.save(usuario);
 
         return converterParaResponseDTO(usuarioSalvo);
+    }
+
+    private String normalizarEmail(String email) {
+        return email.trim().toLowerCase(Locale.ROOT);
     }
 
     // Atualiza os dados de um usuário
@@ -82,9 +98,8 @@ public class UsuarioService {
                 .ifPresent(usuarioEncontrado -> {
 
                     if (!usuarioEncontrado.getId().equals(id)) {
-                        throw new RuntimeException(
-                                "Já existe outro usuário com este e-mail."
-                        );
+                        throw new ResponseStatusException(HttpStatus.CONFLICT,
+                                "Já existe outro usuário com este e-mail.");
                     }
                 });
 
@@ -128,9 +143,7 @@ public class UsuarioService {
     private Usuario buscarEntidadePorId(Long id) {
 
         return usuarioRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Usuário não encontrado.")
-                );
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado."));
     }
 
     // Converte Entity para ResponseDTO

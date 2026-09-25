@@ -19,8 +19,14 @@ public class AdminInitializer {
 
             String email = "joaonavarro@car.ba.gov.br";
 
-            // Verifica se o administrador já existe
-            if (usuarioRepository.existsByEmail(email)) {
+            // Atualiza a função do administrador criado pelas versões anteriores.
+            var administradorExistente = usuarioRepository.findByEmail(email);
+            if (administradorExistente.isPresent()) {
+                Usuario usuario = administradorExistente.get();
+                if ("Estagiario".equals(usuario.getFuncao())) {
+                    usuario.setFuncao("ADMINISTRADOR GERAL");
+                    usuarioRepository.save(usuario);
+                }
                 return;
             }
 
@@ -45,7 +51,7 @@ public class AdminInitializer {
                     passwordEncoder.encode(senha)
             );
 
-            usuario.setFuncao("Estagiario");
+            usuario.setFuncao("ADMINISTRADOR GERAL");
             usuario.setStatus("ATIVO");
 
             usuarioRepository.save(usuario);

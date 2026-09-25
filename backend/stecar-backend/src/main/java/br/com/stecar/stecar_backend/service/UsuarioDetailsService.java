@@ -61,6 +61,10 @@ public class UsuarioDetailsService implements UserDetailsService {
             return "ADMINISTRADOR";
         }
 
+        if ("USUARIO".equals(funcao)) {
+            return "USUARIO";
+        }
+
         throw new IllegalArgumentException(
                 "Função de usuário inválida: " + funcao
         );

@@ -3,21 +3,21 @@
 ===================================================== */
 
 .sidebar {
-  border-right: 1px solid #EAECF0;
+  border-right: 1px solid #eaecf0;
 }
 
 .menu-title {
   padding: 0 20px 10px;
-  color: #98A2B3;
+  color: #98a2b3;
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
 }
 
 .menu-icon {
-  color: #98A2B3;
+  color: #98a2b3;
   font-size: 22px;
-  transition: .25s;
+  transition: 0.25s;
 }
 
 .menu-text {
@@ -30,26 +30,26 @@
   min-height: 48px;
   border-radius: 10px;
   margin: 2px 10px;
-  transition: .25s;
+  transition: 0.25s;
 }
 
 .q-item:hover {
-  background: #F8FAFC;
+  background: #f8fafc;
 }
 
 .q-item:hover .menu-icon,
 .q-item:hover .menu-text {
-  color: #0F5D63;
+  color: #0f5d63;
 }
 
 .menu-active {
-  background: #EEF5F6;
-  border-left: 4px solid #0F5D63;
+  background: #eef5f6;
+  border-left: 4px solid #0f5d63;
 }
 
 .menu-active .menu-icon,
 .menu-active .menu-text {
-  color: #0F5D63;
+  color: #0f5d63;
 }
 
 .sidebar-footer {
@@ -77,7 +77,7 @@
 .header-title {
   font-size: 20px;
   font-weight: 600;
-  letter-spacing: .2px;
+  letter-spacing: 0.2px;
 }
 
 .header-user-button {
@@ -144,6 +144,29 @@
   gap: 20px;
 }
 
+.login-feedback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 20px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #d8f8e8;
+  background: rgba(24, 189, 130, 0.2);
+  font-size: 13px;
+}
+
+.login-feedback-success {
+  border: 1px solid rgba(255, 180, 0, 0.6);
+  color: #4a2d00;
+  background: linear-gradient(135deg, #fff4c9 0%, #ffe6a6 100%);
+  box-shadow: 0 8px 20px rgba(124, 82, 0, 0.18);
+}
+
+.login-feedback-success .q-icon {
+  color: #b86d00;
+}
+
 .login-field .q-field__control {
   min-height: 48px;
   border-radius: 10px;
@@ -155,6 +178,50 @@
 .login-field .q-field__marginal {
   color: #344054;
   font-size: 14px;
+}
+
+.login-page,
+.auth-page,
+.login-field,
+.auth-field,
+.q-field__messages,
+.q-field__error,
+.q-notification,
+.q-notification__message {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.login-field .q-field__bottom,
+.auth-field .q-field__bottom {
+  min-height: 22px;
+}
+
+.login-field .q-field__error,
+.auth-field .q-field__error,
+.q-field__messages {
+  color: #1f2937 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.35;
+}
+
+.login-field .q-field--error .q-field__control,
+.auth-field .q-field--error .q-field__control {
+  border-color: #a3a3a3 !important;
+  box-shadow: none;
+}
+
+.q-notification {
+  background: rgba(245, 245, 245, 0.96) !important;
+  border-left: 5px solid #4b5563 !important;
+  box-shadow: none !important;
+  color: #111827 !important;
+}
+
+.q-notification__message {
+  color: #111827 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
 }
 
 .login-field .q-icon {
@@ -352,6 +419,13 @@
   font-size: 14px;
 }
 
+.auth-field .q-field__error,
+.q-field__messages {
+  color: rgb(26, 12, 12) !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+}
+
 .auth-field .q-icon,
 .auth-password-toggle {
   color: #56adbc;
@@ -443,9 +517,7 @@
   height: 42px;
   border-radius: 10px;
 
-  background: linear-gradient(135deg,
-      #43d26b 0%,
-      #2bb7c8 100%);
+  background: linear-gradient(135deg, #43d26b 0%, #2bb7c8 100%);
 
   display: flex;
   justify-content: center;
@@ -465,13 +537,12 @@
 }
 
 .logo-white {
-  color: #FFFFFF;
+  color: #ffffff;
 }
 
 .logo-green {
-  color: #4AD66D;
+  color: #4ad66d;
 }
-
 
 .pessoas-page {
   padding: 32px;
@@ -650,7 +721,6 @@
 ========================================================== */
 
 .dashboard-summary {
-
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
@@ -661,14 +731,13 @@
 }
 
 .summary-card {
-
   padding: 22px;
 
   border-radius: 20px;
 
-  box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
 
-  transition: .25s;
+  transition: 0.25s;
 
   min-height: 140px;
 
@@ -677,39 +746,31 @@
   flex-direction: column;
 
   justify-content: space-between;
-
 }
 
 .summary-card:hover {
-
   transform: translateY(-4px);
 
-  box-shadow: 0 10px 24px rgba(15, 23, 42, .10);
-
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
 }
 
 .summary-card-top {
-
   display: flex;
 
   justify-content: space-between;
 
   align-items: flex-start;
-
 }
 
 .summary-title {
-
   font-size: 15px;
 
   color: #667085;
 
   font-weight: 500;
-
 }
 
 .summary-value {
-
   margin-top: 8px;
 
   font-size: 48px;
@@ -719,11 +780,9 @@
   color: #101828;
 
   line-height: 1;
-
 }
 
 .summary-footer {
-
   display: flex;
 
   align-items: center;
@@ -731,33 +790,25 @@
   gap: 8px;
 
   font-size: 14px;
-
 }
 
 .summary-period {
-
-  color: #98A2B3;
-
+  color: #98a2b3;
 }
 
 .summary-positive {
-
-  color: #16A34A;
+  color: #16a34a;
 
   font-weight: 600;
-
 }
 
 .summary-negative {
-
-  color: #DC2626;
+  color: #dc2626;
 
   font-weight: 600;
-
 }
 
 .summary-icon {
-
   width: 46px;
 
   height: 46px;
@@ -769,13 +820,10 @@
   align-items: center;
 
   justify-content: center;
-
 }
 
 .summary-icon .q-icon {
-
   font-size: 24px;
-
 }
 
 /* ==========================
@@ -783,51 +831,35 @@
 ========================== */
 
 .bg-success-light {
-
-  background: #DCFCE7;
-
+  background: #dcfce7;
 }
 
 .icon-success {
-
-  color: #22C55E;
-
+  color: #22c55e;
 }
 
 .bg-warning-light {
-
-  background: #FEF3C7;
-
+  background: #fef3c7;
 }
 
 .icon-warning {
-
-  color: #F97316;
-
+  color: #f97316;
 }
 
 .bg-danger-light {
-
-  background: #FEE2E2;
-
+  background: #fee2e2;
 }
 
 .icon-danger {
-
-  color: #EF4444;
-
+  color: #ef4444;
 }
 
 .bg-info-light {
-
-  background: #DBEAFE;
-
+  background: #dbeafe;
 }
 
 .icon-info {
-
-  color: #2563EB;
-
+  color: #2563eb;
 }
 
 /* ==========================================================
@@ -835,35 +867,23 @@
 ========================================================== */
 
 @media (max-width: 1400px) {
-
   .dashboard-summary {
-
     grid-template-columns: repeat(2, 1fr);
-
   }
-
 }
 
 @media (max-width: 768px) {
-
   .dashboard-summary {
-
     grid-template-columns: 1fr;
-
   }
 
   .summary-card {
-
     min-height: 120px;
-
   }
 
   .summary-value {
-
     font-size: 38px;
-
   }
-
 }
 
 /* ==========================================================
@@ -871,7 +891,6 @@
 ========================================================== */
 
 .dashboard-charts {
-
   display: grid;
 
   grid-template-columns: 2fr 1fr;
@@ -879,33 +898,27 @@
   gap: 24px;
 
   margin-top: 28px;
-
 }
 
 .dashboard-chart-card {
-
   border-radius: 20px;
 
   padding: 26px;
 
   min-height: 420px;
 
-  box-shadow: 0 4px 18px rgba(15, 23, 42, .06);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
 
   display: flex;
 
   flex-direction: column;
-
 }
 
 .dashboard-chart-header {
-
   margin-bottom: 25px;
-
 }
 
 .dashboard-chart-title {
-
   margin: 0;
 
   font-size: 30px;
@@ -913,21 +926,17 @@
   font-weight: 700;
 
   color: #101828;
-
 }
 
 .dashboard-chart-subtitle {
-
   margin-top: 6px;
 
   font-size: 15px;
 
-  color: #98A2B3;
-
+  color: #98a2b3;
 }
 
 .dashboard-chart-body {
-
   flex: 1;
 
   display: flex;
@@ -937,7 +946,6 @@
   align-items: stretch;
 
   width: 100%;
-
 }
 
 .monthly-bars {
@@ -1052,16 +1060,15 @@
 }
 
 .chart-placeholder {
-
   width: 100%;
 
   height: 100%;
 
-  border: 2px dashed #E4E7EC;
+  border: 2px dashed #e4e7ec;
 
   border-radius: 18px;
 
-  background: #FCFCFD;
+  background: #fcfcfd;
 
   display: flex;
 
@@ -1072,53 +1079,38 @@
   align-items: center;
 
   gap: 18px;
-
 }
 
 .chart-placeholder-icon {
-
-  color: #D0D5DD;
-
+  color: #d0d5dd;
 }
 
 .chart-placeholder span {
-
-  color: #98A2B3;
+  color: #98a2b3;
 
   font-size: 15px;
-
 }
 
 /* ==========================
    RESPONSIVO
 ========================== */
 
-@media (max-width:1200px) {
-
+@media (max-width: 1200px) {
   .dashboard-charts {
-
     grid-template-columns: 1fr;
-
   }
-
 }
 
-@media (max-width:768px) {
-
+@media (max-width: 768px) {
   .dashboard-chart-card {
-
     min-height: 340px;
 
     padding: 18px;
-
   }
 
   .dashboard-chart-title {
-
     font-size: 24px;
-
   }
-
 }
 
 /* ==========================================================
@@ -1126,7 +1118,6 @@
 ========================================================== */
 
 .dashboard-table {
-
   background: white;
   border-radius: 18px;
 
@@ -1134,22 +1125,18 @@
 
   overflow: hidden;
 
-  border: 1px solid #EDF1F5;
-
+  border: 1px solid #edf1f5;
 }
 
 .table-header {
-
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   padding: 26px 28px;
-
 }
 
 .table-header h2 {
-
   margin: 0;
 
   font-size: 24px;
@@ -1157,71 +1144,53 @@
   font-weight: 700;
 
   color: #101828;
-
 }
 
 .table-header span {
-
-  color: #98A2B3;
+  color: #98a2b3;
 
   font-size: 14px;
-
 }
 
 .table-search {
-
   width: 240px;
-
 }
 
 .assets-table {
-
-  border-top: 1px solid #EEF2F6;
-
+  border-top: 1px solid #eef2f6;
 }
 
 .assets-table thead tr {
-
-  background: #F8FAFC;
-
+  background: #f8fafc;
 }
 
 .assets-table thead th {
-
   color: #667085;
 
   font-weight: 700;
 
   font-size: 13px;
 
-  letter-spacing: .04em;
-
+  letter-spacing: 0.04em;
 }
 
 .assets-table tbody td {
-
   height: 72px;
 
   color: #344054;
 
   font-size: 15px;
-
 }
 
 .assets-table tbody tr {
-
-  transition: .2s;
-
+  transition: 0.2s;
 }
 
 .assets-table tbody tr:hover {
-
-  background: #F9FBFC;
-
+  background: #f9fbfc;
 }
 
 .q-badge {
-
   padding: 8px 14px;
 
   border-radius: 999px;
@@ -1229,25 +1198,18 @@
   font-size: 13px;
 
   font-weight: 600;
-
 }
 
-@media(max-width:900px) {
-
+@media (max-width: 900px) {
   .table-header {
-
     flex-direction: column;
     align-items: flex-start;
     gap: 20px;
-
   }
 
   .table-search {
-
     width: 100%;
-
   }
-
 }
 
 /* ==========================================================
@@ -1262,7 +1224,6 @@ body {
   background: #f5f7fa;
   padding: 24px;
 }
-
 
 /* ==========================================================
    BENS - HEADER
@@ -1295,16 +1256,15 @@ body {
   border-radius: 10px;
 }
 
-
 /*=========================================================
 =            BENS / TABELA                                =
 =========================================================*/
 
 .bens-table {
   border-radius: 14px;
-  border: 1px solid #EAECF0;
+  border: 1px solid #eaecf0;
   overflow: hidden;
-  background: #FFF;
+  background: #fff;
   margin-top: 24px;
 }
 
@@ -1319,7 +1279,7 @@ body {
 
   padding: 24px 28px;
 
-  border-bottom: 1px solid #EAECF0;
+  border-bottom: 1px solid #eaecf0;
 }
 
 .table-title {
@@ -1340,14 +1300,12 @@ body {
 }
 
 .table-last-update {
-
   display: flex;
   align-items: center;
   gap: 8px;
 
   font-size: 13px;
-  color: #98A2B3;
-
+  color: #98a2b3;
 }
 
 /*=========================================================
@@ -1355,55 +1313,43 @@ body {
 =========================================================*/
 
 .bens-qtable {
-
   thead {
-
-    background: #F9FAFB;
-
+    background: #f9fafb;
   }
 
   thead th {
-
     color: #667085;
 
     font-size: 12px;
 
     font-weight: 700;
 
-    letter-spacing: .05em;
+    letter-spacing: 0.05em;
 
     text-transform: uppercase;
 
-    border-bottom: 1px solid #EAECF0;
+    border-bottom: 1px solid #eaecf0;
 
     padding: 16px;
-
   }
 
   tbody td {
-
     padding: 18px 16px;
 
-    border-bottom: 1px solid #F2F4F7;
+    border-bottom: 1px solid #f2f4f7;
 
     color: #344054;
 
     font-size: 14px;
-
   }
 
   tbody tr {
-
-    transition: .20s;
-
+    transition: 0.2s;
   }
 
   tbody tr:hover {
-
-    background: #F9FAFB;
-
+    background: #f9fafb;
   }
-
 }
 
 /*=========================================================
@@ -1411,17 +1357,15 @@ body {
 =========================================================*/
 
 .badge-id {
+  background: #ecfdf3;
 
-  background: #ECFDF3;
-
-  color: #027A48;
+  color: #027a48;
 
   font-weight: 600;
 
   border-radius: 8px;
 
   padding: 6px 12px;
-
 }
 
 /*=========================================================
@@ -1429,33 +1373,27 @@ body {
 =========================================================*/
 
 .descricao-cell {
-
   display: flex;
 
   align-items: center;
 
   gap: 14px;
-
 }
 
 .descricao-title {
-
   font-size: 15px;
 
   font-weight: 600;
 
   color: #101828;
-
 }
 
 .descricao-serie {
-
   font-size: 13px;
 
   color: #667085;
 
   margin-top: 4px;
-
 }
 
 /*=========================================================
@@ -1463,13 +1401,11 @@ body {
 =========================================================*/
 
 .responsavel-cell {
-
   display: flex;
 
   align-items: center;
 
   gap: 10px;
-
 }
 
 /*=========================================================
@@ -1477,15 +1413,13 @@ body {
 =========================================================*/
 
 .categoria-chip {
-
-  background: #F2F4F7;
+  background: #f2f4f7;
 
   color: #475467;
 
   font-weight: 500;
 
   border-radius: 8px;
-
 }
 
 /*=========================================================
@@ -1493,53 +1427,43 @@ body {
 =========================================================*/
 
 .status-chip {
-
   border-radius: 8px;
 
   font-weight: 600;
 
   padding: 0 10px;
-
 }
 
 /* Ativo */
 
 .status-ativo {
+  background: #ecfdf3;
 
-  background: #ECFDF3;
-
-  color: #027A48;
-
+  color: #027a48;
 }
 
 /* Em manutenção */
 
 .status-manutencao {
+  background: #fffaeb;
 
-  background: #FFFAEB;
-
-  color: #B54708;
-
+  color: #b54708;
 }
 
 /* Inativo */
 
 .status-inativo {
+  background: #fef3f2;
 
-  background: #FEF3F2;
-
-  color: #B42318;
-
+  color: #b42318;
 }
 
 /* Descartado */
 
 .status-descartado {
-
-  background: #F2F4F7;
+  background: #f2f4f7;
 
   color: #475467;
-
 }
 
 /*=========================================================
@@ -1547,19 +1471,15 @@ body {
 =========================================================*/
 
 .acao-btn {
-
   color: #667085;
 
-  transition: .25s;
-
+  transition: 0.25s;
 }
 
 .acao-btn:hover {
+  color: #0f5d63;
 
-  color: #0F5D63;
-
-  background: #EEF7F8;
-
+  background: #eef7f8;
 }
 
 /*=========================================================
@@ -1567,7 +1487,6 @@ body {
 =========================================================*/
 
 .table-footer {
-
   display: flex;
 
   justify-content: space-between;
@@ -1576,28 +1495,23 @@ body {
 
   padding: 18px 24px;
 
-  border-top: 1px solid #EAECF0;
+  border-top: 1px solid #eaecf0;
 
-  background: #FCFCFD;
-
+  background: #fcfcfd;
 }
 
 .footer-left {
-
   font-size: 14px;
 
   color: #667085;
-
 }
 
 .footer-right {
-
   display: flex;
 
   gap: 10px;
 
   flex-wrap: wrap;
-
 }
 
 /*=========================================================
@@ -1608,64 +1522,46 @@ body {
 =            RESPONSIVIDADE                              =
 =========================================================*/
 
-@media (max-width:1024px) {
-
+@media (max-width: 1024px) {
   .table-header {
-
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 12px;
-
   }
 
   .table-last-update {
-
     margin-left: auto;
-
   }
 
   .table-footer {
-
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     flex-wrap: wrap;
     gap: 16px;
-
   }
-
 }
 
-@media (max-width:600px) {
-
+@media (max-width: 600px) {
   .table-header {
-
     flex-direction: column;
     align-items: flex-start;
-
   }
 
   .table-last-update {
-
     margin-left: 0;
-
   }
 
   .table-footer {
-
     flex-direction: column;
     align-items: flex-start;
-
   }
 
   .footer-right {
-
     width: 100%;
-
   }
-
 }
 
 /* ======================================================
@@ -1723,7 +1619,7 @@ body {
 /* Área de textos */
 /* ====================================================== */
 
-.dialog-header-left>div {
+.dialog-header-left > div {
   display: flex;
   flex-direction: column;
 }
@@ -1756,13 +1652,13 @@ body {
 }
 
 .badge-id {
-  background: #E6FAF4;
-  color: #0F766E;
+  background: #e6faf4;
+  color: #0f766e;
 }
 
 .badge-status {
-  background: #DCFCE7;
-  color: #15803D;
+  background: #dcfce7;
+  color: #15803d;
 }
 
 /* ====================================================== */
@@ -1770,7 +1666,6 @@ body {
 /* ====================================================== */
 
 .dialog-title {
-
   font-size: 18px;
 
   font-weight: 700;
@@ -1787,14 +1682,13 @@ body {
 /* ====================================================== */
 
 .dialog-location {
-
   display: flex;
 
   align-items: center;
 
   gap: 6px;
 
-  color: #64748B;
+  color: #64748b;
 
   font-size: 14px;
 
@@ -1810,16 +1704,15 @@ body {
 /* ====================================================== */
 
 .dialog-close {
-
   width: 40px;
 
   height: 40px;
 
-  background: #F5F7FA;
+  background: #f5f7fa;
 
   border-radius: 12px;
 
-  color: #64748B;
+  color: #64748b;
 }
 
 /* ====================================================== */
@@ -1827,14 +1720,12 @@ body {
 /* ====================================================== */
 
 .dialog-tabs {
-
   padding: 0 34px;
 
   min-height: 54px;
 }
 
 .dialog-tabs .q-tab {
-
   min-height: 54px;
 
   padding: 0 14px;
@@ -1851,12 +1742,11 @@ body {
 /* ====================================================== */
 
 .dialog-content {
-
   flex: 1;
 
   overflow-y: auto;
 
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 /* ====================================================== */
@@ -1868,7 +1758,7 @@ body {
 }
 
 .dialog-content::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: #d1d5db;
   border-radius: 10px;
 }
 
@@ -1877,9 +1767,7 @@ body {
 /* ====================================================== */
 
 @media (max-width: 900px) {
-
   .bem-dialog {
-
     width: 100%;
 
     height: 100vh;
@@ -1892,1328 +1780,1073 @@ body {
   }
 
   .dialog-header {
-
     padding: 22px;
   }
 
   .dialog-tabs {
-
     padding: 0 20px;
   }
-
 }
 
 /* ======================================================
    BEM INFO TAB
 ====================================================== */
 
-.bem-info-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:48px;
-  padding:32px;
+.bem-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding: 32px;
 }
 
-.info-column{
-  display:flex;
-  flex-direction:column;
-  gap:26px;
+.info-column {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
 }
 
-.info-item{
-  display:flex;
-  align-items:flex-start;
-  gap:16px;
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
 }
 
-.info-icon{
-  font-size:20px;
-  color:#10B981;
-  margin-top:2px;
-  flex-shrink:0;
+.info-icon {
+  font-size: 20px;
+  color: #10b981;
+  margin-top: 2px;
+  flex-shrink: 0;
 }
 
-.info-label{
-  font-size:11px;
-  font-weight:700;
-  color:#94A3B8;
-  letter-spacing:.08em;
-  margin-bottom:5px;
+.info-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
 }
 
-.info-value{
-  font-size:15px;
-  font-weight:600;
-  color:#111827;
-  line-height:22px;
+.info-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 22px;
 }
 
-.status-ok{
-  color:#16A34A;
+.status-ok {
+  color: #16a34a;
 }
 
-.align-top{
-  align-items:flex-start;
+.align-top {
+  align-items: flex-start;
 }
 
-@media (max-width:900px){
-
-  .bem-info-grid{
-    grid-template-columns:1fr;
-    gap:30px;
-    padding:22px;
+@media (max-width: 900px) {
+  .bem-info-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 22px;
   }
-
 }
 
 /* ======================================================
    HISTÓRICO DE MANUTENÇÃO
 ====================================================== */
 
-.maintenance-container{
-
-  padding:32px;
-
+.maintenance-container {
+  padding: 32px;
 }
 
-.maintenance-card{
+.maintenance-card {
+  display: flex;
 
-  display:flex;
+  gap: 18px;
 
-  gap:18px;
+  padding: 22px 0;
 
-  padding:22px 0;
-
-  border-bottom:1px solid #EEF2F7;
-
+  border-bottom: 1px solid #eef2f7;
 }
 
-.maintenance-card:last-child{
-
-  border-bottom:none;
-
+.maintenance-card:last-child {
+  border-bottom: none;
 }
 
-.maintenance-left{
-
-  padding-top:6px;
-
+.maintenance-left {
+  padding-top: 6px;
 }
 
-.maintenance-dot{
+.maintenance-dot {
+  width: 14px;
 
-  width:14px;
+  height: 14px;
 
-  height:14px;
-
-  border-radius:50%;
-
+  border-radius: 50%;
 }
 
-.maintenance-dot.preventiva{
-
-  background:#22C55E;
-
+.maintenance-dot.preventiva {
+  background: #22c55e;
 }
 
-.maintenance-dot.corretiva{
-
-  background:#F59E0B;
-
+.maintenance-dot.corretiva {
+  background: #f59e0b;
 }
 
-.maintenance-content{
-
-  flex:1;
-
+.maintenance-content {
+  flex: 1;
 }
 
-.maintenance-header{
+.maintenance-header {
+  display: flex;
 
-  display:flex;
+  justify-content: space-between;
 
-  justify-content:space-between;
+  align-items: center;
 
-  align-items:center;
-
-  margin-bottom:10px;
-
+  margin-bottom: 10px;
 }
 
-.maintenance-chip{
+.maintenance-chip {
+  font-size: 11px;
 
-  font-size:11px;
-
-  font-weight:700;
-
+  font-weight: 700;
 }
 
-.maintenance-chip.preventiva{
+.maintenance-chip.preventiva {
+  background: #dcfce7;
 
-  background:#DCFCE7;
-
-  color:#15803D;
-
+  color: #15803d;
 }
 
-.maintenance-chip.corretiva{
+.maintenance-chip.corretiva {
+  background: #fef3c7;
 
-  background:#FEF3C7;
-
-  color:#B45309;
-
+  color: #b45309;
 }
 
-.maintenance-date{
+.maintenance-date {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
+  gap: 6px;
 
-  gap:6px;
+  color: #64748b;
 
-  color:#64748B;
-
-  font-size:13px;
-
+  font-size: 13px;
 }
 
-.maintenance-user{
+.maintenance-user {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
+  gap: 8px;
 
-  gap:8px;
+  font-size: 14px;
 
-  font-size:14px;
+  font-weight: 600;
 
-  font-weight:600;
+  color: #374151;
 
-  color:#374151;
-
-  margin-bottom:10px;
-
+  margin-bottom: 10px;
 }
 
-.maintenance-description{
+.maintenance-description {
+  color: #6b7280;
 
-  color:#6B7280;
+  line-height: 22px;
 
-  line-height:22px;
-
-  font-size:14px;
-
+  font-size: 14px;
 }
 
-@media(max-width:768px){
-
-  .maintenance-container{
-
-    padding:20px;
-
+@media (max-width: 768px) {
+  .maintenance-container {
+    padding: 20px;
   }
 
-  .maintenance-header{
+  .maintenance-header {
+    flex-direction: column;
 
-    flex-direction:column;
+    align-items: flex-start;
 
-    align-items:flex-start;
-
-    gap:10px;
-
+    gap: 10px;
   }
-
 }
 
 /* ======================================================
    MOVIMENTAÇÕES
 ====================================================== */
 
-.movements-container{
-
-  padding:32px;
-
+.movements-container {
+  padding: 32px;
 }
 
-.movement-card{
+.movement-card {
+  display: flex;
 
-  display:flex;
+  gap: 22px;
 
-  gap:22px;
+  position: relative;
 
-  position:relative;
-
-  padding:26px 0;
-
+  padding: 26px 0;
 }
 
-.movement-left{
+.movement-left {
+  width: 28px;
 
-  width:28px;
+  display: flex;
 
-  display:flex;
+  flex-direction: column;
 
-  flex-direction:column;
-
-  align-items:center;
-
+  align-items: center;
 }
 
-.movement-dot{
+.movement-dot {
+  width: 14px;
 
-  width:14px;
+  height: 14px;
 
-  height:14px;
+  background: #10b981;
 
-  background:#10B981;
+  border-radius: 50%;
 
-  border-radius:50%;
-
-  z-index:2;
-
+  z-index: 2;
 }
 
-.movement-line{
+.movement-line {
+  width: 2px;
 
-  width:2px;
+  flex: 1;
 
-  flex:1;
+  background: #e5e7eb;
 
-  background:#E5E7EB;
-
-  margin-top:4px;
-
+  margin-top: 4px;
 }
 
-.movement-card:last-child .movement-line{
-
-  display:none;
-
+.movement-card:last-child .movement-line {
+  display: none;
 }
 
-.movement-content{
-
-  flex:1;
-
+.movement-content {
+  flex: 1;
 }
 
-.movement-header{
+.movement-header {
+  display: flex;
 
-  display:flex;
+  justify-content: space-between;
 
-  justify-content:space-between;
+  align-items: center;
 
-  align-items:center;
-
-  margin-bottom:18px;
-
+  margin-bottom: 18px;
 }
 
-.movement-chip{
+.movement-chip {
+  background: #ecfdf5;
 
-  background:#ECFDF5;
+  color: #047857;
 
-  color:#047857;
+  font-weight: 600;
 
-  font-weight:600;
-
-  font-size:11px;
-
+  font-size: 11px;
 }
 
-.movement-date{
+.movement-date {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
+  gap: 6px;
 
-  gap:6px;
+  color: #64748b;
 
-  color:#64748B;
-
-  font-size:13px;
-
+  font-size: 13px;
 }
 
-.movement-route{
+.movement-route {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
+  justify-content: space-between;
 
-  justify-content:space-between;
+  gap: 18px;
 
-  gap:18px;
+  padding: 18px;
 
-  padding:18px;
+  background: #f8fafc;
 
-  background:#F8FAFC;
+  border-radius: 12px;
 
-  border-radius:12px;
-
-  margin-bottom:14px;
-
+  margin-bottom: 14px;
 }
 
 .movement-origin,
-.movement-destination{
+.movement-destination {
+  flex: 1;
 
-  flex:1;
+  display: flex;
 
-  display:flex;
+  flex-direction: column;
 
-  flex-direction:column;
+  gap: 6px;
 
-  gap:6px;
+  font-size: 14px;
 
-  font-size:14px;
-
-  color:#334155;
-
+  color: #334155;
 }
 
 .movement-origin strong,
-.movement-destination strong{
+.movement-destination strong {
+  color: #64748b;
 
-  color:#64748B;
+  font-size: 11px;
 
-  font-size:11px;
+  letter-spacing: 0.05em;
 
-  letter-spacing:.05em;
-
-  text-transform:uppercase;
-
+  text-transform: uppercase;
 }
 
-.movement-arrow{
-
-  color:#10B981;
-
+.movement-arrow {
+  color: #10b981;
 }
 
-.movement-user{
+.movement-user {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
+  gap: 8px;
 
-  gap:8px;
+  color: #475569;
 
-  color:#475569;
-
-  font-size:14px;
-
+  font-size: 14px;
 }
 
-@media(max-width:768px){
-
-  .movements-container{
-
-    padding:20px;
-
+@media (max-width: 768px) {
+  .movements-container {
+    padding: 20px;
   }
 
-  .movement-route{
+  .movement-route {
+    flex-direction: column;
 
-    flex-direction:column;
-
-    align-items:flex-start;
-
+    align-items: flex-start;
   }
 
-  .movement-arrow{
-
-    transform:rotate(90deg);
-
+  .movement-arrow {
+    transform: rotate(90deg);
   }
-
 }
 
 /* ======================================================
    DIALOG MOVIMENTAÇÃO
 ====================================================== */
 
-.mov-dialog{
-  
-    width:1100px;
-    height:760px;
+.mov-dialog {
+  width: 1100px;
+  height: 760px;
 
-    display:flex;
-    flex-direction:column;
-  
-  
+  display: flex;
+  flex-direction: column;
 }
 
 /* ======================================================
    HEADER
 ====================================================== */
 
-.mov-header{
+.mov-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-
-  padding:20px 24px 16px;
-
+  padding: 20px 24px 16px;
 }
 
-.mov-title{
+.mov-title {
+  font-size: 22px;
+  font-weight: 700;
 
-  font-size:22px;
-  font-weight:700;
-
-  color:#1F2937;
-
+  color: #1f2937;
 }
 
-.mov-subtitle{
+.mov-subtitle {
+  margin-top: 4px;
 
-  margin-top:4px;
+  color: #667085;
 
-  color:#667085;
-
-  font-size:13px;
-
+  font-size: 13px;
 }
 
-.mov-patrimonio{
+.mov-patrimonio {
+  color: #0f766e;
 
-  color:#0F766E;
-
-  font-size:13px;
-  font-weight:700;
-
+  font-size: 13px;
+  font-weight: 700;
 }
 
 /* ======================================================
    CONTEÚDO
 ====================================================== */
 
-.mov-content{
-
-  padding:18px 24px;
-
+.mov-content {
+  padding: 18px 24px;
 }
 
-.mov-content .q-field{
-
-  margin-bottom:2px;
-
+.mov-content .q-field {
+  margin-bottom: 2px;
 }
 
 /* Labels */
 
-.mov-content .q-field__label{
-
-  font-size:13px;
-  font-weight:600;
-
+.mov-content .q-field__label {
+  font-size: 13px;
+  font-weight: 600;
 }
 
 /* Inputs */
 
 .mov-content .q-field__native,
-.mov-content .q-field__input{
-
-  font-size:14px;
-
+.mov-content .q-field__input {
+  font-size: 14px;
 }
 
 /* Altura dos campos */
 
-.mov-content .q-field--outlined .q-field__control{
-
-  min-height:46px;
-  border-radius:8px;
-
+.mov-content .q-field--outlined .q-field__control {
+  min-height: 46px;
+  border-radius: 8px;
 }
 
 /* Ícones */
 
-.mov-content .q-icon{
-
-  font-size:18px;
-
+.mov-content .q-icon {
+  font-size: 18px;
 }
 
 /* ======================================================
    TEXTAREA
 ====================================================== */
 
-.mov-content textarea{
-
-  min-height:72px;
-  font-size:14px;
-
+.mov-content textarea {
+  min-height: 72px;
+  font-size: 14px;
 }
 
 /* ======================================================
    FOOTER
 ====================================================== */
 
-.mov-footer{
+.mov-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 
-  display:flex;
-  justify-content:flex-end;
-  gap:10px;
-
-  padding:16px 24px;
-
+  padding: 16px 24px;
 }
 
 /* ======================================================
    BOTÕES
 ====================================================== */
 
-.mov-footer .q-btn{
+.mov-footer .q-btn {
+  height: 40px;
 
-  height:40px;
+  min-height: 40px;
 
-  min-height:40px;
+  padding: 0 18px;
 
-  padding:0 18px;
+  border-radius: 8px;
 
-  border-radius:8px;
+  font-size: 14px;
 
-  font-size:14px;
-
-  font-weight:600;
-
+  font-weight: 600;
 }
 
 /* ======================================================
    RESPONSIVO
 ====================================================== */
 
-@media (max-width:900px){
+@media (max-width: 900px) {
+  .mov-dialog {
+    width: 100vw;
+    height: 100vh;
 
-  .mov-dialog{
+    max-width: 100vw;
 
-    width:100vw;
-    height:100vh;
-
-    max-width:100vw;
-
-    border-radius:0;
-
+    border-radius: 0;
   }
 
-  .mov-header{
-
-    padding:16px 18px;
-
+  .mov-header {
+    padding: 16px 18px;
   }
 
-  .mov-title{
-
-    font-size:22px;
-
+  .mov-title {
+    font-size: 22px;
   }
 
-  .mov-subtitle{
-
-    font-size:13px;
-
+  .mov-subtitle {
+    font-size: 13px;
   }
 
-  .mov-content{
-
-    padding:16px 18px;
-
+  .mov-content {
+    padding: 16px 18px;
   }
 
   /* Labels */
 
-  .mov-content .q-field__label{
-
-    font-size:12px;
-
+  .mov-content .q-field__label {
+    font-size: 12px;
   }
 
   /* Texto digitado */
 
   .mov-content .q-field__native,
-  .mov-content .q-field__input{
-
-    font-size:13px;
-
+  .mov-content .q-field__input {
+    font-size: 13px;
   }
 
   /* Campos */
 
-  .mov-content .q-field__control{
-
-    min-height:42px;
-
+  .mov-content .q-field__control {
+    min-height: 42px;
   }
 
-  .mov-content textarea{
-
-    min-height:70px;
-
+  .mov-content textarea {
+    min-height: 70px;
   }
 
-  .mov-footer{
+  .mov-footer {
+    padding: 16px 18px;
 
-    padding:16px 18px;
+    flex-direction: column-reverse;
 
-    flex-direction:column-reverse;
-
-    gap:10px;
-
+    gap: 10px;
   }
 
-  .mov-footer .q-btn{
+  .mov-footer .q-btn {
+    width: 100%;
 
-    width:100%;
+    height: 38px;
 
-    height:38px;
+    min-height: 38px;
 
-    min-height:38px;
+    font-size: 13px;
 
-    font-size:13px;
-
-    border-radius:8px;
-
+    border-radius: 8px;
   }
-
 }
 /* ======================================================
    DIALOG DELETE
 ====================================================== */
 
-.delete-dialog{
+.delete-dialog {
+  width: 720px;
+  max-width: 95vw;
 
-  width:720px;
-  max-width:95vw;
+  border-radius: 18px;
 
-  border-radius:18px;
-
-  overflow:hidden;
-
+  overflow: hidden;
 }
 
 /* ======================================================
    HEADER
 ====================================================== */
 
-.delete-header{
+.delete-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-
-  padding:28px 30px 22px;
-
+  padding: 28px 30px 22px;
 }
 
-.delete-header-left{
-
-  display:flex;
-  align-items:center;
-  gap:18px;
-
+.delete-header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
-.delete-title{
+.delete-title {
+  font-size: 24px;
+  font-weight: 700;
 
-  font-size:24px;
-  font-weight:700;
-
-  color:#111827;
-
+  color: #111827;
 }
 
-.delete-subtitle{
+.delete-subtitle {
+  margin-top: 6px;
 
-  margin-top:6px;
+  font-size: 14px;
 
-  font-size:14px;
-
-  color:#667085;
-
+  color: #667085;
 }
 
-.delete-close{
-
-  background:#F8FAFC;
-
+.delete-close {
+  background: #f8fafc;
 }
 
 /* ======================================================
    CONTEÚDO
 ====================================================== */
 
-.delete-content{
-
-  padding:28px 30px;
-
+.delete-content {
+  padding: 28px 30px;
 }
 
 /* ======================================================
    ALERTA
 ====================================================== */
 
-.warning-box{
+.warning-box {
+  display: flex;
+  align-items: flex-start;
 
-  display:flex;
-  align-items:flex-start;
+  gap: 16px;
 
-  gap:16px;
+  background: #fef3c7;
 
-  background:#FEF3C7;
+  border: 1px solid #fcd34d;
 
-  border:1px solid #FCD34D;
+  border-radius: 18px;
 
-  border-radius:18px;
+  padding: 18px;
 
-  padding:18px;
-
-  margin-bottom:24px;
-
+  margin-bottom: 24px;
 }
 
-.warning-title{
+.warning-title {
+  font-size: 17px;
 
-  font-size:17px;
+  font-weight: 700;
 
-  font-weight:700;
-
-  color:#92400E;
-
+  color: #92400e;
 }
 
-.warning-text{
+.warning-text {
+  margin-top: 6px;
 
-  margin-top:6px;
+  font-size: 14px;
 
-  font-size:14px;
+  color: #92400e;
 
-  color:#92400E;
-
-  line-height:22px;
-
+  line-height: 22px;
 }
 
 /* ======================================================
    CARD DO BEM
 ====================================================== */
 
-.delete-item-card{
+.delete-item-card {
+  padding: 22px;
 
-  padding:22px;
-
-  border-radius:14px;
-
+  border-radius: 14px;
 }
 
-.item-header{
+.item-header {
+  display: flex;
+  align-items: center;
 
-  display:flex;
-  align-items:center;
+  gap: 16px;
 
-  gap:16px;
-
-  margin-bottom:22px;
-
+  margin-bottom: 22px;
 }
 
-.item-patrimonio{
+.item-patrimonio {
+  color: #0f766e;
 
-  color:#0F766E;
+  font-size: 13px;
 
-  font-size:13px;
+  font-weight: 700;
 
-  font-weight:700;
-
-  letter-spacing:.04em;
-
+  letter-spacing: 0.04em;
 }
 
-.item-nome{
+.item-nome {
+  margin-top: 4px;
 
-  margin-top:4px;
+  font-size: 20px;
 
-  font-size:20px;
+  font-weight: 700;
 
-  font-weight:700;
-
-  color:#1F2937;
-
+  color: #1f2937;
 }
 
 /* ======================================================
    GRID
 ====================================================== */
 
-.item-grid{
+.item-grid {
+  display: grid;
 
-  display:grid;
+  grid-template-columns: repeat(2, 1fr);
 
-  grid-template-columns:repeat(2,1fr);
-
-  gap:18px;
-
+  gap: 18px;
 }
 
-.item-info{
+.item-info {
+  display: flex;
 
-  display:flex;
-
-  flex-direction:column;
-
+  flex-direction: column;
 }
 
-.info-label{
+.info-label {
+  font-size: 12px;
 
-  font-size:12px;
+  font-weight: 700;
 
-  font-weight:700;
+  color: #98a2b3;
 
-  color:#98A2B3;
+  text-transform: uppercase;
 
-  text-transform:uppercase;
-
-  letter-spacing:.06em;
-
+  letter-spacing: 0.06em;
 }
 
-.info-value{
+.info-value {
+  margin-top: 5px;
 
-  margin-top:5px;
+  font-size: 15px;
 
-  font-size:15px;
+  color: #344054;
 
-  color:#344054;
-
-  font-weight:600;
-
+  font-weight: 600;
 }
 
 /* ======================================================
    FOOTER
 ====================================================== */
 
-.delete-footer{
+.delete-footer {
+  display: flex;
 
-  display:flex;
+  justify-content: flex-end;
 
-  justify-content:flex-end;
+  gap: 14px;
 
-  gap:14px;
-
-  padding:20px 30px;
-
+  padding: 20px 30px;
 }
 
-.delete-footer .q-btn{
+.delete-footer .q-btn {
+  height: 42px;
 
-  height:42px;
+  padding: 0 20px;
 
-  padding:0 20px;
+  border-radius: 10px;
 
-  border-radius:10px;
+  font-size: 14px;
 
-  font-size:14px;
-
-  font-weight:600;
-
+  font-weight: 600;
 }
 
 /* ======================================================
    RESPONSIVO
 ====================================================== */
 
-@media (max-width:768px){
+@media (max-width: 768px) {
+  .delete-dialog {
+    width: 100vw;
 
-  .delete-dialog{
+    height: 100vh;
 
-    width:100vw;
+    max-width: 100vw;
 
-    height:100vh;
-
-    max-width:100vw;
-
-    border-radius:0;
-
+    border-radius: 0;
   }
 
-  .delete-header{
-
-    padding:20px;
-
+  .delete-header {
+    padding: 20px;
   }
 
-  .delete-header-left{
-
-    align-items:flex-start;
-
+  .delete-header-left {
+    align-items: flex-start;
   }
 
-  .delete-content{
-
-    padding:20px;
-
+  .delete-content {
+    padding: 20px;
   }
 
-  .warning-box{
-
-    padding:14px;
-
+  .warning-box {
+    padding: 14px;
   }
 
-  .item-grid{
+  .item-grid {
+    grid-template-columns: 1fr;
 
-    grid-template-columns:1fr;
-
-    gap:16px;
-
+    gap: 16px;
   }
 
-  .delete-footer{
+  .delete-footer {
+    flex-direction: column-reverse;
 
-    flex-direction:column-reverse;
-
-    padding:20px;
-
+    padding: 20px;
   }
 
-  .delete-footer .q-btn{
+  .delete-footer .q-btn {
+    width: 100%;
 
-    width:100%;
-
-    height:42px;
-
+    height: 42px;
   }
-
 }
 
 /* ======================================================
    CADASTRO DE BENS
 ====================================================== */
 
-.cadastro-modal{
+.cadastro-modal {
+  width: 900px;
 
-  width:900px;
+  max-width: 95vw;
 
-  max-width:95vw;
+  border-radius: 18px;
 
-  border-radius:18px;
-
-  overflow:hidden;
-
+  overflow: hidden;
 }
 
-.formulario-area{
+.formulario-area {
+  max-height: 70vh;
 
-  max-height:70vh;
+  overflow-y: auto;
 
-  overflow-y:auto;
-
-  padding:24px 28px;
-
+  padding: 24px 28px;
 }
 
 /* ======================================================
    HEADER
 ====================================================== */
 
-.cadastro-header{
+.cadastro-header {
+  display: flex;
 
-  display:flex;
+  justify-content: space-between;
 
-  justify-content:space-between;
+  align-items: center;
 
-  align-items:center;
-
-  padding:24px 28px;
-
+  padding: 24px 28px;
 }
 
-.cadastro-header-left{
+.cadastro-header-left {
+  display: flex;
 
-  display:flex;
+  align-items: center;
 
-  align-items:center;
-
-  gap:16px;
-
+  gap: 16px;
 }
 
-.cadastro-title{
+.cadastro-title {
+  font-size: 28px;
 
-  font-size:28px;
+  font-weight: 700;
 
-  font-weight:700;
-
-  color:#1F2937;
-
+  color: #1f2937;
 }
 
-.cadastro-subtitle{
+.cadastro-subtitle {
+  margin-top: 4px;
 
-  margin-top:4px;
+  font-size: 14px;
 
-  font-size:14px;
-
-  color:#6B7280;
-
+  color: #6b7280;
 }
 
 /* ======================================================
    SEÇÕES
 ====================================================== */
 
-.titulo-secao{
+.titulo-secao {
+  margin-top: 22px;
 
-  margin-top:22px;
+  margin-bottom: 18px;
 
-  margin-bottom:18px;
+  padding-bottom: 10px;
 
-  padding-bottom:10px;
+  border-bottom: 1px solid #ececec;
 
-  border-bottom:1px solid #ECECEC;
+  font-size: 13px;
 
-  font-size:13px;
+  font-weight: 700;
 
-  font-weight:700;
+  color: #98a2b3;
 
-  color:#98A2B3;
+  text-transform: uppercase;
 
-  text-transform:uppercase;
-
-  letter-spacing:.08em;
-
+  letter-spacing: 0.08em;
 }
 
 /* ======================================================
    GRID
 ====================================================== */
 
-.form-grid{
+.form-grid {
+  display: grid;
 
-  display:grid;
+  grid-template-columns: repeat(2, 1fr);
 
-  grid-template-columns:repeat(2,1fr);
-
-  gap:18px;
-
+  gap: 18px;
 }
 
-.form-grid-full{
-
-  grid-column:1 / -1;
-
+.form-grid-full {
+  grid-column: 1 / -1;
 }
 
 /* ======================================================
    CAMPOS
 ====================================================== */
 
-.q-field{
-
-  margin-bottom:6px;
-
+.q-field {
+  margin-bottom: 6px;
 }
 
-.q-field__control{
+.q-field__control {
+  min-height: 50px;
 
-  min-height:50px;
-
-  border-radius:10px !important;
-
+  border-radius: 10px !important;
 }
 
 .q-field__native,
-
-.q-field__input{
-
-  font-size:15px;
-
+.q-field__input {
+  font-size: 15px;
 }
 
-.q-field__label{
-
-  font-weight:600;
-
+.q-field__label {
+  font-weight: 600;
 }
 
 /* ======================================================
    TEXTAREA
 ====================================================== */
 
-textarea{
-
-  min-height:120px !important;
-
+textarea {
+  min-height: 120px !important;
 }
 
 /* ======================================================
    UPLOAD
 ====================================================== */
 
-.q-file{
-
-  margin-top:10px;
-
+.q-file {
+  margin-top: 10px;
 }
 
-.q-file .q-field__control{
+.q-file .q-field__control {
+  border: 2px dashed #d1d5db;
 
-  border:2px dashed #D1D5DB;
+  background: #fafafa;
 
-  background:#FAFAFA;
-
-  transition:.25s;
-
+  transition: 0.25s;
 }
 
-.q-file:hover .q-field__control{
+.q-file:hover .q-field__control {
+  border-color: #22c55e;
 
-  border-color:#22C55E;
-
-  background:#F6FFF8;
-
+  background: #f6fff8;
 }
 
 /* ======================================================
    SCROLL
 ====================================================== */
 
-.formulario-area::-webkit-scrollbar{
-
-  width:8px;
-
+.formulario-area::-webkit-scrollbar {
+  width: 8px;
 }
 
-.formulario-area::-webkit-scrollbar-thumb{
+.formulario-area::-webkit-scrollbar-thumb {
+  background: #c9c9c9;
 
-  background:#C9C9C9;
-
-  border-radius:20px;
-
+  border-radius: 20px;
 }
 
-.formulario-area::-webkit-scrollbar-track{
-
-  background:transparent;
-
+.formulario-area::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* ======================================================
    FOOTER
 ====================================================== */
 
-.cadastro-footer{
+.cadastro-footer {
+  display: flex;
 
-  display:flex;
+  justify-content: flex-end;
 
-  justify-content:flex-end;
+  gap: 14px;
 
-  gap:14px;
+  padding: 20px 28px;
 
-  padding:20px 28px;
-
-  border-top:1px solid #ECECEC;
-
+  border-top: 1px solid #ececec;
 }
 
-.cadastro-footer .q-btn{
+.cadastro-footer .q-btn {
+  height: 42px;
 
-  height:42px;
+  padding: 0 22px;
 
-  padding:0 22px;
+  border-radius: 10px;
 
-  border-radius:10px;
+  font-size: 14px;
 
-  font-size:14px;
+  font-weight: 600;
 
-  font-weight:600;
-
-  text-transform:none;
-
+  text-transform: none;
 }
 
 /* ======================================================
    BOTÃO POSITIVO
 ====================================================== */
 
-.bg-positive{
-
-  background:#22C55E !important;
-
+.bg-positive {
+  background: #22c55e !important;
 }
 
-.bg-positive:hover{
-
-  background:#16A34A !important;
-
+.bg-positive:hover {
+  background: #16a34a !important;
 }
 
 /* ======================================================
    RESPONSIVO
 ====================================================== */
 
-@media (max-width:768px){
+@media (max-width: 768px) {
+  .cadastro-modal {
+    width: 100vw;
 
-  .cadastro-modal{
+    height: 100vh;
 
-    width:100vw;
+    max-width: 100vw;
 
-    height:100vh;
-
-    max-width:100vw;
-
-    border-radius:0;
-
+    border-radius: 0;
   }
 
-  .cadastro-header{
-
-    padding:20px;
-
+  .cadastro-header {
+    padding: 20px;
   }
 
-  .cadastro-header-left{
-
-    align-items:flex-start;
-
+  .cadastro-header-left {
+    align-items: flex-start;
   }
 
-  .formulario-area{
+  .formulario-area {
+    max-height: calc(100vh - 150px);
 
-    max-height:calc(100vh - 150px);
-
-    padding:20px;
-
+    padding: 20px;
   }
 
-  .form-grid{
+  .form-grid {
+    grid-template-columns: 1fr;
 
-    grid-template-columns:1fr;
-
-    gap:16px;
-
+    gap: 16px;
   }
 
-  .cadastro-footer{
+  .cadastro-footer {
+    flex-direction: column-reverse;
 
-    flex-direction:column-reverse;
-
-    padding:20px;
-
+    padding: 20px;
   }
 
-  .cadastro-footer .q-btn{
+  .cadastro-footer .q-btn {
+    width: 100%;
 
-    width:100%;
-
-    height:42px;
-
+    height: 42px;
   }
-
 }
 
 /* ======================================================
@@ -3221,7 +2854,6 @@ textarea{
 ====================================================== */
 
 .exportar-dialog {
-
   width: 720px;
   max-width: 95vw;
 
@@ -3234,17 +2866,14 @@ textarea{
   display: flex;
   flex-direction: column;
 
-  background: #FFFFFF;
-
+  background: #ffffff;
 }
-
 
 /* ======================================================
    HEADER
 ====================================================== */
 
 .exportar-header {
-
   position: relative;
 
   display: flex;
@@ -3254,19 +2883,16 @@ textarea{
 
   padding: 28px 80px 24px 28px;
 
-  background: #FFFFFF;
+  background: #ffffff;
 
   box-sizing: border-box;
-
 }
-
 
 /* ======================================================
    ÁREA ESQUERDA DO HEADER
 ====================================================== */
 
 .exportar-header-left {
-
   display: flex;
 
   align-items: center;
@@ -3274,16 +2900,13 @@ textarea{
   gap: 18px;
 
   min-width: 0;
-
 }
-
 
 /* ======================================================
    ÍCONE DO HEADER
 ====================================================== */
 
 .exportar-header-avatar {
-
   flex-shrink: 0;
 
   width: 58px;
@@ -3291,32 +2914,26 @@ textarea{
 
   border-radius: 14px;
 
-  background: #E6F4FA;
-
+  background: #e6f4fa;
 }
-
 
 /* ======================================================
    INFORMAÇÕES DO HEADER
 ====================================================== */
 
 .exportar-header-info {
-
   display: flex;
 
   flex-direction: column;
 
   min-width: 0;
-
 }
-
 
 /* ======================================================
    TÍTULO
 ====================================================== */
 
 .exportar-title {
-
   font-size: 30px;
 
   font-weight: 700;
@@ -3324,16 +2941,13 @@ textarea{
   color: #101828;
 
   line-height: 1.2;
-
 }
-
 
 /* ======================================================
    SUBTÍTULO
 ====================================================== */
 
 .exportar-subtitle {
-
   margin-top: 6px;
 
   font-size: 15px;
@@ -3341,16 +2955,13 @@ textarea{
   line-height: 1.5;
 
   color: #667085;
-
 }
-
 
 /* ======================================================
    BOTÃO FECHAR
 ====================================================== */
 
 .exportar-close {
-
   position: absolute !important;
 
   top: 22px;
@@ -3369,36 +2980,27 @@ textarea{
   color: #667085;
 
   z-index: 10;
-
 }
-
 
 /* Hover */
 
 .exportar-close:hover {
-
-  background: #F2F4F7;
-
+  background: #f2f4f7;
 }
-
 
 /* ======================================================
    LINHA ENTRE HEADER E CONTEÚDO
 ====================================================== */
 
 .exportar-dialog > .q-separator {
-
-  background: #EAECF0;
-
+  background: #eaecf0;
 }
-
 
 /* ======================================================
    CONTEÚDO
 ====================================================== */
 
 .exportar-content {
-
   flex: 1;
 
   min-height: 0;
@@ -3409,60 +3011,47 @@ textarea{
 
   padding: 28px;
 
-  background: #FAFBFC;
+  background: #fafbfc;
 
   box-sizing: border-box;
-
 }
-
 
 /* ======================================================
    SCROLL
 ====================================================== */
 
 .exportar-content::-webkit-scrollbar {
-
   width: 8px;
-
 }
 
 .exportar-content::-webkit-scrollbar-track {
-
   background: transparent;
-
 }
 
 .exportar-content::-webkit-scrollbar-thumb {
-
-  background: #D0D5DD;
+  background: #d0d5dd;
 
   border-radius: 10px;
-
 }
-
 
 /* Firefox */
 
 .exportar-content {
-
   scrollbar-width: thin;
 
-  scrollbar-color: #D0D5DD transparent;
-
+  scrollbar-color: #d0d5dd transparent;
 }
-
 
 /* ======================================================
    TÍTULOS DAS SEÇÕES
 ====================================================== */
 
 .titulo-secao {
-
   margin-bottom: 16px;
 
   padding-bottom: 10px;
 
-  border-bottom: 1px solid #EAECF0;
+  border-bottom: 1px solid #eaecf0;
 
   font-size: 14px;
 
@@ -3470,125 +3059,98 @@ textarea{
 
   color: #344054;
 
-  letter-spacing: .8px;
-
+  letter-spacing: 0.8px;
 }
-
 
 /* ======================================================
    OPTION GROUP
 ====================================================== */
 
 .exportar-content .q-option-group {
-
   display: flex;
 
   flex-direction: column;
 
   gap: 14px;
-
 }
-
 
 /* ======================================================
    OPÇÕES
 ====================================================== */
 
 .exportar-content .q-radio {
-
   min-height: 40px;
-
 }
-
 
 /* ======================================================
    LISTA DE FILTROS
 ====================================================== */
 
 .exportar-content .q-list {
+  background: #ffffff;
 
-  background: #FFFFFF;
-
-  border: 1px solid #EAECF0;
+  border: 1px solid #eaecf0;
 
   border-radius: 12px;
 
   overflow: hidden;
-
 }
-
 
 /* ======================================================
    ITEM DA LISTA
 ====================================================== */
 
 .exportar-content .q-item {
-
   min-height: 68px;
 
   padding: 12px 16px;
-
 }
-
 
 /* ======================================================
    ÍCONES DOS FILTROS
 ====================================================== */
 
 .exportar-content .q-item__section--avatar {
-
   min-width: 48px;
 
   color: #667085;
-
 }
-
 
 /* ======================================================
    TEXTO
 ====================================================== */
 
 .exportar-content .q-item__label {
-
   font-size: 14px;
 
   font-weight: 500;
 
   color: #344054;
-
 }
 
-
 .exportar-content .q-item__label--caption {
-
   margin-top: 4px;
 
   font-size: 13px;
 
   color: #667085;
-
 }
-
 
 /* ======================================================
    BANNER DE RESUMO
 ====================================================== */
 
 .exportar-content .q-banner {
-
   border-radius: 12px;
 
   padding: 18px;
-
 }
-
 
 /* ======================================================
    RODAPÉ
 ====================================================== */
 
 .exportar-footer {
-
   display: flex;
 
   justify-content: flex-end;
@@ -3599,19 +3161,16 @@ textarea{
 
   padding: 18px 28px;
 
-  background: #FFFFFF;
+  background: #ffffff;
 
-  border-top: 1px solid #EAECF0;
-
+  border-top: 1px solid #eaecf0;
 }
-
 
 /* ======================================================
    BOTÕES
 ====================================================== */
 
 .exportar-dialog .q-btn {
-
   height: 42px;
 
   padding: 0 20px;
@@ -3621,77 +3180,50 @@ textarea{
   font-size: 14px;
 
   font-weight: 600;
-
 }
-
 
 /* ======================================================
    RESPONSIVO
 ====================================================== */
 
 @media (max-width: 900px) {
-
   .exportar-dialog {
-
     width: 96vw;
 
     max-width: 96vw;
-
   }
-
 
   .exportar-header {
-
     padding: 22px 70px 22px 20px;
-
   }
-
 
   .exportar-header-left {
-
     gap: 14px;
-
   }
-
 
   .exportar-title {
-
     font-size: 26px;
-
   }
-
 
   .exportar-subtitle {
-
     font-size: 14px;
-
   }
-
 
   .exportar-content {
-
     padding: 20px;
-
   }
-
 
   .exportar-footer {
-
     padding: 16px 20px;
-
   }
-
 }
-
 
 /* ======================================================
    MOBILE
 ====================================================== */
 
 @media (max-width: 600px) {
-
   .exportar-dialog {
-
     width: 100vw;
 
     max-width: 100vw;
@@ -3699,90 +3231,57 @@ textarea{
     max-height: 100vh;
 
     border-radius: 0;
-
   }
-
 
   .exportar-header {
-
     padding: 18px 60px 18px 16px;
-
   }
-
 
   .exportar-header-avatar {
-
     width: 48px;
     height: 48px;
-
   }
-
 
   .exportar-header-left {
-
     gap: 12px;
-
   }
-
 
   .exportar-title {
-
     font-size: 22px;
-
   }
-
 
   .exportar-subtitle {
-
     font-size: 13px;
-
   }
 
-
   .exportar-close {
-
     top: 16px;
 
     right: 16px;
-
   }
 
-
   .exportar-content {
-
     max-height: 70vh;
 
     padding: 16px;
-
   }
 
-
   .exportar-footer {
-
     flex-direction: column-reverse;
 
     align-items: stretch;
 
     padding: 16px;
-
   }
-
 
   .exportar-footer .q-btn {
-
     width: 100%;
-
   }
-
 
   .titulo-secao {
-
     font-size: 13px;
-
   }
-
 }
-
 
 /* ==========================================================
    HEADER DA PÁGINA
@@ -3792,12 +3291,11 @@ textarea{
   padding: 28px;
   border-radius: 16px;
   background: #ffffff;
-  
+
   margin-left: 20px;
   margin-right: 20px;
   margin-bottom: 24px;
 }
-
 
 /* ==========================================================
    TOPO
@@ -3817,7 +3315,6 @@ textarea{
   font-size: 14px;
   line-height: 1.5;
 }
-
 
 /* ==========================================================
    BOTÃO NOVA MOVIMENTAÇÃO
@@ -3841,7 +3338,6 @@ textarea{
 .movimentacoes-btn-nova:hover {
   box-shadow: 0 5px 14px rgba(0, 0, 0, 0.12);
 }
-
 
 /* ==========================================================
    CARDS DE RESUMO
@@ -3874,7 +3370,6 @@ textarea{
   gap: 10px;
 }
 
-
 /* ==========================================================
    NÚMEROS DOS CARDS
 ========================================================== */
@@ -3893,14 +3388,12 @@ textarea{
   font-weight: 700;
 }
 
-
 /* TOTAL */
 
 .movimentacoes-resumo-total {
   background: #f2f4f7;
   color: #344054;
 }
-
 
 /* EM ABERTO */
 
@@ -3909,7 +3402,6 @@ textarea{
   color: #e76f00;
 }
 
-
 /* PENDENTE */
 
 .movimentacoes-resumo-pendente {
@@ -3917,14 +3409,12 @@ textarea{
   color: #b78103;
 }
 
-
 /* CONCLUÍDO */
 
 .movimentacoes-resumo-concluido {
   background: #dff7e9;
   color: #159447;
 }
-
 
 /* ==========================================================
    TEXTO DOS CARDS
@@ -3935,7 +3425,6 @@ textarea{
   font-size: 13px;
   white-space: nowrap;
 }
-
 
 /* ==========================================================
    ÁREA DE FILTROS
@@ -3963,14 +3452,12 @@ textarea{
   color: #98a2b3;
 }
 
-
 /* ==========================================================
    FILTRO DE TIPO
 ========================================================== */
 
 .movimentacoes-filtro-tipo {
   width: 180px;
-  
 }
 
 .movimentacoes-filtro-tipo :deep(.q-field__control) {
@@ -3983,7 +3470,6 @@ textarea{
 .movimentacoes-filtro-tipo :deep(.q-field__label) {
   font-size: 13px;
 }
-
 
 /* ==========================================================
    FILTRO DE DATA
@@ -4178,62 +3664,207 @@ textarea{
   font-size: 14px;
 }
 
-.historico-page-actions { display: flex; gap: 10px; }
-.historico-page-actions .q-btn { min-height: 40px; border-radius: 8px; font-size: 14px; font-weight: 600; }
-.historico-exportar { color: #344054; border-color: #d0d5dd; background: #fff; }
-.historico-relatorio { color: #fff; background: #36bd76; }
+.historico-page-actions {
+  display: flex;
+  gap: 10px;
+}
+.historico-page-actions .q-btn {
+  min-height: 40px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.historico-exportar {
+  color: #344054;
+  border-color: #d0d5dd;
+  background: #fff;
+}
+.historico-relatorio {
+  color: #fff;
+  background: #36bd76;
+}
 
-.historico-filtros-card { padding: 18px 20px; border-radius: 16px; background: #fff; }
+.historico-filtros-card {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: #fff;
+}
 .historico-busca .q-field__control,
-.historico-filtro .q-field__control { min-height: 42px; border-radius: 8px; }
+.historico-filtro .q-field__control {
+  min-height: 42px;
+  border-radius: 8px;
+}
 .historico-busca .q-field__native,
 .historico-filtro .q-field__native,
-.historico-filtro .q-field__label { color: #98a2b3; font-size: 14px; }
-.historico-filtros-grid { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.historico-filtro { min-width: 200px; flex: 0 0 200px; }
-.historico-filtro-departamento { min-width: 260px; flex: 0 0 260px; }
-.historico-data { min-width: 180px; flex: 0 0 180px; }
+.historico-filtro .q-field__label {
+  color: #98a2b3;
+  font-size: 14px;
+}
+.historico-filtros-grid {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.historico-filtro {
+  min-width: 200px;
+  flex: 0 0 200px;
+}
+.historico-filtro-departamento {
+  min-width: 260px;
+  flex: 0 0 260px;
+}
+.historico-data {
+  min-width: 180px;
+  flex: 0 0 180px;
+}
 
-.historico-filtros-grid .q-field__label { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.historico-filtros-grid .q-field__label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .historico-filtros-grid .q-select .q-field__control,
-.historico-filtros-grid .q-input .q-field__control { min-height: 42px; }
+.historico-filtros-grid .q-input .q-field__control {
+  min-height: 42px;
+}
 
 /* Linha separada para campos de data (ficam abaixo dos filtros, alinhados com 'até') */
-.historico-datas-row { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 8px; }
-.historico-datas-row .historico-filtro { min-width: 180px; flex: 0 0 180px; }
-.historico-datas-row .historico-ate { margin: 0 6px; }
-.historico-ate { color: #98a2b3; font-size: 14px; }
+.historico-datas-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+}
+.historico-datas-row .historico-filtro {
+  min-width: 180px;
+  flex: 0 0 180px;
+}
+.historico-datas-row .historico-ate {
+  margin: 0 6px;
+}
+.historico-ate {
+  color: #98a2b3;
+  font-size: 14px;
+}
 
 /* Tornar labels e controles dentro dos filtros mais escuros e em negrito */
-.historico-filtros-grid { color: #101828; }
+.historico-filtros-grid {
+  color: #101828;
+}
 .historico-filtros-grid .historico-filtro .q-field__label,
 .historico-filtros-grid .q-field__label,
 .historico-filtros-grid .q-item__label,
-.historico-filtros-grid .q-btn__content { color: #101828; font-weight: 700; }
-.historico-filtros-grid .q-field__native { color: #0b1220; font-weight: 600; }
-.historico-table-card { min-height: 405px; margin-top: 24px; border-radius: 16px; overflow: hidden; background: #fff; }
-.historico-table-header { display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 0 20px; border-bottom: 1px solid #eaecf0; }
-.historico-table-title { display: flex; align-items: center; gap: 8px; color: #101828; font-size: 14px; font-weight: 700; }
-.historico-table-title .q-icon { color: #087f8c; }
-.historico-filtro-status { display: flex; align-items: center; gap: 7px; color: #667085; font-size: 13px; }
-.historico-empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 350px; padding: 32px 20px; text-align: center; }
-.historico-empty-icon { display: flex; align-items: center; justify-content: center; width: 72px; height: 72px; margin-bottom: 18px; color: #c6d4da; background: #e8fbf1; border-radius: 22px; }
-.historico-empty-state h2 { margin: 0; color: #101828; font-size: 17px; font-weight: 700; }
-.historico-empty-state p { margin: 10px 0 0; color: #98a2b3; font-size: 14px; line-height: 1.55; }
+.historico-filtros-grid .q-btn__content {
+  color: #101828;
+  font-weight: 700;
+}
+.historico-filtros-grid .q-field__native {
+  color: #0b1220;
+  font-weight: 600;
+}
+.historico-table-card {
+  min-height: 405px;
+  margin-top: 24px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+.historico-table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 54px;
+  padding: 0 20px;
+  border-bottom: 1px solid #eaecf0;
+}
+.historico-table-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #101828;
+  font-size: 14px;
+  font-weight: 700;
+}
+.historico-table-title .q-icon {
+  color: #087f8c;
+}
+.historico-filtro-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #667085;
+  font-size: 13px;
+}
+.historico-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  padding: 32px 20px;
+  text-align: center;
+}
+.historico-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  color: #c6d4da;
+  background: #e8fbf1;
+  border-radius: 22px;
+}
+.historico-empty-state h2 {
+  margin: 0;
+  color: #101828;
+  font-size: 17px;
+  font-weight: 700;
+}
+.historico-empty-state p {
+  margin: 10px 0 0;
+  color: #98a2b3;
+  font-size: 14px;
+  line-height: 1.55;
+}
 
 @media (max-width: 800px) {
-  .historico-page-top { flex-direction: column; }
-  .historico-page-actions { width: 100%; }
-  .historico-page-actions .q-btn { flex: 1; }
+  .historico-page-top {
+    flex-direction: column;
+  }
+  .historico-page-actions {
+    width: 100%;
+  }
+  .historico-page-actions .q-btn {
+    flex: 1;
+  }
 }
 
 @media (max-width: 600px) {
-  .historico-page { padding: 16px; }
-  .historico-page-title { font-size: 22px; }
-  .historico-filtros-card { padding: 16px; }
-  .historico-filtros-grid { display: grid; grid-template-columns: 1fr; }
-  .historico-filtro, .historico-filtro-departamento, .historico-data { width: 100%; }
-  .historico-ate { display: none; }
+  .historico-page {
+    padding: 16px;
+  }
+  .historico-page-title {
+    font-size: 22px;
+  }
+  .historico-filtros-card {
+    padding: 16px;
+  }
+  .historico-filtros-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .historico-filtro,
+  .historico-filtro-departamento,
+  .historico-data {
+    width: 100%;
+  }
+  .historico-ate {
+    display: none;
+  }
 }
 
 @media (max-width: 600px) {
@@ -4266,13 +3897,11 @@ textarea{
   }
 }
 
-
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 900px) {
-
   .movimentacoes-header {
     padding: 20px;
   }
@@ -4288,12 +3917,9 @@ textarea{
   .movimentacoes-filtro-pesquisa {
     min-width: 100%;
   }
-
 }
 
-
 @media (max-width: 600px) {
-
   .movimentacoes-header {
     padding: 16px;
   }
@@ -4339,7 +3965,6 @@ textarea{
   .movimentacoes-filtro-data {
     width: 100%;
   }
-
 }
 
 /* ==========================================================
@@ -4360,7 +3985,6 @@ textarea{
   box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
 }
 
-
 /* ==========================================================
    CABEÇALHO DA TABELA
 ========================================================== */
@@ -4378,7 +4002,6 @@ textarea{
 
   background: #ffffff;
 }
-
 
 /* ==========================================================
    TÍTULO
@@ -4403,7 +4026,6 @@ textarea{
   font-size: 12px;
 }
 
-
 /* ==========================================================
    ATUALIZAÇÃO
 ========================================================== */
@@ -4418,7 +4040,6 @@ textarea{
   font-size: 12px;
 }
 
-
 /* ==========================================================
    TABELA
 ========================================================== */
@@ -4428,7 +4049,6 @@ textarea{
 
   background: #ffffff;
 }
-
 
 /* ==========================================================
    CABEÇALHO DAS COLUNAS
@@ -4453,7 +4073,6 @@ textarea{
   border-bottom: 1px solid #eaecf0;
 }
 
-
 /* ==========================================================
    LINHAS
 ========================================================== */
@@ -4474,7 +4093,6 @@ textarea{
   background: #f5fbfb;
 }
 
-
 /* ==========================================================
    CÉLULAS
 ========================================================== */
@@ -4488,7 +4106,6 @@ textarea{
 
   border-bottom: 1px solid #f2f4f7;
 }
-
 
 /* ==========================================================
    ID DO BEM
@@ -4522,7 +4139,6 @@ textarea{
   font-size: 11px;
 }
 
-
 /* ==========================================================
    NOME DO BEM
 ========================================================== */
@@ -4535,7 +4151,6 @@ textarea{
 
   white-space: nowrap;
 }
-
 
 /* ==========================================================
    CHIP DE TIPO
@@ -4552,7 +4167,6 @@ textarea{
   font-weight: 500;
 }
 
-
 /* ==========================================================
    TIPO — MANUTENÇÃO
 ========================================================== */
@@ -4562,7 +4176,6 @@ textarea{
 
   color: #d85b00 !important;
 }
-
 
 /* ==========================================================
    TIPO — CESSÃO
@@ -4574,7 +4187,6 @@ textarea{
   color: #16803c !important;
 }
 
-
 /* ==========================================================
    TIPO — TRANSFERÊNCIA
 ========================================================== */
@@ -4584,7 +4196,6 @@ textarea{
 
   color: #2563eb !important;
 }
-
 
 /* ==========================================================
    LOCAL / ORIGEM
@@ -4614,7 +4225,6 @@ textarea{
   border-radius: 50%;
 }
 
-
 /* ==========================================================
    DESTINO
 ========================================================== */
@@ -4622,7 +4232,6 @@ textarea{
 .movimentacoes-destino-icone {
   color: #087f8c;
 }
-
 
 /* ==========================================================
    DATA
@@ -4635,7 +4244,6 @@ textarea{
 
   white-space: nowrap;
 }
-
 
 /* ==========================================================
    RESPONSÁVEL
@@ -4674,7 +4282,6 @@ textarea{
   font-weight: 700;
 }
 
-
 /* ==========================================================
    STATUS
 ========================================================== */
@@ -4690,7 +4297,6 @@ textarea{
   font-weight: 500;
 }
 
-
 /* ==========================================================
    STATUS — APROVADO
 ========================================================== */
@@ -4700,7 +4306,6 @@ textarea{
 
   color: #087f73 !important;
 }
-
 
 /* ==========================================================
    STATUS — PENDENTE
@@ -4712,7 +4317,6 @@ textarea{
   color: #a16207 !important;
 }
 
-
 /* ==========================================================
    STATUS — CONCLUÍDO
 ========================================================== */
@@ -4723,7 +4327,6 @@ textarea{
   color: #16803c !important;
 }
 
-
 /* ==========================================================
    STATUS — ABERTO
 ========================================================== */
@@ -4733,7 +4336,6 @@ textarea{
 
   color: #c2410c !important;
 }
-
 
 /* ==========================================================
    SEM DADOS
@@ -4756,7 +4358,6 @@ textarea{
   font-size: 13px;
 }
 
-
 /* ==========================================================
    RODAPÉ
 ========================================================== */
@@ -4775,7 +4376,6 @@ textarea{
   background: #ffffff;
 }
 
-
 /* ==========================================================
    QUANTIDADE DE REGISTROS
 ========================================================== */
@@ -4791,7 +4391,6 @@ textarea{
 
   font-weight: 500;
 }
-
 
 /* ==========================================================
    PAGINAÇÃO
@@ -4828,13 +4427,11 @@ textarea{
   font-size: 12px;
 }
 
-
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 1100px) {
-
   .movimentacoes-table {
     overflow-x: auto;
   }
@@ -4842,12 +4439,9 @@ textarea{
   .movimentacoes-table :deep(table) {
     min-width: 1000px;
   }
-
 }
 
-
 @media (max-width: 700px) {
-
   .movimentacoes-body {
     border-radius: 12px;
   }
@@ -4863,12 +4457,9 @@ textarea{
   .movimentacoes-body-footer {
     padding: 0 16px;
   }
-
 }
 
-
 @media (max-width: 500px) {
-
   .movimentacoes-body-footer {
     flex-direction: column;
     align-items: flex-start;
@@ -4883,7 +4474,6 @@ textarea{
 
     justify-content: flex-end;
   }
-
 }
 
 /* ==========================================================
@@ -4891,7 +4481,6 @@ textarea{
 ========================================================== */
 
 .escritorio-cadastro-dialog {
-
   // width: 680px;
   // max-width: 90vw;
 
@@ -4902,16 +4491,13 @@ textarea{
   overflow: hidden;
 
   background: #ffffff;
-
 }
-
 
 /* ==========================================================
    CABEÇALHO
 ========================================================== */
 
 .escritorio-cadastro-header {
-
   display: flex;
 
   align-items: flex-start;
@@ -4921,23 +4507,17 @@ textarea{
   padding: 24px 28px;
 
   background: #ffffff;
-
 }
 
-
 .escritorio-cadastro-titulo-area {
-
   display: flex;
 
   flex-direction: column;
 
   gap: 5px;
-
 }
 
-
 .escritorio-cadastro-titulo {
-
   color: #1e293b;
 
   font-size: 17px;
@@ -4945,27 +4525,21 @@ textarea{
   font-weight: 700;
 
   line-height: 1.3;
-
 }
 
-
 .escritorio-cadastro-subtitulo {
-
   color: #94a3b8;
 
   font-size: 13px;
 
   line-height: 1.4;
-
 }
-
 
 /* ==========================================================
    BOTÃO FECHAR
 ========================================================== */
 
 .escritorio-cadastro-fechar {
-
   width: 34px;
 
   height: 34px;
@@ -4977,49 +4551,37 @@ textarea{
   background: #f1f5f9;
 
   color: #64748b;
-
 }
-
 
 .escritorio-cadastro-fechar:hover {
-
   background: #e2e8f0;
-
 }
-
 
 /* ==========================================================
    CONTEÚDO
 ========================================================== */
 
 .escritorio-cadastro-content {
-
   max-height: calc(90vh - 150px);
 
   overflow-y: auto;
 
   padding: 22px 28px;
-
 }
-
 
 /* ==========================================================
    FORMULÁRIO
 ========================================================== */
 
 .escritorio-form {
-
   display: flex;
 
   flex-direction: column;
 
   gap: 14px;
-
 }
 
-
 .escritorio-form-group {
-
   display: flex;
 
   flex-direction: column;
@@ -5027,27 +4589,21 @@ textarea{
   gap: 6px;
 
   flex: 1;
-
 }
 
-
 .escritorio-form-row {
-
   display: grid;
 
   grid-template-columns: 1fr 1fr;
 
   gap: 14px;
-
 }
-
 
 /* ==========================================================
    LABEL
 ========================================================== */
 
 .escritorio-form-label {
-
   color: #475569;
 
   font-size: 13px;
@@ -5055,79 +4611,55 @@ textarea{
   font-weight: 600;
 
   line-height: 1.3;
-
 }
 
-
 .campo-obrigatorio {
-
   color: #ef4444;
 
   margin-left: 2px;
-
 }
-
 
 /* ==========================================================
    INPUTS
 ========================================================== */
 
 .escritorio-input {
-
   width: 100%;
-
 }
 
-
 .escritorio-input :deep(.q-field__control) {
-
   min-height: 40px;
 
   border-radius: 9px;
 
   color: #334155;
-
 }
 
-
 .escritorio-input :deep(.q-field__native) {
-
   color: #334155;
 
   font-size: 13px;
-
 }
 
-
 .escritorio-input :deep(.q-field__native::placeholder) {
-
   color: #a0a9b8;
 
   opacity: 1;
-
 }
-
 
 .escritorio-input :deep(.q-field__control:before) {
-
   border-color: #dbe1e8;
-
 }
-
 
 .escritorio-input :deep(.q-field__control:hover:before) {
-
   border-color: #b8c1cc;
-
 }
-
 
 /* ==========================================================
    RODAPÉ
 ========================================================== */
 
 .escritorio-cadastro-footer {
-
   display: flex;
 
   justify-content: flex-end;
@@ -5139,16 +4671,13 @@ textarea{
   padding: 16px 28px;
 
   background: #ffffff;
-
 }
-
 
 /* ==========================================================
    BOTÃO CANCELAR
 ========================================================== */
 
 .escritorio-btn-cancelar {
-
   min-height: 40px;
 
   padding: 0 20px;
@@ -5158,16 +4687,13 @@ textarea{
   font-size: 13px;
 
   font-weight: 600;
-
 }
-
 
 /* ==========================================================
    BOTÃO SALVAR
 ========================================================== */
 
 .escritorio-btn-salvar {
-
   min-height: 40px;
 
   padding: 0 22px;
@@ -5178,90 +4704,59 @@ textarea{
 
   font-weight: 600;
 
-  box-shadow:
-    0 4px 12px rgba(16, 185, 129, 0.20);
-
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
-
 
 /* ==========================================================
    SCROLL
 ========================================================== */
 
 .escritorio-cadastro-content::-webkit-scrollbar {
-
   width: 8px;
-
 }
-
 
 .escritorio-cadastro-content::-webkit-scrollbar-track {
-
   background: #f8fafc;
-
 }
 
-
 .escritorio-cadastro-content::-webkit-scrollbar-thumb {
-
   background: #cbd5e1;
 
   border-radius: 10px;
-
 }
-
 
 .escritorio-cadastro-content::-webkit-scrollbar-thumb:hover {
-
   background: #94a3b8;
-
 }
-
 
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 600px) {
-
   .escritorio-cadastro-dialog {
-
     width: 95vw;
 
     max-width: 95vw;
 
     border-radius: 16px;
-
   }
-
 
   .escritorio-cadastro-header {
-
     padding: 20px;
-
   }
-
 
   .escritorio-cadastro-content {
-
     padding: 20px;
-
   }
-
 
   .escritorio-cadastro-footer {
-
     padding: 14px 20px;
-
   }
-
 
   .escritorio-form-row {
-
     grid-template-columns: 1fr;
-
   }
-
 }
 
 /* ==========================================================
@@ -5269,23 +4764,18 @@ textarea{
 ========================================================== */
 
 .departamentos-header {
-
   padding: 28px;
-  
-  
+
   background: #ffffff;
 
   border-radius: 12px;
-
 }
-
 
 /* ==========================================================
    BOTÃO NOVO DEPARTAMENTO
 ========================================================== */
 
 .departamentos-btn-novo {
-
   min-height: 40px;
 
   padding: 0 20px;
@@ -5293,16 +4783,13 @@ textarea{
   font-weight: 600;
 
   border-radius: 8px;
-
 }
-
 
 /* ==========================================================
    CARDS DE RESUMO
 ========================================================== */
 
 .departamentos-resumo-card {
-
   min-width: 210px;
 
   min-height: 62px;
@@ -5318,16 +4805,13 @@ textarea{
   border-radius: 10px;
 
   background: #ffffff;
-
 }
-
 
 /* ==========================================================
    ÍCONES DOS CARDS
 ========================================================== */
 
 .departamentos-resumo-icone {
-
   width: 34px;
 
   height: 34px;
@@ -5339,49 +4823,37 @@ textarea{
   justify-content: center;
 
   border-radius: 8px;
-
 }
-
 
 /* TOTAL */
 
 .departamentos-icone-total {
-
   background: #f1f3f5;
 
   color: #334155;
-
 }
-
 
 /* BENS */
 
 .departamentos-icone-bens {
-
   background: #dcfce7;
 
   color: #16a34a;
-
 }
-
 
 /* GESTORES */
 
 .departamentos-icone-gestores {
-
   background: #dbeafe;
 
   color: #2563eb;
-
 }
-
 
 /* ==========================================================
    NÚMEROS DOS CARDS
 ========================================================== */
 
 .departamentos-resumo-numero {
-
   font-size: 17px;
 
   font-weight: 700;
@@ -5389,16 +4861,13 @@ textarea{
   line-height: 1.1;
 
   color: #111827;
-
 }
-
 
 /* ==========================================================
    LABEL DOS CARDS
 ========================================================== */
 
 .departamentos-resumo-label {
-
   margin-top: 3px;
 
   font-size: 12px;
@@ -5406,16 +4875,13 @@ textarea{
   color: #64748b;
 
   white-space: nowrap;
-
 }
-
 
 /* ==========================================================
    LABEL DOS FILTROS
 ========================================================== */
 
 .departamentos-field-label {
-
   margin-bottom: 6px;
 
   font-size: 13px;
@@ -5423,78 +4889,51 @@ textarea{
   font-weight: 700;
 
   color: #334155;
-
 }
-
 
 /* ==========================================================
    CAMPO DE BUSCA
 ========================================================== */
 
 .departamentos-busca {
-
   width: 100%;
-
 }
-
 
 /* ==========================================================
    FILTROS
 ========================================================== */
 
 .departamentos-filtro {
-
   width: 150px;
-
 }
-
 
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 768px) {
-
   .departamentos-header {
-
     padding: 20px;
-
   }
 
   .departamentos-resumo-card {
-
     min-width: 180px;
-
   }
-
 }
-
 
 @media (max-width: 600px) {
-
   .departamentos-header {
-
     padding: 16px;
-
   }
-
 
   .departamentos-resumo-card {
-
     width: 100%;
-
   }
-
 
   .departamentos-btn-novo {
-
     margin-top: 12px;
-
   }
-
 }
-
-
 
 /* ==========================================================
    DEPARTAMENTOS TABLE
@@ -5506,30 +4945,25 @@ textarea{
   margin-top: 20px;
 }
 
-
 /* ==========================================================
    GRID
 ========================================================== */
 
 .departamentos-grid {
-
   display: grid;
 
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 18px;
 
   width: 100%;
 }
 
-
 /* ==========================================================
    CARD DO DEPARTAMENTO
 ========================================================== */
 
 .departamento-card {
-
   position: relative;
 
   min-height: 212px;
@@ -5550,29 +4984,23 @@ textarea{
     border-color 0.18s ease;
 }
 
-
 /* ==========================================================
    HOVER
 ========================================================== */
 
 .departamento-card:hover {
-
   transform: translateY(-2px);
 
   border-color: #d8dee8;
 
-  box-shadow:
-    0 7px 18px rgba(15, 23, 42, 0.08);
-
+  box-shadow: 0 7px 18px rgba(15, 23, 42, 0.08);
 }
-
 
 /* ==========================================================
    SIGLA
 ========================================================== */
 
 .departamento-sigla {
-
   display: flex;
 
   align-items: center;
@@ -5590,13 +5018,11 @@ textarea{
   font-weight: 700;
 }
 
-
 /* ==========================================================
    NOME
 ========================================================== */
 
 .departamento-nome {
-
   color: #0f172a;
 
   font-size: 15px;
@@ -5608,13 +5034,11 @@ textarea{
   margin-bottom: 5px;
 }
 
-
 /* ==========================================================
    DESCRIÇÃO
 ========================================================== */
 
 .departamento-descricao {
-
   color: #64748b;
 
   font-size: 12px;
@@ -5626,13 +5050,11 @@ textarea{
   max-width: 100%;
 }
 
-
 /* ==========================================================
    INFORMAÇÕES
 ========================================================== */
 
 .departamento-informacoes {
-
   display: flex;
 
   align-items: center;
@@ -5648,13 +5070,11 @@ textarea{
   border-top: 1px solid #eef1f5;
 }
 
-
 /* ==========================================================
    INFORMAÇÃO INDIVIDUAL
 ========================================================== */
 
 .departamento-informacao {
-
   display: flex;
 
   align-items: center;
@@ -5664,13 +5084,11 @@ textarea{
   min-width: 0;
 }
 
-
 /* ==========================================================
    ÍCONE DOS BENS
 ========================================================== */
 
 .departamento-informacao-icone {
-
   display: flex;
 
   align-items: center;
@@ -5684,13 +5102,11 @@ textarea{
   flex-shrink: 0;
 }
 
-
 /* ==========================================================
    ÍCONE DOS CONSERTOS
 ========================================================== */
 
 .departamento-consertos-icone {
-
   display: flex;
 
   align-items: center;
@@ -5708,13 +5124,11 @@ textarea{
   flex-shrink: 0;
 }
 
-
 /* ==========================================================
    TEXTO DA INFORMAÇÃO
 ========================================================== */
 
 .departamento-informacao-texto {
-
   display: flex;
 
   align-items: center;
@@ -5724,13 +5138,11 @@ textarea{
   white-space: nowrap;
 }
 
-
 /* ==========================================================
    VALOR
 ========================================================== */
 
 .departamento-informacao-texto strong {
-
   color: #334155;
 
   font-size: 12px;
@@ -5738,25 +5150,21 @@ textarea{
   font-weight: 700;
 }
 
-
 /* ==========================================================
    LABEL
 ========================================================== */
 
 .departamento-informacao-texto span {
-
   color: #64748b;
 
   font-size: 11px;
 }
-
 
 /* ==========================================================
    BARRA INFERIOR
 ========================================================== */
 
 .departamento-barra {
-
   position: absolute;
 
   left: 22px;
@@ -5770,50 +5178,34 @@ textarea{
   opacity: 0.28;
 }
 
-
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 1100px) {
-
   .departamentos-grid {
-
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
 }
 
-
 @media (max-width: 650px) {
-
   .departamentos-grid {
-
     grid-template-columns: 1fr;
 
     gap: 14px;
-
   }
 
   .departamento-card {
-
     min-height: 200px;
-
   }
-
 }
-
 
 /* ==========================================================
    ACESSIBILIDADE / INTERAÇÃO
 ========================================================== */
 
 .departamento-card:active {
-
   transform: translateY(0);
-
 }
 
 /* ==========================================================
@@ -5821,7 +5213,6 @@ textarea{
 ========================================================== */
 
 .visualizacao-departamento-page {
-
   background: #f5f7fa;
 
   min-height: 100vh;
@@ -5829,27 +5220,21 @@ textarea{
   padding: 24px 26px;
 
   color: #0f172a;
-
 }
-
 
 /* ==========================================================
    CABEÇALHO
 ========================================================== */
 
 .visualizacao-departamento-header {
-
   margin-bottom: 22px;
-
 }
-
 
 /* ==========================================================
    VOLTAR
 ========================================================== */
 
 .visualizacao-departamento-voltar {
-
   display: flex;
 
   align-items: center;
@@ -5865,34 +5250,25 @@ textarea{
   width: fit-content;
 
   margin-bottom: 18px;
-
 }
-
 
 .visualizacao-departamento-voltar:hover {
-
   color: #0f172a;
-
 }
-
 
 /* ==========================================================
    IDENTIFICAÇÃO
 ========================================================== */
 
 .visualizacao-departamento-identificacao {
-
   display: flex;
 
   align-items: center;
 
   gap: 14px;
-
 }
 
-
 .visualizacao-departamento-sigla {
-
   width: 54px;
 
   height: 54px;
@@ -5912,38 +5288,29 @@ textarea{
   font-size: 14px;
 
   font-weight: 700;
-
 }
 
-
 .visualizacao-departamento-titulo {
-
   font-size: 24px;
 
   font-weight: 700;
 
   line-height: 1.2;
-
 }
 
-
 .visualizacao-departamento-subtitulo {
-
   margin-top: 5px;
 
   color: #64748b;
 
   font-size: 14px;
-
 }
-
 
 /* ==========================================================
    RESUMO
 ========================================================== */
 
 .visualizacao-departamento-resumo {
-
   display: flex;
 
   gap: 14px;
@@ -5951,12 +5318,9 @@ textarea{
   margin-bottom: 24px;
 
   flex-wrap: wrap;
-
 }
 
-
 .visualizacao-departamento-resumo-card {
-
   width: 194px;
 
   min-height: 136px;
@@ -5966,12 +5330,9 @@ textarea{
   border-radius: 16px;
 
   background: white;
-
 }
 
-
 .visualizacao-departamento-resumo-icone {
-
   width: 42px;
 
   height: 42px;
@@ -5985,120 +5346,87 @@ textarea{
   justify-content: center;
 
   margin-bottom: 10px;
-
 }
-
 
 /* CORES DOS ÍCONES */
 
 .visualizacao-departamento-resumo-icone.total {
-
   background: #f1f5f9;
 
   color: #334155;
-
 }
 
-
 .visualizacao-departamento-resumo-icone.ativos {
-
   background: #d1fae5;
 
   color: #059669;
-
 }
 
-
 .visualizacao-departamento-resumo-icone.manutencao {
-
   background: #ffedd5;
 
   color: #ea580c;
-
 }
 
-
 .visualizacao-departamento-resumo-icone.concertos {
-
   background: #dbeafe;
 
   color: #2563eb;
-
 }
 
-
 .visualizacao-departamento-resumo-numero {
-
   font-size: 26px;
 
   font-weight: 700;
 
   line-height: 1;
-
 }
 
-
 .visualizacao-departamento-resumo-label {
-
   color: #64748b;
 
   font-size: 13px;
 
   margin-top: 5px;
-
 }
-
 
 /* ==========================================================
    FILTROS
 ========================================================== */
 
 .visualizacao-departamento-filtros {
-
   display: flex;
 
   gap: 12px;
 
   margin-bottom: 24px;
-
 }
-
 
 .visualizacao-departamento-busca {
-
   flex: 1;
-
 }
-
 
 .visualizacao-departamento-filtro {
-
   width: 150px;
-
 }
-
 
 /* ==========================================================
    CARD DE BENS
 ========================================================== */
 
 .visualizacao-departamento-bens {
-
   background: white;
 
   border-radius: 16px;
 
   overflow: hidden;
-
 }
-
 
 /* ==========================================================
    CABEÇALHO DOS BENS
 ========================================================== */
 
 .visualizacao-departamento-bens-header {
-
   min-height: 58px;
 
   display: flex;
@@ -6110,32 +5438,23 @@ textarea{
   padding: 0 24px;
 
   border-bottom: 1px solid #e5e7eb;
-
 }
 
-
 .visualizacao-departamento-bens-titulo {
-
   font-size: 15px;
 
   font-weight: 700;
-
 }
 
-
 .visualizacao-departamento-bens-contador {
-
   margin-left: 8px;
 
   color: #94a3b8;
 
   font-size: 13px;
-
 }
 
-
 .visualizacao-departamento-bens-total {
-
   display: flex;
 
   align-items: center;
@@ -6145,56 +5464,41 @@ textarea{
   color: #94a3b8;
 
   font-size: 13px;
-
 }
-
 
 /* ==========================================================
    TABELA
 ========================================================== */
 
 .visualizacao-departamento-table {
-
   background: white;
-
 }
-
 
 .visualizacao-departamento-table :deep(thead tr) {
-
   background: #f8fafc;
-
 }
 
-
 .visualizacao-departamento-table :deep(th) {
-
   color: #64748b;
 
   font-size: 11px;
 
   font-weight: 700;
 
-  letter-spacing: .04em;
-
+  letter-spacing: 0.04em;
 }
 
-
 .visualizacao-departamento-table :deep(td) {
-
   color: #475569;
 
   font-size: 13px;
-
 }
-
 
 /* ==========================================================
    ID
 ========================================================== */
 
 .visualizacao-departamento-id {
-
   color: #059669;
 
   background: #ecfdf5;
@@ -6208,16 +5512,13 @@ textarea{
   font-weight: 700;
 
   width: fit-content;
-
 }
-
 
 /* ==========================================================
    DESCRIÇÃO
 ========================================================== */
 
 .visualizacao-departamento-descricao {
-
   display: flex;
 
   align-items: center;
@@ -6227,12 +5528,9 @@ textarea{
   color: #1e293b;
 
   font-weight: 500;
-
 }
 
-
 .visualizacao-departamento-produto-icone {
-
   width: 28px;
 
   height: 28px;
@@ -6248,42 +5546,33 @@ textarea{
   align-items: center;
 
   justify-content: center;
-
 }
-
 
 /* ==========================================================
    CATEGORIA
 ========================================================== */
 
 .visualizacao-departamento-categoria {
-
   border-radius: 6px;
 
   padding: 5px 9px;
 
   font-size: 11px;
-
 }
-
 
 /* ==========================================================
    RESPONSÁVEL
 ========================================================== */
 
 .visualizacao-departamento-responsavel {
-
   display: flex;
 
   align-items: center;
 
   gap: 7px;
-
 }
 
-
 .visualizacao-departamento-avatar {
-
   width: 26px;
 
   height: 26px;
@@ -6303,16 +5592,13 @@ textarea{
   font-size: 9px;
 
   font-weight: 700;
-
 }
-
 
 /* ==========================================================
    STATUS
 ========================================================== */
 
 .visualizacao-departamento-status {
-
   border-radius: 12px;
 
   padding: 5px 10px;
@@ -6320,84 +5606,60 @@ textarea{
   font-size: 11px;
 
   font-weight: 600;
-
 }
-
 
 /* ==========================================================
    AÇÕES
 ========================================================== */
 
 .visualizacao-departamento-acoes {
-
   display: flex;
 
   justify-content: center;
 
   gap: 3px;
-
 }
-
 
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 @media (max-width: 900px) {
-
   .visualizacao-departamento-resumo-card {
-
     width: calc(50% - 7px);
-
   }
 
   .visualizacao-departamento-filtros {
-
     flex-wrap: wrap;
-
   }
 
   .visualizacao-departamento-busca {
-
     width: 100%;
 
     flex-basis: 100%;
-
   }
-
 }
 
-
 @media (max-width: 600px) {
-
   .visualizacao-departamento-page {
-
     padding: 18px 14px;
-
   }
 
   .visualizacao-departamento-titulo {
-
     font-size: 20px;
-
   }
 
   .visualizacao-departamento-resumo-card {
-
     width: 100%;
-
   }
 
   .visualizacao-departamento-filtro {
-
     flex: 1;
 
     width: auto;
-
   }
 
   .visualizacao-departamento-bens-header {
-
     padding: 14px;
 
     align-items: flex-start;
@@ -6405,7 +5667,5 @@ textarea{
     flex-direction: column;
 
     gap: 8px;
-
   }
-
 }
