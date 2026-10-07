@@ -14,19 +14,3 @@
 
 </template>
 
-<script setup>
-
-// =======================================================
-//
-// Componente apenas visual.
-//
-// Futuramente poderá receber:
-//
-// nome da empresa
-// data
-// filtros
-// breadcrumbs
-//
-// =======================================================
-
-</script>

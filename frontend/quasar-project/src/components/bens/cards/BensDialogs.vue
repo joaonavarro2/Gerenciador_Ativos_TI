@@ -1,5 +1,4 @@
 <template>
-
   <q-dialog
     :model-value="modelValue"
     persistent
@@ -7,57 +6,36 @@
     transition-hide="fade"
     @update:model-value="$emit('update:modelValue', $event)"
   >
-
-    <q-card class="bem-dialog"  style="
-    width:900px;
-    height:500px;
-    max-width:none;
-    max-height:none;
-    background:white;
-    border-radius:10px;
-  ">
-
+    <q-card
+      class="bem-dialog"
+      style="
+        width: 900px;
+        height: 500px;
+        max-width: none;
+        max-height: none;
+        background: white;
+        border-radius: 10px;
+      "
+    >
       <!-- =======================================================
            HEADER
       ======================================================== -->
 
       <div class="dialog-header">
-
         <div class="dialog-header-left">
-
-          <q-avatar
-            size="56px"
-            rounded
-            :color="bem.avatarColor"
-            :text-color="bem.iconColor"
-          >
-
-            <q-icon
-              :name="bem.icon"
-              size="24px"
-            />
-
+          <q-avatar size="56px" rounded :color="bem.avatarColor" :text-color="bem.iconColor">
+            <q-icon :name="bem.icon" size="24px" />
           </q-avatar>
 
           <div>
-
             <div class="dialog-badges">
-
-              <q-chip
-                dense
-                square
-                class="badge-id"
-              >
+              <q-chip dense square class="badge-id">
                 {{ bem.patrimonio }}
               </q-chip>
 
-              <q-chip
-                dense
-                :class="statusClass(bem.status)"
-              >
+              <q-chip dense :class="statusClass(bem.status)">
                 {{ bem.status }}
               </q-chip>
-
             </div>
 
             <div class="dialog-title">
@@ -65,21 +43,14 @@
             </div>
 
             <div class="dialog-location">
-
-              <q-icon
-                name="place"
-                size="15px"
-              />
-                {{ bem.departamento }}
-                •
-                {{ bem.localizacao }}
-                •
-                {{ bem.escritorio }}
-
+              <q-icon name="place" size="15px" />
+              {{ bem.departamento }}
+              •
+              {{ bem.localizacao }}
+              •
+              {{ bem.escritorio }}
             </div>
-
           </div>
-
         </div>
 
         <q-btn
@@ -90,7 +61,6 @@
           class="dialog-close"
           @click="$emit('update:modelValue', false)"
         />
-
       </div>
 
       <!-- =======================================================
@@ -105,22 +75,11 @@
         dense
         class="dialog-tabs"
       >
+        <q-tab name="informacoes" label="Informações Gerais" />
 
-        <q-tab
-          name="informacoes"
-          label="Informações Gerais"
-        />
+        <q-tab name="manutencoes" label="Histórico de Manutenção" />
 
-        <q-tab
-          name="manutencoes"
-          label="Histórico de Manutenção"
-        />
-
-        <q-tab
-          name="movimentacoes"
-          label="Movimentações Recentes"
-        />
-
+        <q-tab name="movimentacoes" label="Movimentações Recentes" />
       </q-tabs>
 
       <q-separator />
@@ -129,43 +88,27 @@
            CONTEÚDO
       ======================================================== -->
 
-      <q-tab-panels
-        v-model="tab"
-        animated
-        class="dialog-content"
-      >
-
+      <q-tab-panels v-model="tab" animated class="dialog-content">
         <q-tab-panel name="informacoes">
-
           <!-- COMPONENTE -->
-          <BemInfoTab />
-
+          <BemInfoTab :bem="bem" />
         </q-tab-panel>
 
         <q-tab-panel name="manutencoes">
-
           <!-- COMPONENTE -->
-          <BemMaintenanceTab />
-
+          <BemMaintenanceTab :bem-id="bem.id" />
         </q-tab-panel>
 
         <q-tab-panel name="movimentacoes">
-
           <!-- COMPONENTE -->
-          <BemMovementsTab />
-
+          <BemMovementsTab :bem-id="bem.id" />
         </q-tab-panel>
-
       </q-tab-panels>
-
     </q-card>
-
   </q-dialog>
-
 </template>
 
 <script setup>
-
 import { ref, computed } from 'vue'
 
 import BemInfoTab from '../cards/BemInfoTab.vue'
@@ -173,43 +116,19 @@ import BemMaintenanceTab from '../cards/BemMaintenanceTab.vue'
 import BemMovementsTab from '../cards/BemMovementsTab.vue'
 
 const props = defineProps({
-
   modelValue: Boolean,
-
-  bemId: {
-    type: String,
-    default: null
-  },
 
   bem: {
     type: Object,
-    default: null
-  }
-
+    default: () => ({}),
+  },
 })
 
-defineEmits([
-  'update:modelValue'
-])
+defineEmits(['update:modelValue'])
 
 const tab = ref('informacoes')
 
-const bem = computed(() => {
-  if (props.bem) return props.bem
-
-  return {
-    id: 1,
-    patrimonio: 'BEM-0041',
-    nome: 'Trator Agrícola MF 275',
-    status: 'Ativo',
-    escritorio: 'Sede',
-    departamento: 'Operações',
-    localizacao: 'Galpão Central',
-    icon: 'agriculture',
-    avatarColor: 'green-1',
-    iconColor: 'green-8',
-  }
-})
+const bem = computed(() => props.bem || {})
 
 /* ==========================================================
    BACKEND
@@ -228,9 +147,7 @@ pela resposta da API.
 ========================================================== */
 
 function statusClass(status) {
-
   switch (status) {
-
     case 'Ativo':
       return 'badge-status status-ativo'
 
@@ -245,9 +162,6 @@ function statusClass(status) {
 
     default:
       return 'badge-status'
-
   }
-
 }
-
 </script>

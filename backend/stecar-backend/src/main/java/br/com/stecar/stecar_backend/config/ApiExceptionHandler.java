@@ -22,6 +22,10 @@ public class ApiExceptionHandler {
         Map<String, String> errors = new LinkedHashMap<>();
         exception.getBindingResult().getFieldErrors()
                 .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        errors.put("mensagem", exception.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .distinct()
+            .collect(java.util.stream.Collectors.joining(" ")));
         return ResponseEntity.badRequest().body(errors);
     }
 

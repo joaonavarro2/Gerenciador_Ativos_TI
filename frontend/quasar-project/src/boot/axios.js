@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
+import { clearSession } from '@/services/auth.js'
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
@@ -15,6 +16,20 @@ api.interceptors.request.use((config) => {
 
   return config
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      const rotaAtual = window.location.hash.slice(1) || '/dashboard'
+      clearSession()
+      if (!rotaAtual.startsWith('/login')) {
+        window.location.hash = `/login?redirect=${encodeURIComponent(rotaAtual)}`
+      }
+    }
+    return Promise.reject(error)
+  },
+)
 
 export default boot(({ app }) => {
   app.config.globalProperties.$api = api
