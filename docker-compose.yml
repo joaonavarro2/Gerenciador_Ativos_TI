@@ -7,8 +7,8 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      database:
-        condition: service_healthy
+      backend:
+        condition: service_started
     restart: unless-stopped
     networks:
       - ativos-ti
@@ -29,6 +29,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
+    networks:
+      - ativos-ti
+
+  backend:
+    build:
+      context: ./backend/stecar-backend
+      dockerfile: Dockerfile
+    container_name: ativos-ti-backend
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-stecar}
+      DB_USER: ${POSTGRES_USER:-ativos_ti}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-ativos_ti_dev}
+      STECAR_JWT_SECRET: ${STECAR_JWT_SECRET:?Defina STECAR_JWT_SECRET com pelo menos 32 caracteres}
+      STECAR_ADMIN_PASSWORD: ${STECAR_ADMIN_PASSWORD:?Defina STECAR_ADMIN_PASSWORD}
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      MAIL_SMTP_AUTH: ${MAIL_SMTP_AUTH:-true}
+      MAIL_SMTP_STARTTLS: ${MAIL_SMTP_STARTTLS:-true}
+      STECAR_FRONTEND_URL: ${STECAR_FRONTEND_URL:-http://localhost:8080}
+    depends_on:
+      database:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - ativos-ti

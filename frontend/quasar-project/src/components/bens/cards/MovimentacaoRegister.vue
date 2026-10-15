@@ -1,633 +1,274 @@
 <template>
-
   <q-dialog
     :model-value="modelValue"
     persistent
     transition-show="fade"
     transition-hide="fade"
-    @update:model-value="$emit('update:modelValue', $event)"
+    @update:model-value="emit('update:modelValue', $event)"
   >
-
-    <q-card class="mov-dialog" style="
-    width:900px;
-    height:500px;
-    max-width:none;
-    max-height:none;
-    background:white;
-    border-radius:10px;">
-
-      <!-- =======================================================
-           HEADER
-      ======================================================== -->
-
+    <q-card
+      class="mov-dialog"
+      style="
+        width: 900px;
+        max-width: 95vw;
+        max-height: 90vh;
+        background: white;
+        border-radius: 10px;
+      "
+    >
       <div class="mov-header">
-
         <div>
-
-          <div class="mov-title">
-            Registrar Movimentação
-          </div>
-
+          <div class="mov-title">Registrar Movimentação</div>
           <div class="mov-subtitle">
-
             Bem:
-
-            <span class="mov-patrimonio">
-
-              {{ bemSelecionado.patrimonio }}
-
-            </span>
-
-            -
-
-            {{ bemSelecionado.nome }}
-
+            <span class="mov-patrimonio">{{
+              bemSelecionado.patrimonio || bemSelecionado.codigo || '—'
+            }}</span>
+            - {{ bemSelecionado.nome || 'Carregando bem...' }}
           </div>
-
         </div>
-
         <q-btn
           flat
           round
           dense
           icon="close"
           class="dialog-close"
-          @click="$emit('update:modelValue', false)"
+          @click="emit('update:modelValue', false)"
         />
-
       </div>
 
       <q-separator />
 
-      <!-- =======================================================
-           FORMULÁRIO
-      ======================================================== -->
-
-      <div class="mov-content">
-
-        <div class="row q-col-gutter-lg">
-
-          <!-- =============================
-               BEM
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-select
-
-              v-model="movimentacao.bem"
-
-              outlined
-
-              use-input
-
-              fill-input
-
-              hide-selected
-
-              input-debounce="300"
-
-              option-label="label"
-
-              option-value="id"
-
-              emit-value
-
-              map-options
-
-              :options="bens"
-
-              label="Bem"
-
-              @filter="buscarBens"
-
-            />
-
+      <q-form @submit.prevent="registrarMovimentacao">
+        <div class="mov-content">
+          <div class="row q-col-gutter-lg">
+            <div class="col-12 col-md-6">
+              <q-select
+                v-model="movimentacao.tipo"
+                outlined
+                :options="tiposMovimentacao"
+                label="Tipo de Movimentação *"
+                :rules="[obrigatorio]"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-input
+                v-model="movimentacao.data"
+                outlined
+                mask="##/##/####"
+                label="Data da Movimentação *"
+                :rules="[obrigatorio]"
+              >
+                <template #append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                      <q-date v-model="movimentacao.data" mask="DD/MM/YYYY">
+                        <div class="row justify-end q-pa-sm">
+                          <q-btn v-close-popup flat label="Fechar" />
+                        </div>
+                      </q-date>
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+            <div class="col-12 col-md-6">
+              <q-input
+                v-model="departamentoOrigem"
+                outlined
+                readonly
+                label="Departamento de Origem"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-input v-model="escritorioOrigem" outlined readonly label="Escritório de Origem" />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-select
+                v-model="movimentacao.departamentoDestinoId"
+                outlined
+                :options="departamentos"
+                option-label="nome"
+                option-value="id"
+                emit-value
+                map-options
+                label="Departamento de Destino *"
+                :rules="[obrigatorio]"
+              />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-select
+                v-model="movimentacao.escritorioDestinoId"
+                outlined
+                :options="escritorios"
+                option-label="nome"
+                option-value="id"
+                emit-value
+                map-options
+                label="Escritório de Destino *"
+                :rules="[obrigatorio]"
+              />
+            </div>
+            <div class="col-12">
+              <q-select
+                v-model="movimentacao.responsavelDestinoId"
+                outlined
+                clearable
+                :options="responsaveisDestino"
+                option-label="nome"
+                option-value="id"
+                emit-value
+                map-options
+                label="Responsável pelo Recebimento"
+              />
+            </div>
+            <div class="col-12">
+              <q-input
+                v-model="movimentacao.justificativa"
+                outlined
+                autogrow
+                type="textarea"
+                label="Justificativa / Motivo"
+              />
+            </div>
           </div>
-
-          <!-- =============================
-               TIPO
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-select
-
-              v-model="movimentacao.tipo"
-
-              outlined
-
-              :options="tiposMovimentacao"
-
-              label="Tipo de Movimentação"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               DATA
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-input
-
-              outlined
-
-              v-model="movimentacao.data"
-
-              mask="##/##/####"
-
-              label="Data da Movimentação"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               DEPTO ORIGEM
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-input
-
-              outlined
-
-              readonly
-
-              v-model="movimentacao.departamentoOrigem"
-
-              label="Departamento de Origem"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               DEPTO DESTINO
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-select
-
-              outlined
-
-              v-model="movimentacao.departamentoDestino"
-
-              :options="departamentos"
-
-              label="Departamento de Destino"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               RESPONSÁVEL ENTREGA
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-select
-
-              outlined
-
-              use-input
-
-              fill-input
-
-              hide-selected
-
-              input-debounce="300"
-
-              option-label="label"
-
-              option-value="id"
-
-              emit-value
-
-              map-options
-
-              :options="responsaveis"
-
-              label="Responsável pela Entrega"
-
-              @filter="buscarResponsaveis"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               RESPONSÁVEL RECEBIMENTO
-          ============================== -->
-
-          <div class="col-12 col-md-6">
-
-            <q-select
-
-              outlined
-
-              use-input
-
-              fill-input
-
-              hide-selected
-
-              input-debounce="300"
-
-              option-label="label"
-
-              option-value="id"
-
-              emit-value
-
-              map-options
-
-              :options="responsaveis"
-
-              label="Responsável pelo Recebimento"
-
-              @filter="buscarResponsaveis"
-
-            />
-
-          </div>
-
-          <!-- =============================
-               JUSTIFICATIVA
-          ============================== -->
-
-          <div class="col-12">
-
-            <q-input
-
-              outlined
-
-              autogrow
-
-              type="textarea"
-
-              v-model="movimentacao.justificativa"
-
-              label="Justificativa / Motivo"
-
-            />
-
-          </div>
-
         </div>
 
-      </div>
-
-      <q-separator />
-
-      <!-- =======================================================
-           BOTÕES
-      ======================================================== -->
-
-      <div class="mov-footer">
-
-        <q-btn
-
-          outline
-
-          color="grey-7"
-
-          label="Cancelar"
-
-          @click="$emit('update:modelValue', false)"
-
-        />
-
-        <q-btn
-
-          color="positive"
-
-          icon="check_circle"
-
-          label="Registrar Movimentação"
-
-          @click="registrarMovimentacao"
-
-        />
-
-      </div>
-
+        <q-separator />
+        <div class="mov-footer">
+          <q-btn
+            outline
+            color="grey-7"
+            label="Cancelar"
+            @click="emit('update:modelValue', false)"
+          />
+          <q-btn
+            type="submit"
+            color="positive"
+            icon="check_circle"
+            label="Registrar Movimentação"
+            :loading="salvando"
+          />
+        </div>
+      </q-form>
     </q-card>
-
   </q-dialog>
-
 </template>
 
 <script setup>
+import { computed, ref, watch } from 'vue'
+import { useQuasar } from 'quasar'
+import { api } from '@/boot/axios'
 
-import { ref } from 'vue'
-
-/* ==========================================================
-   PROPS
-========================================================== */
-
-defineProps({
-
-  modelValue: Boolean,
-
-  bemId: {
-    type: String,
-    default: null
-  }
-
+const props = defineProps({
+  modelValue: { type: Boolean, default: false },
+  bemId: { type: Number, default: null },
+  opcoes: {
+    type: Object,
+    default: () => ({ escritorios: [], departamentos: [], pessoas: [] }),
+  },
 })
 
-const emit = defineEmits([
-  'update:modelValue'
-])
-
-/* ==========================================================
-   BACKEND
-
-   GET /api/bens/{id}
-
-   Quando o usuário clicar no botão de movimentação,
-   este endpoint carregará automaticamente todas as
-   informações do bem.
-
-========================================================== */
-
-const bemSelecionado = ref({
-
-  id: 1,
-
-  patrimonio: 'BEM-0041',
-
-  nome: 'Trator Agrícola MF 275',
-
-  departamento: 'Operações'
-
-})
-
-/* ==========================================================
-   FORMULÁRIO
-========================================================== */
-
+const emit = defineEmits(['update:modelValue', 'movimentado'])
+const $q = useQuasar()
+const tiposMovimentacao = ['Transferência', 'Empréstimo', 'Devolução']
+const bemSelecionado = ref({})
+const departamentoOrigem = ref('')
+const escritorioOrigem = ref('')
+const salvando = ref(false)
 const movimentacao = ref({
-
-  bem: null,
-
   tipo: null,
-
   data: '',
-
-  departamentoOrigem: 'Operações',
-
-  departamentoDestino: null,
-
-  responsavelEntrega: null,
-
-  responsavelRecebimento: null,
-
-  justificativa: ''
-
+  departamentoDestinoId: null,
+  escritorioDestinoId: null,
+  responsavelDestinoId: null,
+  justificativa: '',
+})
+const departamentos = computed(() => props.opcoes.departamentos || [])
+const escritorios = computed(() => props.opcoes.escritorios || [])
+const responsaveisDestino = computed(() => {
+  const departamentoId = movimentacao.value.departamentoDestinoId
+  return (props.opcoes.pessoas || []).filter(
+    (pessoa) => !departamentoId || pessoa.departamentoId === departamentoId,
+  )
 })
 
-/* ==========================================================
-   MOCK - BENS
-
-   BACKEND
-
-   GET /api/bens/search?termo=
-
-   Esta lista será substituída
-   pela resposta da API.
-
-========================================================== */
-
-const bens = ref([
-
-  {
-
-    id: 1,
-
-    label: 'BEM-0041 - Trator Agrícola MF 275'
-
-  },
-
-  {
-
-    id: 2,
-
-    label: 'BEM-0098 - Notebook Dell Latitude'
-
-  },
-
-  {
-
-    id: 3,
-
-    label: 'BEM-0156 - Impressora HP LaserJet'
-
-  }
-
-])
-
-/* ==========================================================
-   MOCK - TIPOS
-
-   BACKEND
-
-   GET /api/movimentacoes/tipos
-
-========================================================== */
-
-const tiposMovimentacao = ref([
-
-  'Transferência',
-
-  'Empréstimo',
-
-  'Devolução',
-
-  'Conserto',
-
-  'Baixa'
-
-])
-
-/* ==========================================================
-   MOCK - DEPARTAMENTOS
-
-   BACKEND
-
-   GET /api/departamentos
-
-========================================================== */
-
-const departamentos = ref([
-
-  'Operações',
-
-  'Agronomia',
-
-  'Financeiro',
-
-  'TI',
-
-  'Administrativo'
-
-])
-
-/* ==========================================================
-   MOCK - RESPONSÁVEIS
-
-   BACKEND
-
-   GET /api/pessoas/search?nome=
-
-========================================================== */
-
-const responsaveis = ref([
-
-  {
-
-    id: 1,
-
-    label: 'Carlos Andrade'
-
-  },
-
-  {
-
-    id: 2,
-
-    label: 'Rafael Oliveira'
-
-  },
-
-  {
-
-    id: 3,
-
-    label: 'Mariana Souza'
-
-  }
-
-])
-
-/* ==========================================================
-   AUTOCOMPLETE DOS BENS
-
-   BACKEND
-
-   GET /api/bens/search?termo={texto}
-
-   O backend retornará apenas os bens
-   compatíveis com o texto digitado.
-
-========================================================== */
-
-function buscarBens(val, update) {
-
-  update(() => {
-
-    /*
-    Quando existir backend:
-
-    const response = await api.get(
-      '/api/bens/search',
-      {
-        params:{
-          termo: val
-        }
-      }
-    )
-
-    bens.value = response.data
-
-    */
-
-  })
-
+function obrigatorio(valor) {
+  return (valor !== null && valor !== undefined && valor !== '') || 'Preencha este campo.'
 }
 
-/* ==========================================================
-   AUTOCOMPLETE RESPONSÁVEIS
-
-   BACKEND
-
-   GET /api/pessoas/search?nome={texto}
-
-========================================================== */
-
-function buscarResponsaveis(val, update) {
-
-  update(() => {
-
-    /*
-    Quando existir backend:
-
-    const response = await api.get(
-      '/api/pessoas/search',
-      {
-        params:{
-          nome: val
-        }
-      }
-    )
-
-    responsaveis.value = response.data
-
-    */
-
-  })
-
+function dataApi(valor) {
+  const [dia, mes, ano] = valor.split('/')
+  return `${ano}-${mes}-${dia}T12:00:00`
 }
 
-/* ==========================================================
-   REGISTRAR MOVIMENTAÇÃO
+async function carregarBem() {
+  if (!props.modelValue || !props.bemId) return
+  try {
+    const { data } = await api.get(`/bens/${props.bemId}`)
+    bemSelecionado.value = data
+    departamentoOrigem.value = data.departamento || ''
+    escritorioOrigem.value = data.escritorio || ''
+    movimentacao.value = {
+      tipo: null,
+      data: new Date().toLocaleDateString('pt-BR'),
+      departamentoDestinoId: data.departamentoId,
+      escritorioDestinoId: data.escritorioId,
+      responsavelDestinoId: data.pessoaId,
+      justificativa: '',
+    }
+  } catch (error) {
+    $q.notify({
+      type: 'negative',
+      message: error.response?.data?.mensagem || 'Não foi possível carregar o bem.',
+    })
+  }
+}
 
-   BACKEND
-
-   POST /api/movimentacoes
-
-========================================================== */
-
-function registrarMovimentacao() {
-
-  /*
-  =====================================================
-
-  POST /api/movimentacoes
-
-  Body esperado:
-
-  {
-
-    bemId,
-
-    tipo,
-
-    data,
-
-    departamentoDestino,
-
-    responsavelEntrega,
-
-    responsavelRecebimento,
-
-    justificativa
-
+async function registrarMovimentacao() {
+  if (
+    !props.bemId ||
+    !movimentacao.value.tipo ||
+    !movimentacao.value.data ||
+    !movimentacao.value.departamentoDestinoId ||
+    !movimentacao.value.escritorioDestinoId
+  ) {
+    $q.notify({ type: 'negative', message: 'Preencha o tipo, a data e o destino da movimentação.' })
+    return
   }
 
-  =====================================================
-  */
-
-  console.log(movimentacao.value)
-
-  emit('update:modelValue', false)
-
+  salvando.value = true
+  try {
+    await api.post(`/bens/${props.bemId}/movimentacoes`, {
+      tipo: movimentacao.value.tipo,
+      data: dataApi(movimentacao.value.data),
+      escritorioDestinoId: movimentacao.value.escritorioDestinoId,
+      departamentoDestinoId: movimentacao.value.departamentoDestinoId,
+      responsavelDestinoId: movimentacao.value.responsavelDestinoId || null,
+      justificativa: movimentacao.value.justificativa || null,
+    })
+    $q.notify({ type: 'positive', message: 'Movimentação registrada com sucesso.' })
+    emit('movimentado')
+    emit('update:modelValue', false)
+  } catch (error) {
+    const resposta = error.response?.data
+    const mensagem =
+      resposta?.mensagem ||
+      (resposta &&
+        Object.entries(resposta)
+          .map(([campo, detalhe]) => `${campo}: ${detalhe}`)
+          .join(' ')) ||
+      (error.response?.status === 401
+        ? 'Sua sessão expirou. Entre novamente para registrar a movimentação.'
+        : 'Não foi possível registrar a movimentação.')
+    $q.notify({
+      type: 'negative',
+      message: mensagem,
+    })
+  } finally {
+    salvando.value = false
+  }
 }
 
+watch(() => [props.modelValue, props.bemId], carregarBem, { immediate: true })
 </script>

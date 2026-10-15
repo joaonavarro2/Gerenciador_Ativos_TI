@@ -195,7 +195,7 @@
 
       <div class="sidebar-footer">
 
-        <q-item clickable to="/login">
+        <q-item clickable @click="sair">
 
           <q-item-section avatar>
             <q-icon
@@ -222,6 +222,7 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { clearSession } from '@/services/auth.js'
 
 const $q = useQuasar()
 defineProps({
@@ -237,6 +238,11 @@ const router = useRouter()
 
 function irPara(caminho) {
   router.push(caminho)
+}
+
+function sair () {
+  clearSession()
+  router.push('/login')
 }
 
 </script>

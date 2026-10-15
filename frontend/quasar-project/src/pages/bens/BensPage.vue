@@ -1,40 +1,147 @@
 <template>
   <q-page class="page-container">
-    <BensHeader :itens="bens" />
+    <BensHeader v-model:filtros="filtros" :itens="bens" :opcoes="opcoes" @bem-salvo="bemSalvo" />
 
-    <BensTable :bens="bens" @bens-atualizados="receberBens" />
+    <q-banner v-if="erro" class="bg-negative text-white q-mb-md" rounded>
+      {{ erro }}
+      <template #action>
+        <q-btn flat color="white" label="Tentar novamente" @click="carregarBens" />
+      </template>
+    </q-banner>
+
+    <BensTable
+      :bens="bens"
+      :opcoes="opcoes"
+      :loading="carregando"
+      @bens-atualizados="carregarBens"
+    />
   </q-page>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
+import { onMounted, reactive, ref, watch } from 'vue'
+import { api } from '@/boot/axios'
 import BensHeader from '@/components/bens/BensHeader.vue'
 import BensTable from '@/components/bens/BensTable.vue'
 
-// Fonte única dos dados da página. Futuramente será preenchida pelo Spring Boot.
-const bens = ref([
-  { id: 'BEM-001', descricao: 'Trator Agrícola MF 275', serie: 'MF275-2023-001', categoria: 'Veículo', marca: 'Massey Ferguson • MF 275', departamento: 'Operações', responsavel: 'Carlos Andrade', status: 'Inativo', icon: 'agriculture', avatarColor: 'green-1', iconColor: 'green-8' },
-  { id: 'BEM-002', descricao: 'Lenovo ThinkPad X1 Carbon', serie: 'LEN-X1-2024-001', categoria: 'Notebook', marca: 'Lenovo • ThinkPad X1 Carbon', departamento: 'Dep. Recursos Humanos', responsavel: 'Mariana Santos', status: 'Ativo', icon: 'laptop', avatarColor: 'blue-1', iconColor: 'blue-8' },
-  { id: 'BEM-003', descricao: 'Dell Latitude 7420', serie: 'DEL-7420-001', categoria: 'Notebook', marca: 'Dell • Latitude 7420', departamento: 'Dep. Financeiro', responsavel: 'João Silva', status: 'Em Manutenção', icon: 'laptop', avatarColor: 'orange-1', iconColor: 'orange-8' },
-  { id: 'BEM-004', descricao: 'Monitor Samsung 24"', serie: 'SAM-MON-001', categoria: 'Monitor', marca: 'Samsung • T350', departamento: 'Dep. Administrativo', responsavel: 'Ana Oliveira', status: 'Ativo', icon: 'monitor', avatarColor: 'purple-1', iconColor: 'purple-8' },
-  { id: 'BEM-005', descricao: 'Impressora Brother HL', serie: 'BRO-HL-001', categoria: 'Impressora', marca: 'Brother • HL-L2360DW', departamento: 'Dep. Licitações', responsavel: 'Pedro Souza', status: 'Inativo', icon: 'print', avatarColor: 'grey-3', iconColor: 'grey-8' },
-  { id: 'BEM-006', descricao: 'Scanner Canon', serie: 'CAN-SCAN-001', categoria: 'Scanner', marca: 'Canon • DR-C240', departamento: 'Controle Interno', responsavel: 'Lucas Almeida', status: 'Ativo', icon: 'document_scanner', avatarColor: 'cyan-1', iconColor: 'cyan-8' },
-  { id: 'BEM-007', descricao: 'Computador Dell OptiPlex', serie: 'DEL-OPT-001', categoria: 'PC', marca: 'Dell • OptiPlex 7090', departamento: 'Diretoria Geral', responsavel: 'Fernanda Costa', status: 'Descartado', icon: 'desktop_windows', avatarColor: 'red-1', iconColor: 'red-8' },
-  { id: 'BEM-008', descricao: 'Notebook HP ProBook', serie: 'HP-PRO-001', categoria: 'Notebook', marca: 'HP • ProBook 450', departamento: 'Dep. Engenharia', responsavel: 'Ricardo Lima', status: 'Ativo', icon: 'laptop', avatarColor: 'indigo-1', iconColor: 'indigo-8' },
-  { id: 'BEM-009', descricao: 'Monitor LG UltraWide', serie: 'LG-ULT-001', categoria: 'Monitor', marca: 'LG • UltraWide 29"', departamento: 'Assessoria Jurídica', responsavel: 'Juliana Martins', status: 'Em Manutenção', icon: 'monitor', avatarColor: 'teal-1', iconColor: 'teal-8' },
-])
+const bens = ref([])
+const opcoes = ref({ escritorios: [], departamentos: [], pessoas: [], categorias: [], status: [] })
+const carregando = ref(false)
+const erro = ref('')
+const filtros = reactive({ busca: '', categoria: [], status: [], departamento: '' })
+let timerBusca
+let requestIdBens = 0
 
-function receberBens(bensAtualizados) {
-  bens.value = bensAtualizados
+async function carregarOpcoes() {
+  try {
+    const { data } = await api.get('/bens/opcoes')
+    opcoes.value = {
+      escritorios: data.escritorios || [],
+      departamentos: data.departamentos || [],
+      pessoas: data.pessoas || [],
+      categorias: data.categorias || [],
+      status: data.status || [],
+    }
+  } catch (error) {
+    if (error.response?.status !== 401) {
+      erro.value = mensagemErro(error, 'as opções de cadastro')
+    }
+  }
 }
 
-/*
- * BACKEND — SPRING BOOT
- *
- * const response = await api.get('/bens')
- * bens.value = response.data
- *
- * Header e tabela continuam recebendo os mesmos dados via props.
- */
+async function carregarBens() {
+  const chamadaAtual = ++requestIdBens
+  carregando.value = true
+  erro.value = ''
+  try {
+    const { data } = await api.get('/bens', {
+      params: {
+        busca: filtros.busca || undefined,
+        categoria: filtros.categoria.length ? filtros.categoria.join(',') : undefined,
+        status: filtros.status.length ? filtros.status.join(',') : undefined,
+        departamento: filtros.departamento || undefined,
+      },
+    })
+    if (chamadaAtual !== requestIdBens) return
+    bens.value = data.map(mapearBem)
+  } catch (error) {
+    if (
+      chamadaAtual !== requestIdBens ||
+      error.code === 'ERR_CANCELED' ||
+      error.response?.status === 401
+    )
+      return
+    erro.value = mensagemErro(error, 'o inventário')
+  } finally {
+    if (chamadaAtual === requestIdBens) carregando.value = false
+  }
+}
+
+function mensagemErro(error, alvo) {
+  const status = error.response?.status
+  if (!error.response)
+    return `Servidor indisponível. Não foi possível carregar ${alvo}; tente novamente.`
+  if (status === 403) return `Sua conta não tem permissão para carregar ${alvo}.`
+  if (status >= 500)
+    return `O servidor falhou ao carregar ${alvo} (HTTP ${status}). Tente novamente.`
+  return error.response.data?.mensagem || `Não foi possível carregar ${alvo} (HTTP ${status}).`
+}
+
+async function atualizarInventario() {
+  await Promise.all([carregarOpcoes(), carregarBens()])
+}
+
+async function bemSalvo() {
+  clearTimeout(timerBusca)
+  filtros.busca = ''
+  filtros.categoria = []
+  filtros.status = []
+  filtros.departamento = ''
+  await atualizarInventario()
+}
+
+function mapearBem(item) {
+  const icons = {
+    Veículo: ['agriculture', 'green-1', 'green-8'],
+    Notebook: ['laptop', 'blue-1', 'blue-8'],
+    Notebooks: ['laptop', 'blue-1', 'blue-8'],
+    Monitor: ['monitor', 'teal-1', 'teal-8'],
+    Monitores: ['monitor', 'teal-1', 'teal-8'],
+    Impressora: ['print', 'orange-1', 'orange-8'],
+    Impressoras: ['print', 'orange-1', 'orange-8'],
+  }
+  const [icon, avatarColor, iconColor] = icons[item.categoria] || [
+    'inventory_2',
+    'grey-3',
+    'grey-8',
+  ]
+  return {
+    ...item,
+    id: item.id,
+    descricao: item.nome,
+    serie: item.serial,
+    numeroSerie: item.serial,
+    marca: [item.fabricante, item.modelo].filter(Boolean).join(' • '),
+    escritorio: item.escritorio,
+    localizacao: item.escritorio,
+    responsavel: item.responsavel || 'Não atribuído',
+    observacoes: item.descricao,
+    icon,
+    avatarColor,
+    iconColor,
+  }
+}
+
+watch(
+  () => [filtros.busca, filtros.categoria, filtros.status, filtros.departamento],
+  () => {
+    clearTimeout(timerBusca)
+    timerBusca = setTimeout(carregarBens, 250)
+  },
+  { deep: true },
+)
+
+onMounted(async () => {
+  await atualizarInventario()
+})
 </script>

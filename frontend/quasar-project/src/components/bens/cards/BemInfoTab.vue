@@ -1,13 +1,10 @@
 <template>
-
   <div class="bem-info-grid">
-
     <!-- =====================================================
          COLUNA ESQUERDA
     ====================================================== -->
 
     <div class="info-column">
-
       <div class="info-item">
         <q-icon name="tag" class="info-icon" />
 
@@ -53,10 +50,7 @@
       </div>
 
       <div class="info-item">
-        <q-icon
-          name="precision_manufacturing"
-          class="info-icon"
-        />
+        <q-icon name="precision_manufacturing" class="info-icon" />
 
         <div>
           <div class="info-label">MODELO</div>
@@ -76,7 +70,6 @@
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- =====================================================
@@ -84,7 +77,6 @@
     ====================================================== -->
 
     <div class="info-column">
-
       <div class="info-item">
         <q-icon name="event" class="info-icon" />
 
@@ -130,99 +122,44 @@
       </div>
 
       <div class="info-item">
-        <q-icon
-          name="check_circle"
-          class="info-icon"
-        />
+        <q-icon name="check_circle" class="info-icon" />
 
         <div>
           <div class="info-label">STATUS</div>
 
-          <div
-            class="info-value"
-            :class="statusClass(bem.status)"
-          >
+          <div class="info-value" :class="statusClass(bem.status)">
             {{ bem.status }}
           </div>
-
         </div>
       </div>
 
       <div class="info-item align-top">
-
-        <q-icon
-          name="description"
-          class="info-icon"
-        />
+        <q-icon name="description" class="info-icon" />
 
         <div>
-
-          <div class="info-label">
-            OBSERVAÇÕES
-          </div>
+          <div class="info-label">OBSERVAÇÕES</div>
 
           <div class="info-value">
             {{ bem.observacoes }}
           </div>
-
         </div>
-
       </div>
-
     </div>
-
   </div>
-
 </template>
 
 <script setup>
-
-import { ref } from 'vue'
-
-/* ==========================================================
-   BACKEND
-
-   GET /api/bens/{id}
-
-   Quando a API estiver pronta,
-   substituir este mock pelos
-   dados retornados do backend.
-
-========================================================== */
-
-const bem = ref({
-
-  patrimonio: 'BEM-0041',
-
-  nome: 'Trator Agrícola MF 275',
-
-  categoria: 'Veículo',
-
-  marca: 'Massey Ferguson',
-
-  modelo: 'MF 275',
-
-  numeroSerie: 'MF275-2023-001',
-
-  dataAquisicao: '18/03/2023',
-
-  departamento: 'Operações',
-
-  responsavel: 'Carlos Andrade',
-
-  localizacao: 'Galpão Central',
-
-  status: 'Ativo',
-
-  observacoes:
-    'Equipamento utilizado nas operações agrícolas da unidade central.'
-
+const props = defineProps({
+  bem: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
+const bem = props.bem
+
 function statusClass(status) {
-
   switch (status) {
-
     case 'Ativo':
       return 'status-ok'
 
@@ -237,9 +174,6 @@ function statusClass(status) {
 
     default:
       return ''
-
   }
-
 }
-
 </script>

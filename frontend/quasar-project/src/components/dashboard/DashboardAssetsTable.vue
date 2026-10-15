@@ -3,10 +3,10 @@
     <div class="table-header">
       <div>
         <h2>Registro de Bens</h2>
-        <span>Dados fornecidos pelos mocks da página</span>
+        <span>Os cinco bens adquiridos mais recentemente</span>
       </div>
 
-      <q-input outlined dense placeholder="Buscar..." class="table-search">
+      <q-input v-model="busca" outlined dense placeholder="Buscar..." class="table-search">
         <template #prepend>
           <q-icon name="search" />
         </template>
@@ -17,6 +17,7 @@
       flat
       :rows="rows"
       :columns="columns"
+      :filter="busca"
       row-key="id"
       hide-bottom
       separator="horizontal"
@@ -34,12 +35,16 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+
 defineProps({
   rows: {
     type: Array,
     default: () => [],
   },
 })
+
+const busca = ref('')
 
 const columns = [
   { name: 'id', label: 'ID', field: 'id', align: 'left' },

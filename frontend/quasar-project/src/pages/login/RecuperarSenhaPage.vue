@@ -35,6 +35,7 @@
           icon="replay"
           label="Recuperar Senha"
           type="submit"
+          :loading="enviando"
           class="auth-submit auth-submit-secondary"
         />
       </q-form>
@@ -49,13 +50,36 @@
 import { ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { api } from '@/boot/axios.js'
 
 const $q = useQuasar()
 const router = useRouter()
 const email = ref('')
+const enviando = ref(false)
 
 function obrigatorio(valor) { return !!valor || 'Campo obrigatório' }
 function emailValido(valor) { return /.+@.+\..+/.test(valor) || 'Informe um e-mail válido' }
-function recuperar() { $q.notify({ type: 'positive', message: 'Se o e-mail estiver cadastrado, enviaremos as instruções de redefinição.' }) }
+async function recuperar() {
+  if (!email.value || !/.+@.+\..+/.test(email.value)) {
+    $q.notify({ type: 'warning', message: 'Informe um e-mail válido para continuar.' })
+    return
+  }
+
+  enviando.value = true
+  try {
+    await api.post('/auth/recuperar-senha', { email: email.value })
+    $q.notify({ type: 'positive', message: 'Se o e-mail estiver cadastrado, enviaremos o link de redefinição.' })
+    email.value = ''
+  } catch (error) {
+    const mensagem = error.response?.data?.mensagem
+      || error.response?.data?.message
+      || (error.response?.status === 401
+        ? 'O backend em execução está desatualizado. Reinicie a API para habilitar a recuperação de senha.'
+        : 'Não foi possível enviar o link. Tente novamente.')
+    $q.notify({ type: 'warning', message: mensagem })
+  } finally {
+    enviando.value = false
+  }
+}
 function voltar() { router.push('/login') }
 </script>

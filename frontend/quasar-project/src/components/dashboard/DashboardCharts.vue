@@ -4,7 +4,7 @@
       <div class="dashboard-chart-header">
         <div>
           <h3 class="dashboard-chart-title">Atividade Mensal</h3>
-          <p class="dashboard-chart-subtitle">Movimentações e consertos por mês — 2026</p>
+          <p class="dashboard-chart-subtitle">Movimentações e consertos por mês — {{ year }}</p>
         </div>
       </div>
 
@@ -13,8 +13,14 @@
           <div v-for="item in monthlyActivity" :key="item.month" class="bar-group">
             <div class="bar-label">{{ item.month }}</div>
             <div class="bar-stack">
-              <div class="bar bar-movimentacoes" :style="{ height: `${(item.movimentacoes / maxMonthlyValue) * 100}%` }" />
-              <div class="bar bar-consertos" :style="{ height: `${(item.consertos / maxMonthlyValue) * 100}%` }" />
+              <div
+                class="bar bar-movimentacoes"
+                :style="{ height: `${(item.movimentacoes / maxMonthlyValue) * 100}%` }"
+              />
+              <div
+                class="bar bar-consertos"
+                :style="{ height: `${(item.consertos / maxMonthlyValue) * 100}%` }"
+              />
             </div>
             <div class="bar-values">
               <span>{{ item.movimentacoes }}</span>
@@ -29,7 +35,7 @@
       <div class="dashboard-chart-header">
         <div>
           <h3 class="dashboard-chart-title">Distribuição por Categoria</h3>
-          <p class="dashboard-chart-subtitle">Composição do patrimônio ativo</p>
+          <p class="dashboard-chart-subtitle">Composição do patrimônio por categoria</p>
         </div>
       </div>
 
@@ -42,7 +48,7 @@
             </div>
             <div class="category-stat">
               <div class="category-progress">
-                <div :style="{ width: `${(item.value / maxCategoryValue) * 100}%`, background: itemColor(item.name) }" />
+                <div :style="{ width: `${item.value}%`, background: itemColor(item.name) }" />
               </div>
               <span>{{ item.value }}%</span>
             </div>
@@ -65,16 +71,15 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  year: {
+    type: Number,
+    default: () => new Date().getFullYear(),
+  },
 })
 
 const maxMonthlyValue = computed(() => {
-  const values = props.monthlyActivity.flatMap(item => [item.movimentacoes, item.consertos])
-  return values.length ? Math.max(...values) : 1
-})
-
-const maxCategoryValue = computed(() => {
-  const values = props.categoryDistribution.map(item => item.value)
-  return values.length ? Math.max(...values) : 1
+  const values = props.monthlyActivity.flatMap((item) => [item.movimentacoes, item.consertos])
+  return Math.max(1, ...values)
 })
 
 function itemColor(name) {
