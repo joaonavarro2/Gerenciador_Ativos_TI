@@ -37,7 +37,7 @@ public class MovimentacaoService {
     @Transactional(readOnly = true)
     public List<MovimentacaoResponseDTO> listarTodas() {
         return movimentacaoRepository
-                .findAllByOrderByDataDesc()
+                .listarTodasComReferencias()
                 .stream()
                 .map(this::converterParaResponse)
                 .toList();
@@ -239,5 +239,50 @@ public class MovimentacaoService {
         dto.setUsuarioId(movimentacao.getUsuarioId());
 
         return dto;
+        
+    }       
+    
+        
+    private MovimentacaoResponseDTO converterParaResponse(
+        Object[] dados) {
+
+        MovimentacaoResponseDTO dto = new MovimentacaoResponseDTO();
+
+        dto.setId((Long) dados[0]);
+        dto.setTipo((String) dados[1]);
+        dto.setData((LocalDateTime) dados[2]);
+        dto.setStatus((String) dados[3]);
+        dto.setJustificativa((String) dados[4]);
+
+        dto.setItemId((Long) dados[5]);
+        dto.setPatrimonioBem((String) dados[6]);
+        dto.setNomeBem((String) dados[7]);
+
+        dto.setDepartamentoOrigemId((Long) dados[8]);
+        dto.setDepartamentoOrigem((String) dados[9]);
+
+        dto.setDepartamentoDestinoId((Long) dados[10]);
+        dto.setDepartamentoDestino((String) dados[11]);
+
+        dto.setEscritorioOrigemId((Long) dados[12]);
+        dto.setEscritorioOrigem((String) dados[13]);
+
+        dto.setEscritorioDestinoId((Long) dados[14]);
+        dto.setEscritorioDestino((String) dados[15]);
+
+        dto.setPessoaOrigemId((Long) dados[16]);
+        dto.setPessoaOrigem((String) dados[17]);
+
+        dto.setPessoaDestinoId((Long) dados[18]);
+        dto.setPessoaDestino((String) dados[19]);
+
+        dto.setUsuarioId((Long) dados[20]);
+        dto.setResponsavel((String) dados[21]);
+
+        return dto;
     }
+
+
+
+
 }
