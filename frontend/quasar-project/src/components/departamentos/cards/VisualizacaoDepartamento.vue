@@ -1,4 +1,4 @@
-<template>
+﻿<template>
 
   
 
@@ -173,7 +173,7 @@
           </div>
 
           <div class="visualizacao-departamento-resumo-numero">
-            {{ resumo.concertos }}
+            {{ resumo.consertos }}
           </div>
 
           <div class="visualizacao-departamento-resumo-label">
@@ -292,6 +292,11 @@
 
         <!-- TABELA -->
 
+        <q-banner v-if="erroBens" dense rounded class="bg-red-1 text-negative q-mb-md">
+          {{ erroBens }}
+          <template #action><q-btn flat color="negative" label="Tentar novamente" @click="carregarBens" /></template>
+        </q-banner>
+        <q-inner-loading :showing="carregandoBens"><q-spinner size="36px" color="primary" /></q-inner-loading>
         <q-table
           flat
           :rows="bensFiltrados"
@@ -454,25 +459,6 @@
                   @click="abrirDetalhesBem(props.row)"
                 />
 
-                <q-btn
-                  flat
-                  round
-                  dense
-                  icon="edit"
-                  size="sm"
-                  @click="abrirEdicaoBem(props.row)"
-                />
-
-                <q-btn
-                  flat
-                  round
-                  dense
-                  icon="delete"
-                  size="sm"
-                  color="negative"
-                  @click="abrirExclusaoBem(props.row)"
-                />
-
               </div>
 
             </q-td>
@@ -488,28 +474,15 @@
         :bem="bemDetalhes"
       />
 
-      <BemCadastroDialog
-        v-model="dialogEdicaoBem"
-        :bem="bemEditando"
-        @salvo="salvarBemDepartamento"
-      />
-
-      <DeleteDialog
-        v-model="dialogDeleteBem"
-        :bem="bemExcluido"
-        @remover-bem="removerBemDepartamento"
-      />
-
     </q-page>
 
 </template>
 
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { api } from '@/boot/axios.js'
 import BemDetailsDialog from '@/components/bens/cards/BensDialogs.vue'
-import BemCadastroDialog from '@/components/bens/cadastro/Cadastro.vue'
-import DeleteDialog from '@/components/bens/cards/DeleteDialog.vue'
 
 
 /* ==========================================================
@@ -584,11 +557,9 @@ const emit = defineEmits([
 ])
 
 const dialogDetalhesBem = ref(false)
-const dialogEdicaoBem = ref(false)
-const dialogDeleteBem = ref(false)
 const bemDetalhes = ref({})
-const bemEditando = ref(null)
-const bemExcluido = ref(null)
+const carregandoBens = ref(false)
+const erroBens = ref('')
 
 function voltar() {
 
@@ -600,39 +571,6 @@ function abrirDetalhesBem(bem) {
   bemDetalhes.value = { ...bem }
   dialogDetalhesBem.value = true
 }
-
-function abrirEdicaoBem(bem) {
-  bemEditando.value = { ...bem }
-  dialogEdicaoBem.value = true
-}
-
-function abrirExclusaoBem(bem) {
-  bemExcluido.value = { ...bem }
-  dialogDeleteBem.value = true
-}
-
-function salvarBemDepartamento(dados) {
-  bens.value = bens.value.map(item => {
-    if (item.id !== dados.id) return item
-
-    return {
-      ...item,
-      ...dados,
-      nome: dados.nome || item.nome || item.descricao,
-      descricao: dados.descricao || item.descricao || item.nome,
-      status: dados.status || item.status,
-    }
-  })
-
-  dialogEdicaoBem.value = false
-}
-
-function removerBemDepartamento(id) {
-  bens.value = bens.value.filter(item => item.id !== id)
-  dialogDeleteBem.value = false
-}
-
-
 
 /* ==========================================================
    RESUMO DO DEPARTAMENTO
@@ -657,23 +595,13 @@ function removerBemDepartamento(id) {
  */
 
 const resumo = computed(() => {
-
+  const statusNormalizado = (status) => String(status || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
   return {
-
-    totalBens:
-      props.departamento?.bens || 0,
-
-    bensAtivos:
-      2,
-
-    emManutencao:
-      1,
-
-    consertos:
-      props.departamento?.consertos || 0
-
+    totalBens: bens.value.length,
+    bensAtivos: bens.value.filter((item) => statusNormalizado(item.status) === 'ativo').length,
+    emManutencao: bens.value.filter((item) => statusNormalizado(item.status).includes('manutenc')).length,
+    consertos: props.departamento?.consertos || 0,
   }
-
 })
 
 
@@ -728,102 +656,29 @@ const categoriaOptions = [
 
 
 
-/* ==========================================================
-   MOCK DOS BENS
-========================================================== */
+const bens = ref([])
 
-/*
- * MOCKS temporários.
- *
- * Estes bens representam os equipamentos
- * associados ao departamento selecionado.
- *
- * FUTURO BACKEND:
- *
- * GET /api/departamentos/{id}/bens
- *
- * O resultado da API substituirá este array.
- */
+async function carregarBens() {
+  const id = props.departamento?.id
+  if (!id) { bens.value = []; return }
+  carregandoBens.value = true
+  erroBens.value = ''
+  try {
+    const { data } = await api.get(`/departamentos/${id}/bens`)
+    bens.value = data.map((item) => ({
+      ...item,
+      descricao: item.descricao || item.nome || '',
+      marcaModelo: [item.fabricante, item.modelo].filter(Boolean).join(' / ') || '—',
+      responsavel: item.responsavel || '—',
+      localizacao: [item.escritorio, item.departamento].filter(Boolean).join(' / ') || '—',
+      ultimaMovimentacao: '—',
+    }))
+  } catch (error) {
+    erroBens.value = error.response?.data?.mensagem || 'Não foi possível carregar os bens deste departamento.'
+  } finally { carregandoBens.value = false }
+}
 
-const bens = ref([
-
-  {
-
-    id: 'BEM-1001',
-    nome: 'Notebook Dell Latitude 7440',
-    descricao: 'Notebook corporativo para uso administrativo e desenvolvimento.',
-    categoria: 'Tecnologia',
-    codigo: 'DCL-7440-01',
-    patrimonio: 'PAT-2024-1001',
-    serie: 'SN-DEL-7440-001',
-    fabricante: 'Dell',
-    modelo: 'Latitude 7440',
-    responsavel: 'Ricardo Alves',
-    status: 'Ativo',
-    dataAquisicao: '2024-02-15',
-    escritorio: 'Sede',
-    departamento: 'Assessoria da Diretoria',
-    localizacao: 'Sala AD – Sede',
-    ultimaMovimentacao: '12/05/2025',
-    icon: 'laptop',
-    avatarColor: 'blue-1',
-    iconColor: 'blue-8'
-
-  },
-
-
-  {
-
-    id: 'BEM-1002',
-    nome: 'Computador Dell OptiPlex',
-    descricao: 'Desktop de produtividade para atendimento interno.',
-    categoria: 'Tecnologia',
-    codigo: 'DOP-001',
-    patrimonio: 'PAT-2024-1002',
-    serie: 'SN-DEL-OP-002',
-    fabricante: 'Dell',
-    modelo: 'OptiPlex 7090',
-    responsavel: 'Ricardo Alves',
-    status: 'Ativo',
-    dataAquisicao: '2023-10-18',
-    escritorio: 'Sede',
-    departamento: 'Assessoria da Diretoria',
-    localizacao: 'Sala AD – Sede',
-    ultimaMovimentacao: '08/04/2025',
-    icon: 'desktop_windows',
-    avatarColor: 'green-1',
-    iconColor: 'green-8'
-
-  },
-
-
-  {
-
-    id: 'BEM-1003',
-    nome: 'Monitor LG 24"',
-    descricao: 'Monitor para estação de trabalho e reuniões.',
-    categoria: 'Periféricos',
-    codigo: 'LG-24-001',
-    patrimonio: 'PAT-2024-1003',
-    serie: 'SN-LG-24-003',
-    fabricante: 'LG',
-    modelo: '24MK430',
-    responsavel: 'Ricardo Alves',
-    status: 'Manutenção',
-    dataAquisicao: '2022-11-09',
-    escritorio: 'Sede',
-    departamento: 'Assessoria da Diretoria',
-    localizacao: 'Sala AD – Sede',
-    ultimaMovimentacao: '20/03/2025',
-    icon: 'monitor',
-    avatarColor: 'orange-1',
-    iconColor: 'orange-8'
-
-  }
-
-])
-
-
+watch(() => props.departamento?.id, carregarBens, { immediate: true })
 
 /* ==========================================================
    COLUNAS
@@ -1105,3 +960,4 @@ function iniciais(nome) {
 // }
 
 </script>
+

@@ -31,11 +31,18 @@
 
             <div class="row q-col-gutter-md">
               <div class="col-12 col-md-6">
-                <q-input
-                  v-model="form.ativoId"
+                <q-select
+                  v-model="form.itemId"
+                  :options="bens"
+                  option-label="rotulo"
+                  option-value="id"
+                  emit-value
+                  map-options
+                  use-input
+                  @filter="filtrarBens"
                   outlined
                   dense
-                  label="ID do Ativo *"
+                  label="Ativo *"
                   :rules="[valorObrigatorio]"
                   hide-bottom-space
                 />
@@ -95,14 +102,27 @@
             </div>
 
             <div class="col-12">
-              <q-input
+              <q-select
                 v-model="form.tecnico"
+                :options="tecnicosFiltrados"
+                use-input
+                input-debounce="0"
+                @filter="filtrarTecnicos"
                 outlined
                 dense
                 label="Técnico Responsável *"
+                placeholder="Digite para buscar um usuário"
                 :rules="[valorObrigatorio]"
                 hide-bottom-space
-              />
+              >
+                <template #no-option>
+                  <q-item>
+                    <q-item-section class="text-grey-7">
+                      {{ todosTecnicos.length ? 'Nenhum nome encontrado.' : 'Nenhum usuário ativo cadastrado.' }}
+                    </q-item-section>
+                  </q-item>
+                </template>
+              </q-select>
             </div>
           </div>
 
@@ -118,6 +138,7 @@
                   v-model="form.dataInicio"
                   outlined
                   dense
+                  type="date"
                   label="Data de Início *"
                   :rules="[valorObrigatorio]"
                   hide-bottom-space
@@ -133,6 +154,7 @@
                   v-model="form.dataConclusao"
                   outlined
                   dense
+                  type="date"
                   label="Data de Conclusão"
                 >
                   <template #append>
@@ -161,7 +183,7 @@
             <div class="anexo-upload" @click="abrirSelecionadorArquivos">
               <q-icon name="cloud_upload" color="positive" size="30px" />
               <div class="text-body1 text-weight-medium q-mt-sm">Clique para fazer upload ou arraste arquivos</div>
-              <div class="text-grey-7 q-mt-xs">PDF, JPEG, PNG, XLSX até 20MB por arquivo</div>
+              <div class="text-grey-7 q-mt-xs">PDF, JPG, PNG, GIF, DOC ou DOCX — até 20 MB por arquivo</div>
             </div>
           </div>
         </q-card-section>
@@ -174,7 +196,8 @@
             no-caps
             icon="check_circle"
             label="Salvar Alterações"
-            :disable="!formValido"
+            :loading="salvando"
+            :disable="!formValido || salvando"
           />
         </q-card-actions>
       </q-form>
@@ -183,10 +206,12 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import { api } from '@/boot/axios.js'
 
 const aberto = defineModel({ type: Boolean, default: false })
 const props = defineProps({
+  salvando: Boolean,
   reparo: {
     type: Object,
     default: () => ({})
@@ -195,12 +220,16 @@ const props = defineProps({
 
 const emit = defineEmits(['salvar'])
 const inputArquivo = ref(null)
+const todosBens = ref([])
+const bens = ref([])
+const todosTecnicos = ref([])
+const tecnicosFiltrados = ref([])
 
 const tiposReparo = ['Reparo', 'Substituição', 'Instalação']
 const statusOptions = ['Pendente', 'Em andamento', 'Concluído']
 
 const form = ref({
-  ativoId: '',
+  itemId: null,
   tipo: null,
   problema: '',
   descricao: '',
@@ -213,7 +242,7 @@ const form = ref({
 
 const formValido = computed(
   () =>
-    form.value.ativoId &&
+    form.value.itemId &&
     form.value.tipo &&
     form.value.problema &&
     form.value.status &&
@@ -226,7 +255,7 @@ watch(
   (reparo) => {
     if (reparo && Object.keys(reparo).length) {
       form.value = {
-        ativoId: reparo.ativoId || '',
+        itemId: reparo.itemId || null,
         tipo: reparo.tipo || null,
         problema: reparo.problema || '',
         descricao: reparo.descricao || '',
@@ -259,25 +288,54 @@ function selecionarArquivos(event) {
   event.target.value = ''
 }
 
+function filtrarBens(valor, atualizar) {
+  atualizar(() => {
+    const termo = (valor || '').toLocaleLowerCase('pt-BR')
+    bens.value = todosBens.value.filter((bem) => bem.rotulo.toLocaleLowerCase('pt-BR').includes(termo))
+  })
+}
+
+function normalizarTexto(valor) {
+  return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
+}
+
+function filtrarTecnicos(valor, atualizar) {
+  atualizar(() => {
+    const termo = normalizarTexto(valor)
+    tecnicosFiltrados.value = todosTecnicos.value.filter((nome) => normalizarTexto(nome).includes(termo))
+  })
+}
+
 function salvarReparo() {
   if (!formValido.value) return
 
   emit('salvar', {
     ...props.reparo,
-    ativoId: form.value.ativoId,
+    itemId: form.value.itemId,
     tipo: form.value.tipo,
-    problema: form.value.problema,
-    descricao: form.value.descricao || 'Sem detalhes adicionais.',
+    descricaoProblema: form.value.problema,
+    descricaoSolucao: form.value.descricao || null,
     status: form.value.status,
     tecnico: form.value.tecnico,
-    dataInicio: form.value.dataInicio,
-    dataConclusao: form.value.dataConclusao,
-    data: form.value.dataInicio,
+    dataEntrada: `${form.value.dataInicio}T00:00:00`,
+    dataSaida: form.value.dataConclusao ? `${form.value.dataConclusao}T00:00:00` : null,
     anexos: form.value.anexos,
   })
-
-  fechar()
 }
+
+onMounted(async () => {
+  try {
+    const { data } = await api.get('/bens')
+    todosBens.value = data.map((bem) => ({ ...bem, rotulo: `${bem.codigo} · ${bem.nome}` }))
+    bens.value = todosBens.value
+  } catch { /* A página informa falhas ao carregar os registros. */ }
+
+  try {
+    const { data } = await api.get('/consertos/tecnicos')
+    todosTecnicos.value = data
+    tecnicosFiltrados.value = data
+  } catch { /* A lista fica vazia se a API não estiver disponível. */ }
+})
 </script>
 
 <style scoped>

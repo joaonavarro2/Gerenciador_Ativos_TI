@@ -36,27 +36,36 @@ public class MovimentacaoService {
     // Lista todas as movimentações, da mais recente para a mais antiga.
     @Transactional(readOnly = true)
     public List<MovimentacaoResponseDTO> listarTodas() {
+        return listarTodas(null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MovimentacaoResponseDTO> listarTodas(String tipo) {
         return movimentacaoRepository
                 .listarTodasComReferencias()
                 .stream()
                 .map(this::converterParaResponse)
+                .filter(m -> tipo == null || tipo.isBlank() || m.getTipo().equalsIgnoreCase(tipo.trim()))
                 .toList();
     }
 
     // Busca uma movimentação pelo ID.
     @Transactional(readOnly = true)
     public MovimentacaoResponseDTO buscarPorId(Long id) {
-        Movimentacao movimentacao = movimentacaoRepository
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Movimentação não encontrada."
-                ));
+        return movimentacaoRepository
+            .buscarComReferencias(id)
+            .stream()
+            .findFirst()
+            .map(this::converterParaResponse)
+            .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Movimentação não encontrada."
+            ));
 
-        return converterParaResponse(movimentacao);
     }
 
     // Lista o histórico de movimentações de um bem.
+
     @Transactional(readOnly = true)
     public List<MovimentacaoResponseDTO> listarPorItem(Long itemId) {
         if (!itemRepository.existsById(itemId)) {
@@ -69,13 +78,25 @@ public class MovimentacaoService {
         return movimentacaoRepository
                 .findByItemIdOrderByDataDesc(itemId)
                 .stream()
-                .map(this::converterParaResponse)
+                .flatMap(movimentacao ->
+                        movimentacaoRepository
+                                .buscarComReferencias(movimentacao.getId())
+                                .stream()
+                                .map(this::converterParaResponse)
+                )
                 .toList();
     }
 
+
     // Lista movimentações por status.
+
     @Transactional(readOnly = true)
     public List<MovimentacaoResponseDTO> listarPorStatus(String status) {
+        return listarPorStatus(status, null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<MovimentacaoResponseDTO> listarPorStatus(String status, String tipo) {
         if (status == null || status.isBlank()) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -86,9 +107,16 @@ public class MovimentacaoService {
         return movimentacaoRepository
                 .findByStatusIgnoreCaseOrderByDataDesc(status.trim())
                 .stream()
-                .map(this::converterParaResponse)
+                .flatMap(movimentacao ->
+                        movimentacaoRepository
+                                .buscarComReferencias(movimentacao.getId())
+                                .stream()
+                                .map(this::converterParaResponse)
+                )
+                .filter(m -> tipo == null || tipo.isBlank() || m.getTipo().equalsIgnoreCase(tipo.trim()))
                 .toList();
     }
+
 
     // Cadastra uma movimentação.
     @Transactional
@@ -97,7 +125,7 @@ public class MovimentacaoService {
             Long usuarioAutenticadoId) {
 
         if (dto.getItemId() == null ||
-                !itemRepository.existsById(dto.getItemId())) {
+                !itemRepository.existsByIdAndExcluidoFalse(dto.getItemId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Bem não encontrado."
@@ -113,6 +141,7 @@ public class MovimentacaoService {
         }
 
         validarOrigemDestino(dto);
+        validarReferencias(dto);
 
         Movimentacao movimentacao = new Movimentacao();
 
@@ -136,7 +165,10 @@ public class MovimentacaoService {
 
         Movimentacao salva = movimentacaoRepository.save(movimentacao);
 
-        return converterParaResponse(salva);
+        return movimentacaoRepository.buscarComReferencias(salva.getId()).stream()
+                .findFirst().map(this::converterParaResponse)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Não foi possível consultar a movimentação cadastrada."));
     }
 
     // Atualiza os dados de uma movimentação existente.
@@ -153,7 +185,7 @@ public class MovimentacaoService {
                 ));
 
         if (dto.getItemId() == null ||
-                !itemRepository.existsById(dto.getItemId())) {
+                !itemRepository.existsByIdAndExcluidoFalse(dto.getItemId())) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND,
                     "Bem não encontrado."
@@ -161,6 +193,7 @@ public class MovimentacaoService {
         }
 
         validarOrigemDestino(dto);
+        validarReferencias(dto);
 
         movimentacao.setTipo(dto.getTipo().trim());
         movimentacao.setData(
@@ -182,7 +215,15 @@ public class MovimentacaoService {
         // Mantém o usuário original que registrou a movimentação.
         Movimentacao atualizada = movimentacaoRepository.save(movimentacao);
 
-        return converterParaResponse(atualizada);
+        return movimentacaoRepository
+        .buscarComReferencias(atualizada.getId())
+        .stream()
+        .findFirst()
+        .map(this::converterParaResponse)
+        .orElseThrow(() -> new ResponseStatusException(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "Não foi possível consultar a movimentação atualizada."
+        ));
     }
 
     // Exclui uma movimentação.
@@ -214,6 +255,21 @@ public class MovimentacaoService {
                     HttpStatus.BAD_REQUEST,
                     "Informe ao menos um campo de origem e um de destino."
             );
+        }
+    }
+
+    private void validarReferencias(MovimentacaoRequestDTO dto) {
+        validarReferencia(dto.getDepartamentoOrigemId(), "Departamento de origem", itemRepository::contarDepartamento);
+        validarReferencia(dto.getDepartamentoDestinoId(), "Departamento de destino", itemRepository::contarDepartamento);
+        validarReferencia(dto.getEscritorioOrigemId(), "Escritório de origem", itemRepository::contarEscritorio);
+        validarReferencia(dto.getEscritorioDestinoId(), "Escritório de destino", itemRepository::contarEscritorio);
+        validarReferencia(dto.getPessoaOrigemId(), "Pessoa de origem", itemRepository::contarPessoaAtiva);
+        validarReferencia(dto.getPessoaDestinoId(), "Pessoa de destino", itemRepository::contarPessoaAtiva);
+    }
+
+    private void validarReferencia(Long id, String campo, java.util.function.ToLongFunction<Long> contar) {
+        if (id != null && contar.applyAsLong(id) == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, campo + " inválido ou inativo.");
         }
     }
 

@@ -27,7 +27,7 @@
 
       <div class="col-auto">
         <div class="field-label">Data Inicial</div>
-        <q-input v-model="dataInicial" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
+        <q-input v-model="dataInicial" outlined dense type="date" class="historico-filtro historico-data" clearable>
           <template #prepend><q-icon name="event" /></template>
         </q-input>
       </div>
@@ -38,7 +38,7 @@
 
       <div class="col-auto">
         <div class="field-label">Data Final</div>
-        <q-input v-model="dataFinal" outlined dense placeholder="dd/mm/aaaa" class="historico-filtro historico-data" clearable>
+        <q-input v-model="dataFinal" outlined dense type="date" class="historico-filtro historico-data" clearable>
           <template #prepend><q-icon name="event" /></template>
         </q-input>
       </div>
@@ -68,13 +68,22 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { api } from '@/boot/axios.js'
 
 const props = defineProps({
   filtros: { type: Object, required: true }
 })
 
 const emit = defineEmits(['update:filtros', 'novo'])
+
+onMounted(async () => {
+  try {
+    const { data } = await api.get('/bens/opcoes')
+    escritorios.value.splice(0, escritorios.value.length, ...data.escritorios.map((opcao) => opcao.nome))
+    departamentos.value.splice(0, departamentos.value.length, ...data.departamentos.map((opcao) => opcao.nome))
+  } catch { /* Mantém as opções locais se a API estiver indisponível. */ }
+})
 
 const criarFiltro = (chave) => computed({
   get: () => props.filtros[chave],
@@ -91,7 +100,7 @@ const dataFinal = criarFiltro('dataFinal')
 
 const tipos = ['Reparo', 'Substituição', 'Instalação']
 const statusOptions = ['Pendente', 'Em andamento', 'Concluído']
-const escritorios = ['Alagoinhas',
+const escritorios = ref(['Alagoinhas',
   'Amargosa',
   'Barreiras',
   'Bom Jesus da Lapa',
@@ -117,8 +126,8 @@ const escritorios = ['Alagoinhas',
   'Serrinha',
   'Teixeira de Freitas',
   'Valença',
-  'Vitória da Conquista']
-const departamentos = ['Alagoinhas',
+  'Vitória da Conquista'])
+const departamentos = ref(['Alagoinhas',
   'Amargosa',
   'Barreiras',
   'Bom Jesus da Lapa',
@@ -144,7 +153,7 @@ const departamentos = ['Alagoinhas',
   'Serrinha',
   'Teixeira de Freitas',
   'Valença',
-  'Vitória da Conquista']
+  'Vitória da Conquista'])
 </script>
 
 <style scoped>

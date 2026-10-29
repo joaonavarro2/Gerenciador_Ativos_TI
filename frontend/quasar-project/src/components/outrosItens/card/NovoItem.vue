@@ -25,7 +25,7 @@
               <q-input v-model="form.nome" outlined dense label="Nome do item *" placeholder="Ex: Papel A4 - Resma" :rules="[obrigatorio]" hide-bottom-space />
             </div>
             <div class="col-12 col-md-6">
-              <q-select v-model="form.categoria" outlined dense label="Categoria *" :options="categorias" :rules="[obrigatorio]" hide-bottom-space />
+              <q-select v-model="form.categoria" outlined dense label="Categoria *" :options="props.categorias" :rules="[obrigatorio]" hide-bottom-space />
             </div>
             <div class="col-12 col-md-6">
               <q-select v-model="form.status" outlined dense label="Status *" :options="statusOptions" :rules="[obrigatorio]" hide-bottom-space />
@@ -35,7 +35,7 @@
           <div class="titulo-secao q-mt-xl">LOCALIZAÇÃO E ESTOQUE</div>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-6">
-              <q-select v-model="form.escritorio" outlined dense label="Escritório *" :options="escritorios" :rules="[obrigatorio]" hide-bottom-space />
+              <q-select v-model="form.escritorio" outlined dense label="Escritório *" :options="props.escritorios" :rules="[obrigatorio]" hide-bottom-space />
             </div>
             <div class="col-12 col-md-6">
               <q-input v-model="form.localizacao" outlined dense label="Localização *" placeholder="Ex: Almoxarifado Central" :rules="[obrigatorio]" hide-bottom-space />
@@ -46,6 +46,7 @@
             <div class="col-12 col-md-6">
               <q-input v-model.number="form.estoqueMinimo" outlined dense type="number" min="0" label="Estoque mínimo *" :rules="[quantidadeObrigatoria]" hide-bottom-space />
             </div>
+            <div class="col-12"><q-input v-model="form.fornecedor" outlined dense label="Fornecedor" /></div>
           </div>
         </q-card-section>
 
@@ -59,39 +60,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const aberto = defineModel({ type: Boolean, default: false })
+const props = defineProps({ escritorios: { type: Array, default: () => [] }, categorias: { type: Array, default: () => [] } })
 const emit = defineEmits(['salvar'])
 
-const categorias = ['Monitor','Mouse','Teclado','Cabo','Fonte','Estabilizador','No-break','Roteador','Switch','Hub','Impressora','Scanner','Nobreak','Estabilizador','Cabo de rede','Cabo HDMI','Cabo VGA']
-const escritorios = ['Alagoinhas',
-  'Amargosa',
-  'Barreiras',
-  'Bom Jesus da Lapa',
-  'Caetité',
-  'Salvador',
-  'Cruz das Almas',
-  'Eunápolis',
-  'Ribeira do Pombal',
-  'Feira de Santana',
-  'Irecê',
-  'Itaberaba',
-  'Itabuna',
-  'Itapetinga',
-  'Jacobina',
-  'Jequié',
-  'Juazeiro',
-  'Macaúbas',
-  'Paulo Afonso',
-  'Riachão do Jacuípe',
-  'Santa Maria da Vitória',
-  'Seabra',
-  'Senhor do Bonfim',
-  'Serrinha',
-  'Teixeira de Freitas',
-  'Valença',
-  'Vitória da Conquista',]
 const statusOptions = ['Ativo', 'Inativo', 'Esgotado']
 
 const estadoInicial = () => ({
@@ -107,6 +81,7 @@ const estadoInicial = () => ({
 })
 
 const form = ref(estadoInicial())
+watch(() => aberto.value, (visivel) => { if (!visivel) form.value = estadoInicial() })
 const formValido = computed(() =>
   form.value.codigo && form.value.nome && form.value.categoria && form.value.escritorio
   && form.value.localizacao && form.value.quantidade >= 0 && form.value.estoqueMinimo >= 0 && form.value.status,
@@ -127,8 +102,7 @@ function fechar() {
 
 function salvar() {
   if (!formValido.value) return
-  emit('salvar', { ...form.value, id: Date.now() })
-  fechar()
+  emit('salvar', { ...form.value })
 }
 </script>
 

@@ -25,6 +25,7 @@
         icon="add"
         label="Nova Pessoa"
         no-caps
+        @click="emit('nova-pessoa')"
       />
     </div>
 
@@ -33,6 +34,7 @@
       flat
       :rows="pessoas"
       :columns="columns"
+      :pagination="{ rowsPerPage: 0 }"
       row-key="id"
       separator="horizontal"
       class="bens-qtable pessoas-qtable"
@@ -71,7 +73,7 @@ defineProps({
   }
 })
 
-const emit = defineEmits(['visualizar', 'editar', 'excluir'])
+const emit = defineEmits(['visualizar', 'editar', 'excluir', 'nova-pessoa'])
 
 const columns = [
   { name: 'nome', label: 'NOME COMPLETO', field: 'nome', align: 'left' },
