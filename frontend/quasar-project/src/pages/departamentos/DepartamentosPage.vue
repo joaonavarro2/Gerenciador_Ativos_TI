@@ -38,7 +38,7 @@
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md">
           <q-btn flat label="Cancelar" :disable="excluindo" @click="fecharConfirmacaoExclusao" />
-          <q-btn color="negative" icon="delete" label="Excluir" :loading="excluindo" @click="excluirDepartamento" />
+          <q-btn v-if="$podeEditar()" color="negative" icon="delete" label="Excluir" :loading="excluindo" @click="excluirDepartamento" />
         </q-card-actions>
       </q-card>
     </q-dialog>

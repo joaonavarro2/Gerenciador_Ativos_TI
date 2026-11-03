@@ -175,15 +175,6 @@ async function entrar() {
     const texto = String(rawMensagem).toLowerCase()
 
     if (
-      status === 404 ||
-      texto.includes('usuário não cadastrado') ||
-      texto.includes('user not found')
-    ) {
-      emailError.value = 'Usuário não cadastrado. Verifique o e-mail ou cadastre-se.'
-      return
-    }
-
-    if (
       status === 401 ||
       status === 403 ||
       texto.includes('senha incorreta') ||

@@ -62,6 +62,11 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/renovar")
+    public ResponseEntity<LoginResponseDTO> renovar(Authentication authentication) {
+        return ResponseEntity.ok(authService.renovar(authentication.getName()));
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UsuarioResponseDTO> me(
             Authentication authentication) {
