@@ -1,0 +1,9 @@
+CREATE TABLE conserto_anexo (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    conserto_id BIGINT NOT NULL REFERENCES conserto(id) ON DELETE CASCADE,
+    nome_arquivo VARCHAR(255) NOT NULL,
+    tipo_conteudo VARCHAR(150) NOT NULL,
+    tamanho BIGINT NOT NULL,
+    conteudo BYTEA NOT NULL,
+    data_upload TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

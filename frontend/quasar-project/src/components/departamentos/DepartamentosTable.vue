@@ -33,6 +33,19 @@
 
         </div>
 
+        <q-btn
+          flat
+          round
+          dense
+          icon="delete_outline"
+          color="negative"
+          class="departamento-excluir"
+          aria-label="Excluir departamento"
+          @click.stop="emit('solicitar-exclusao', departamento)"
+        >
+          <q-tooltip>Excluir departamento</q-tooltip>
+        </q-btn>
+
 
         <!-- =================================================
              NOME
@@ -197,7 +210,8 @@ defineProps({
 
 const emit = defineEmits([
 
-  'visualizar-departamento'
+  'visualizar-departamento',
+  'solicitar-exclusao'
 
 ])
 
@@ -221,3 +235,8 @@ function visualizarDepartamento(departamento) {
 }
 
 </script>
+
+<style scoped>
+.departamento-card { position: relative; }
+.departamento-excluir { position: absolute; top: 12px; right: 12px; z-index: 1; }
+</style>

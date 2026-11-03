@@ -41,7 +41,7 @@ import BaseDialog from '@/components/common/BaseDialog.vue'
 const props = defineProps({ modelValue: Boolean, item: { type: Object, default: () => ({}) } })
 const emit = defineEmits(['update:modelValue', 'excluir'])
 function fechar() { emit('update:modelValue', false) }
-function confirmar() { if (!props.item.id) return; emit('excluir', props.item.id); fechar() }
+function confirmar() { if (!props.item.id) return; emit('excluir', props.item.id) }
 </script>
 
 <style scoped>

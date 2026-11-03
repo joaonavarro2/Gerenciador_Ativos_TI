@@ -1,116 +1,73 @@
 <template>
   <q-page class="movimentacoes-page">
-    <MovimentacoesHeader
-      :movimentacoes="movimentacoes"
-      v-model:filtros="filtros"
-    />
-
+    <MovimentacoesHeader :movimentacoes="movimentacoes" v-model:filtros="filtros" @registrar="carregarMovimentacoes" />
+    <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro }}</q-banner>
+    <q-inner-loading :showing="carregando"><q-spinner size="40px" color="primary" /></q-inner-loading>
     <MovimentacoesTable :movimentacoes="movimentacoesFiltradas" />
   </q-page>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-
+import { computed, onMounted, ref } from 'vue'
 import MovimentacoesHeader from '@/components/movimentacoes/MovimentacoesHeader.vue'
 import MovimentacoesTable from '@/components/movimentacoes/MovimentacoesTable.vue'
+import { api } from '@/boot/axios.js'
 
-// Fonte única dos dados da página. No futuro, esta lista será preenchida pela API.
-const movimentacoes = ref([
-  {
-    id: 1,
-    patrimonio: 'BA-021874',
-    codigoMovimentacao: 'MOV-0045',
-    bem: 'Impressora HP LaserJet Pro',
-    tipo: 'Manutenção',
-    tipoClasse: 'manutencao',
-    tipoIcone: 'build',
-    origem: 'Dep. de TI',
-    destino: 'Assistência Técnica',
-    data: '18/06/25',
-    responsavel: 'Marcos Silva',
-    iniciais: 'MS',
-    status: 'Em Aberto',
-    statusClasse: 'aberto',
-    statusIcone: 'schedule',
-  },
-  {
-    id: 2,
-    patrimonio: 'BA-083401',
-    codigoMovimentacao: 'MOV-0012',
-    bem: 'Notebook Lenovo ThinkPad',
-    tipo: 'Cessão',
-    tipoClasse: 'cessao',
-    tipoIcone: 'person_add',
-    origem: 'Dep. Administrativo',
-    destino: 'Prefeitura Municipal',
-    data: '30/05/25',
-    responsavel: 'Fernanda Rocha',
-    iniciais: 'FR',
-    status: 'Pendente',
-    statusClasse: 'pendente',
-    statusIcone: 'error_outline',
-  },
-  {
-    id: 3,
-    patrimonio: 'BA-042891',
-    codigoMovimentacao: 'MOV-0001',
-    bem: 'Notebook Dell Latitude 5540',
-    tipo: 'Transferência',
-    tipoClasse: 'transferencia',
-    tipoIcone: 'sync_alt',
-    origem: 'Dep. de TI',
-    destino: 'Dep. Financeiro',
-    data: '10/06/25',
-    responsavel: 'João Matos',
-    iniciais: 'JM',
-    status: 'Concluído',
-    statusClasse: 'concluido',
-    statusIcone: 'check_circle_outline',
-  },
-])
+const movimentacoes = ref([])
+const carregando = ref(false)
+const erro = ref('')
+const filtros = ref({ busca: '', tipo: null, data: null })
 
-// O estado dos filtros pertence à página, pois ele coordena Header e tabela.
-const filtros = ref({
-  busca: '',
-  tipo: null,
-  data: null,
-})
+const normalizar = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
+const formatarData = (valor) => valor ? new Intl.DateTimeFormat('pt-BR').format(new Date(valor)) : ''
+const nomeLocal = (escritorio, departamento, pessoa) => [escritorio, departamento, pessoa].filter(Boolean).join(' / ') || '—'
+const mapear = (m) => {
+  const status = normalizar(m.status).includes('conclu') ? 'Concluído' : (m.status || 'Em Aberto')
+  const origem = nomeLocal(m.escritorioOrigem, m.departamentoOrigem, m.pessoaOrigem)
+  const destino = nomeLocal(m.escritorioDestino, m.departamentoDestino, m.pessoaDestino)
+  const responsavel = m.responsavel || '—'
+  const iniciais = responsavel.split(/\s+/).slice(0, 2).map((parte) => parte[0]).join('').toLocaleUpperCase('pt-BR')
+  const tipoClasse = normalizar(m.tipo).replace(/\s+/g, '-')
+  const statusClasse = normalizar(status).replace(/\s+/g, '-')
+  return {
+    ...m,
+    patrimonio: m.patrimonioBem || `Bem #${m.itemId}`,
+    codigoMovimentacao: `MOV-${String(m.id).padStart(4, '0')}`,
+    bem: m.nomeBem || `Bem #${m.itemId}`,
+    tipoClasse,
+    tipoIcone: m.tipo?.toLocaleLowerCase('pt-BR').includes('devol') ? 'assignment_return' : 'sync_alt',
+    origem,
+    destino,
+    data: formatarData(m.data),
+    dataIso: m.data?.slice(0, 10) || '',
+    responsavel,
+    iniciais: iniciais || '—',
+    statusClasse,
+    statusIcone: normalizar(status).includes('conclu') ? 'check_circle_outline' : 'schedule',
+  }
+}
 
-const normalizarTexto = (valor) =>
-  String(valor ?? '')
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
+async function carregarMovimentacoes() {
+  carregando.value = true
+  erro.value = ''
+  try {
+    const { data } = await api.get('/movimentacoes')
+    movimentacoes.value = data.map(mapear)
+  } catch (e) {
+    erro.value = e.response?.data?.mensagem || 'Não foi possível carregar as movimentações.'
+  } finally { carregando.value = false }
+}
 
 const movimentacoesFiltradas = computed(() => {
-  const busca = normalizarTexto(filtros.value.busca)
-
-  return movimentacoes.value.filter((movimentacao) => {
-    const correspondeBusca = !busca || [
-      movimentacao.patrimonio,
-      movimentacao.codigoMovimentacao,
-      movimentacao.bem,
-      movimentacao.origem,
-      movimentacao.destino,
-      movimentacao.responsavel,
-    ].some((campo) => normalizarTexto(campo).includes(busca))
-
-    const correspondeTipo = !filtros.value.tipo || movimentacao.tipo === filtros.value.tipo
-    const correspondeData = !filtros.value.data || movimentacao.data === filtros.value.data
-
-    return correspondeBusca && correspondeTipo && correspondeData
+  const busca = normalizar(filtros.value.busca)
+  return movimentacoes.value.filter((m) => {
+    const texto = [m.patrimonio, m.codigoMovimentacao, m.bem, m.origem, m.destino, m.responsavel].some((campo) => normalizar(campo).includes(busca))
+    const tipo = !filtros.value.tipo || m.tipo === filtros.value.tipo
+    const filtroData = filtros.value.data || ''
+    const data = !filtroData || m.dataIso === filtroData || m.data.startsWith(filtroData)
+    return texto && tipo && data
   })
 })
 
-/*
- * BACKEND — SPRING BOOT
- *
- * Quando a API estiver disponível, a fonte única continuará sendo esta página:
- *
- * const response = await api.get('/movimentacoes', { params: filtros.value })
- * movimentacoes.value = response.data
- *
- * Header e tabela não precisam conhecer a API; eles continuam recebendo props.
- */
+onMounted(carregarMovimentacoes)
 </script>

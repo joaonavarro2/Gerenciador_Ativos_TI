@@ -1,30 +1,23 @@
 <template>
   <q-page class="consertos-page">
     <ConsertosHeader v-model:filtros="filtros" @novo="abrirModalNovoReparo" />
-
-    <ConsertosTable
-      :consertos="consertosFiltrados"
-      :possui-filtros="possuiFiltros"
-      :filtros="filtros"
-      @visualizar="abrirModalVisualizacao"
-      @editar="abrirModalEdicao"
-      @excluir="abrirModalExclusao"
-    />
-
-    <NovoReparo v-model="dialogNovoReparo" @salvar="adicionarReparo" />
-    <EditarReparo v-model="dialogEditarReparo" :reparo="reparoSelecionado" @salvar="atualizarReparo" />
+    <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro }}</q-banner>
+    <q-card flat bordered class="q-mb-md">
+      <q-inner-loading :showing="carregando"><q-spinner size="40px" color="primary" /></q-inner-loading>
+      <ConsertosTable :consertos="consertosFiltrados" :possui-filtros="possuiFiltros" :filtros="filtros"
+        @visualizar="abrirModalVisualizacao" @editar="abrirModalEdicao" @excluir="abrirModalExclusao" />
+    </q-card>
+    <NovoReparo v-model="dialogNovoReparo" :salvando="salvando" @salvar="adicionarReparo" />
+    <EditarReparo v-model="dialogEditarReparo" :reparo="reparoSelecionado" :salvando="salvando" @salvar="atualizarReparo" />
     <VisualizarReparo v-model="dialogVisualizarReparo" :reparo="reparoSelecionado" />
-    <ExcluirReparo
-      v-model="dialogExcluirReparo"
-      :reparo="reparoSelecionado"
-      @excluir="excluirReparo"
-    />
+    <ExcluirReparo v-model="dialogExcluirReparo" :reparo="reparoSelecionado" @excluir="excluirReparo" />
   </q-page>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-
+import { computed, onMounted, ref } from 'vue'
+import { Notify } from 'quasar'
+import { api } from '@/boot/axios.js'
 import ConsertosHeader from '@/components/consertos/ConsertosHeader.vue'
 import ConsertosTable from '@/components/consertos/ConsertosTable.vue'
 import NovoReparo from '@/components/consertos/card/NovoReparo.vue'
@@ -37,126 +30,151 @@ const dialogEditarReparo = ref(false)
 const dialogVisualizarReparo = ref(false)
 const dialogExcluirReparo = ref(false)
 const reparoSelecionado = ref({})
-
-const consertos = ref([
-  { id: 1, ativoId: 'ATV-2001', problema: 'Quebra da tela', tipo: 'Reparo', status: 'Pendente', tecnico: 'Lucas', descricao: 'Tela trincada por queda', data: '2024-06-02', escritorio: 'Salvador', departamento: 'Diretoria Geral' },
-  { id: 2, ativoId: 'ATV-2002', problema: 'Fonte com defeito', tipo: 'Substituição', status: 'Concluído', tecnico: 'Mariana', descricao: 'Substituição da fonte', data: '2024-06-15', escritorio: 'Feira de Santana', departamento: 'Dep. Financeiro' },
-  { id: 3, ativoId: 'ATV-2003', problema: 'Teclado com teclas soltas', tipo: 'Reparo', status: 'Em andamento', tecnico: 'Paulo', descricao: 'Troca parcial do teclado', data: '2024-07-01', escritorio: 'Vitória da Conquista', departamento: 'Controle Interno' },
-])
-
+const consertos = ref([])
+const carregando = ref(false)
+const salvando = ref(false)
+const erro = ref('')
 const filtros = ref({ busca: '', tipo: null, status: null, tecnico: null, departamento: null, escritorio: null, dataInicial: '', dataFinal: '' })
-
 const possuiFiltros = computed(() => Object.values(filtros.value).some(Boolean))
+const texto = (valor) => String(valor ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLocaleLowerCase('pt-BR')
+const formatarData = (valor) => valor ? valor.slice(0, 10) : ''
 
-function abrirModalNovoReparo() {
-  dialogNovoReparo.value = true
+function mapear(reparo) {
+  return {
+    ...reparo,
+    ativoId: reparo.codigoBem || reparo.patrimonioBem || `Bem #${reparo.itemId}`,
+    problema: reparo.descricaoProblema,
+    descricao: reparo.descricaoSolucao || '',
+    data: formatarData(reparo.dataEntrada),
+    dataInicio: formatarData(reparo.dataEntrada),
+    dataConclusao: formatarData(reparo.dataSaida),
+  }
 }
 
-function abrirModalEdicao(reparo) {
-  reparoSelecionado.value = reparo
-  dialogEditarReparo.value = true
+async function carregarReparos() {
+  carregando.value = true
+  erro.value = ''
+  try {
+    const { data } = await api.get('/consertos')
+    consertos.value = data.map(mapear)
+  } catch (e) {
+    erro.value = e.response?.data?.mensagem || 'Não foi possível carregar os reparos.'
+  } finally { carregando.value = false }
 }
 
-function abrirModalVisualizacao(reparo) {
-  reparoSelecionado.value = reparo
-  dialogVisualizarReparo.value = true
+function abrirModalNovoReparo() { dialogNovoReparo.value = true }
+function abrirModalEdicao(reparo) { reparoSelecionado.value = reparo; dialogEditarReparo.value = true }
+function abrirModalVisualizacao(reparo) { reparoSelecionado.value = reparo; dialogVisualizarReparo.value = true }
+function abrirModalExclusao(reparo) { reparoSelecionado.value = reparo; dialogExcluirReparo.value = true }
+
+function corpo(reparo) {
+  return {
+    tipo: reparo.tipo,
+    descricaoProblema: reparo.descricaoProblema || reparo.problema,
+    descricaoSolucao: reparo.descricaoSolucao || reparo.descricao || null,
+    dataEntrada: reparo.dataEntrada || `${reparo.dataInicio || reparo.data}T00:00:00`,
+    dataSaida: reparo.dataSaida || (reparo.dataConclusao ? `${reparo.dataConclusao}T00:00:00` : null),
+    status: reparo.status,
+    tecnico: reparo.tecnico,
+    itemId: reparo.itemId,
+  }
 }
 
-function abrirModalExclusao(reparo) {
-  reparoSelecionado.value = reparo
-  dialogExcluirReparo.value = true
-}
+function mensagemErroApi(erro, acao) {
+  const dados = erro.response?.data
+  if (typeof dados?.mensagem === 'string' && dados.mensagem.trim()) return dados.mensagem
 
-function excluirReparo(id) {
-  consertos.value = consertos.value.filter(item => item.id !== id)
-}
-
-function adicionarReparo(novoReparo) {
-  const novoItem = {
-    id: Date.now(),
-    ativoId: novoReparo.ativoId,
-    problema: novoReparo.problema,
-    tipo: novoReparo.tipo,
-    status: novoReparo.status || 'Pendente',
-    tecnico: novoReparo.tecnico,
-    descricao: novoReparo.descricao || novoReparo.problema,
-    data: novoReparo.data || novoReparo.dataInicio || new Date().toISOString().slice(0, 10),
-    escritorio: novoReparo.escritorio || 'Não informado',
-    departamento: novoReparo.departamento || 'Não informado',
-    dataInicio: novoReparo.dataInicio,
-    dataConclusao: novoReparo.dataConclusao,
+  // A API também pode responder apenas com um mapa de campos inválidos.
+  if (dados && typeof dados === 'object') {
+    const detalhes = Object.entries(dados)
+      .filter(([campo, valor]) => campo !== 'timestamp' && typeof valor === 'string')
+      .map(([campo, valor]) => `${campo}: ${valor}`)
+    if (detalhes.length) return detalhes.join(' · ')
   }
 
-  consertos.value.unshift(novoItem)
+  if (erro.response) return `${acao} (HTTP ${erro.response.status}). Confira os dados e tente novamente.`
+  return `Não foi possível conectar ao servidor para ${acao.toLocaleLowerCase('pt-BR')}. Verifique se o backend está ativo.`
 }
 
-function atualizarReparo(reparoAtualizado) {
-  consertos.value = consertos.value.map(item =>
-    item.id === reparoAtualizado.id
-      ? {
-          ...item,
-          ...reparoAtualizado,
-          data: reparoAtualizado.data || reparoAtualizado.dataInicio || item.data,
-        }
-      : item,
-  )
+async function enviarAnexos(id, arquivos) {
+  if (!arquivos?.length) return
+  const formData = new FormData()
+  arquivos.forEach((arquivo) => formData.append('arquivos', arquivo))
+  await api.post(`/consertos/${id}/anexos`, formData)
 }
 
-function texto(valor) {
-  if (valor === null || valor === undefined) return ''
-  if (Array.isArray(valor)) return valor.map(v => texto(v)).join(', ')
-  if (typeof valor === 'object') return valor.nome || valor.label || valor.name || valor.value || ''
-  return String(valor)
+async function adicionarReparo(reparo) {
+  salvando.value = true
+  try {
+    const { data } = await api.post('/consertos', corpo(reparo))
+    dialogNovoReparo.value = false
+    await carregarReparos()
+    try {
+      await enviarAnexos(data.id, reparo.anexos)
+      Notify.create({ type: 'positive', message: 'Reparo registrado.' })
+    } catch (e) {
+      Notify.create({ type: 'warning', message: e.response?.data?.mensagem || 'Reparo registrado, mas não foi possível enviar os anexos. Reenvie pela edição.' })
+    }
+  } catch (e) {
+    console.error('Falha ao registrar reparo', {
+      status: e.response?.status,
+      resposta: e.response?.data,
+      url: e.config?.baseURL ? `${e.config.baseURL}${e.config.url || ''}` : e.config?.url,
+      payload: corpo(reparo),
+      erro: e.message,
+    })
+    Notify.create({ type: 'negative', message: mensagemErroApi(e, 'Registrar reparo'), timeout: 8000 })
+    await carregarReparos()
+  } finally { salvando.value = false }
 }
 
-function normalizar(valor) {
-  return texto(valor).trim().toLowerCase()
+async function atualizarReparo(reparo) {
+  salvando.value = true
+  try {
+    await api.put(`/consertos/${reparo.id}`, corpo(reparo))
+    dialogEditarReparo.value = false
+    await carregarReparos()
+    try {
+      await enviarAnexos(reparo.id, reparo.anexos)
+      Notify.create({ type: 'positive', message: 'Reparo atualizado.' })
+    } catch (e) {
+      Notify.create({ type: 'warning', message: e.response?.data?.mensagem || 'Reparo atualizado, mas não foi possível enviar os anexos.' })
+    }
+  } catch (e) {
+    console.error('Falha ao atualizar reparo', {
+      status: e.response?.status,
+      resposta: e.response?.data,
+      erro: e.message,
+    })
+    Notify.create({ type: 'negative', message: mensagemErroApi(e, 'Atualizar reparo'), timeout: 8000 })
+    await carregarReparos()
+  } finally { salvando.value = false }
 }
 
-const consertosFiltrados = computed(() => {
-  const f = filtros.value
-  return consertos.value.filter(item => {
-    if (f.busca) {
-      const b = normalizar(f.busca)
-      const combinado = `${item.ativoId} ${item.problema} ${item.descricao} ${item.tecnico}`
-      if (!normalizar(combinado).includes(b)) return false
-    }
+async function excluirReparo(id) {
+  try {
+    await api.delete(`/consertos/${id}`)
+    await carregarReparos()
+    Notify.create({ type: 'positive', message: 'Reparo excluído.' })
+  } catch (e) {
+    Notify.create({ type: 'negative', message: e.response?.data?.mensagem || 'Não foi possível excluir o reparo.' })
+  }
+}
 
-    if (f.status && String(f.status).trim() !== '') {
-      if (normalizar(item.status) !== normalizar(f.status)) return false
-    }
+const consertosFiltrados = computed(() => consertos.value.filter((item) => {
+  const busca = texto(filtros.value.busca)
+  const contemBusca = !busca || texto(`${item.ativoId} ${item.problema} ${item.descricao} ${item.tecnico}`).includes(busca)
+  const matches = (campo, filtro) => !filtro || texto(campo) === texto(filtro)
+  const desde = !filtros.value.dataInicial || item.data >= filtros.value.dataInicial
+  const ate = !filtros.value.dataFinal || item.data <= filtros.value.dataFinal
+  return contemBusca && matches(item.status, filtros.value.status) && matches(item.tipo, filtros.value.tipo)
+    && matches(item.tecnico, filtros.value.tecnico) && matches(item.departamento, filtros.value.departamento)
+    && matches(item.escritorio, filtros.value.escritorio) && desde && ate
+}))
 
-    if (f.tipo && String(f.tipo).trim() !== '') {
-      if (normalizar(item.tipo) !== normalizar(f.tipo)) return false
-    }
-
-    if (f.departamento && String(f.departamento).trim() !== '') {
-      if (normalizar(item.departamento) !== normalizar(f.departamento)) return false
-    }
-
-    if (f.escritorio && String(f.escritorio).trim() !== '') {
-      if (normalizar(item.escritorio) !== normalizar(f.escritorio)) return false
-    }
-
-    if (f.tecnico && String(f.tecnico).trim() !== '') {
-      if (normalizar(item.tecnico) !== normalizar(f.tecnico)) return false
-    }
-
-    if (f.dataInicial) {
-      if (new Date(item.data) < new Date(f.dataInicial)) return false
-    }
-    if (f.dataFinal) {
-      if (new Date(item.data) > new Date(f.dataFinal)) return false
-    }
-
-    return true
-  })
-})
-
+onMounted(carregarReparos)
 </script>
 
 <style scoped>
-.consertos-page {
-  padding: 16px;
-}
+.consertos-page { padding: 16px; }
 </style>

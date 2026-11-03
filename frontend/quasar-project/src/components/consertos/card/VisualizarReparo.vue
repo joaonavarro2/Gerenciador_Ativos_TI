@@ -113,6 +113,26 @@
             </div>
           </div>
         </div>
+
+        <div class="reparo-secao q-mt-xl">
+          <div class="titulo-secao row items-center q-mb-md">
+            <q-icon name="attach_file" color="positive" size="20px" />
+            <div class="q-ml-sm">ANEXOS</div>
+          </div>
+          <q-list v-if="anexos.length" bordered separator>
+            <q-item v-for="anexo in anexos" :key="anexo.id">
+              <q-item-section avatar><q-icon name="description" color="positive" /></q-item-section>
+              <q-item-section>
+                <q-item-label>{{ anexo.nomeArquivo }}</q-item-label>
+                <q-item-label caption>{{ formatarTamanho(anexo.tamanho) }}</q-item-label>
+              </q-item-section>
+              <q-item-section side>
+                <q-btn flat round dense icon="download" :loading="baixando === anexo.id" @click="baixar(anexo)" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <div v-else class="text-grey-7">{{ carregandoAnexos ? 'Carregando anexos…' : 'Nenhum anexo.' }}</div>
+        </div>
       </q-card-section>
 
       <q-card-actions align="right" class="q-pa-md dialog-actions">
@@ -123,7 +143,10 @@
 </template>
 
 <script setup>
-defineProps({
+import { ref, watch } from 'vue'
+import { api } from '@/boot/axios.js'
+
+const props = defineProps({
   modelValue: Boolean,
   reparo: {
     type: Object,
@@ -132,6 +155,36 @@ defineProps({
 })
 
 defineEmits(['update:modelValue'])
+
+const anexos = ref([])
+const carregandoAnexos = ref(false)
+const baixando = ref(null)
+
+watch(() => [props.modelValue, props.reparo?.id], async ([aberto, id]) => {
+  if (!aberto || !id) return
+  carregandoAnexos.value = true
+  try {
+    const { data } = await api.get(`/consertos/${id}/anexos`)
+    anexos.value = data
+  } catch { anexos.value = [] } finally { carregandoAnexos.value = false }
+}, { immediate: true })
+
+async function baixar(anexo) {
+  baixando.value = anexo.id
+  try {
+    const { data } = await api.get(`/consertos/${props.reparo.id}/anexos/${anexo.id}`, { responseType: 'blob' })
+    const url = URL.createObjectURL(data)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = anexo.nomeArquivo
+    link.click()
+    URL.revokeObjectURL(url)
+  } finally { baixando.value = null }
+}
+
+function formatarTamanho(bytes) {
+  return bytes < 1024 * 1024 ? `${Math.ceil(bytes / 1024)} KB` : `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 </script>
 
 <style scoped>

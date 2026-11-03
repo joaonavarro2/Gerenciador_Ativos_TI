@@ -10,6 +10,7 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <q-card-section class="q-pa-lg">
+      <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro }}</q-banner>
       <div class="warning-box">
         <q-icon name="warning" size="34px" color="warning" />
 
@@ -46,7 +47,8 @@
           color="negative"
           icon="delete"
           label="Excluir Pessoa"
-          :disable="!pessoa || !pessoa.id"
+          :disable="loading || !pessoa || !pessoa.id"
+          :loading="loading"
           @click="confirmarExclusao"
         />
       </q-card-actions>
@@ -67,6 +69,8 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  loading: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'excluir'])
@@ -81,9 +85,8 @@ function fechar() {
 }
 
 function confirmarExclusao() {
-  if (!props.pessoa || !props.pessoa.id) return
+  if (!props.pessoa || !props.pessoa.id || props.loading) return
   emit('excluir', props.pessoa.id)
-  emit('update:modelValue', false)
 }
 </script>
 

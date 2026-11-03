@@ -214,12 +214,15 @@
               use-input
               fill-input
               hide-selected
+              clearable
+              input-debounce="0"
               v-model="form.pessoaId"
-              :options="responsaveis"
+              :options="responsaveisFiltrados"
               option-label="nome"
               option-value="id"
               emit-value
               map-options
+              @filter="filtrarResponsaveis"
               label="Funcionário Responsável"
             />
           </div>
@@ -343,7 +346,32 @@ const statusOptions = computed(() => [
 
 const escritorios = computed(() => props.opcoes.escritorios || [])
 const departamentos = computed(() => props.opcoes.departamentos || [])
-const responsaveis = computed(() => props.opcoes.pessoas || [])
+const responsaveis = computed(() => {
+  const pessoas = [...(props.opcoes.pessoas || [])]
+  const pessoaAtualId = props.bem?.pessoaId
+  if (pessoaAtualId && !pessoas.some((pessoa) => Number(pessoa.id) === Number(pessoaAtualId))) {
+    pessoas.unshift({ id: pessoaAtualId, nome: props.bem.responsavel || `Funcionário #${pessoaAtualId}` })
+  }
+  return pessoas
+})
+const responsaveisFiltrados = ref([])
+
+watch(responsaveis, (pessoas) => {
+  responsaveisFiltrados.value = pessoas
+}, { immediate: true })
+
+function normalizarBusca(valor) {
+  return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLocaleLowerCase('pt-BR')
+}
+
+function filtrarResponsaveis(valor, update) {
+  const busca = normalizarBusca(valor)
+  update(() => {
+    responsaveisFiltrados.value = busca
+      ? responsaveis.value.filter((pessoa) => normalizarBusca(pessoa.nome).includes(busca))
+      : responsaveis.value
+  })
+}
 
 /* ==========================================================
    LIMPAR FORMULÁRIO

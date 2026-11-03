@@ -36,7 +36,8 @@ public class MovimentacaoController {
     @GetMapping
     public ResponseEntity<List<MovimentacaoResponseDTO>> listar(
             @RequestParam(required = false) String status,
-            @RequestParam(required = false) Long itemId) {
+            @RequestParam(required = false) Long itemId,
+            @RequestParam(required = false) String tipo) {
 
         if (itemId != null) {
             return ResponseEntity.ok(
@@ -45,14 +46,9 @@ public class MovimentacaoController {
         }
 
         if (status != null && !status.isBlank()) {
-            return ResponseEntity.ok(
-                    movimentacaoService.listarPorStatus(status)
-            );
+            return ResponseEntity.ok(movimentacaoService.listarPorStatus(status, tipo));
         }
-
-        return ResponseEntity.ok(
-                movimentacaoService.listarTodas()
-        );
+        return ResponseEntity.ok(movimentacaoService.listarTodas(tipo));
     }
 
     // Busca uma movimentação pelo ID.
@@ -95,5 +91,11 @@ public class MovimentacaoController {
         return ResponseEntity.ok(
                 movimentacaoService.atualizar(id, dados)
         );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
+        movimentacaoService.excluir(id);
+        return ResponseEntity.noContent().build();
     }
 }

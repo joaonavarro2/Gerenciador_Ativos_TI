@@ -10,7 +10,7 @@
 
       <div class="historico-page-actions">
         <q-btn @click="dialogExportar = true" outline no-caps icon="file_download" label="Exportar Histórico" class="historico-exportar" />
-        <ExportarRelatorio v-model="dialogExportar" :filtros="props.filtros" :itens="[]" />
+        <ExportarRelatorio v-model="dialogExportar" :filtros="filtrosExportacao" :itens="itensExportacao" />
       </div>
     </div>
 
@@ -53,6 +53,7 @@ import ExportarRelatorio from '@/components/common/ExportarRelatorio.vue'
 
 const props = defineProps({
   filtros: { type: Object, required: true },
+  historicos: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['update:filtros'])
@@ -70,53 +71,25 @@ const usuario = criarFiltro('usuario')
 const dataInicial = criarFiltro('dataInicial')
 const dataFinal = criarFiltro('dataFinal')
 
-const eventos = ['Cadastro', 'Movimentação', 'Manutenção', 'Alteração de Status']
-const escritorios = ['Alagoinhas',
-  'Amargosa',
-  'Barreiras',
-  'Bom Jesus da Lapa',
-  'Caetité',
-  'Salvador',
-  'Cruz das Almas',
-  'Eunápolis',
-  'Ribeira do Pombal',
-  'Feira de Santana',
-  'Irecê',
-  'Itaberaba',
-  'Itabuna',
-  'Itapetinga',
-  'Jacobina',
-  'Jequié',
-  'Juazeiro',
-  'Macaúbas',
-  'Paulo Afonso',
-  'Riachão do Jacuípe',
-  'Santa Maria da Vitória',
-  'Seabra',
-  'Senhor do Bonfim',
-  'Serrinha',
-  'Teixeira de Freitas',
-  'Valença',
-  'Vitória da Conquista']
-const departamentos = ['Assessoria da Diretoria',
-            'Controle Interno',
-            'Comitê Técnico Ambiental',
-            'Diretoria Geral',
-            'Assessoria de Comunicação',
-            'Assessoria Jurídica',
-            'Dep.Recursos Humanos',
-            'Dep.Administrativo',
-            'Dep.Convênios e Contratos',
-            'Dep.Financeiro',
-            'Dep.Licitações',
-            'Dep.Capacitação',
-            'Dep.Engenharia',
-            'Coord.Água para Todos',
-            'Coord.Pró-Semiárido',
-            'Coord.Bahia Produtiva',
-            'Coord.Projetos Especiais',
-            'Coord.Articulação de Políticas']
-const usuarios = ['Carlos Andrade', 'Mariana Silva', 'João Mendes', 'Fernanda Rocha']
+const opcoesUnicas = (chave) => [...new Set(props.historicos.map((item) => item[chave]).filter((valor) => valor && valor !== '—'))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
+const eventos = computed(() => opcoesUnicas('evento'))
+const escritorios = computed(() => opcoesUnicas('escritorio'))
+const departamentos = computed(() => opcoesUnicas('departamento'))
+const usuarios = computed(() => opcoesUnicas('usuario'))
+const itensExportacao = computed(() => props.historicos.map((item) => ({
+  id: item.ativoId,
+  descricao: `${item.evento}: ${item.descricao}`,
+  categoria: item.evento,
+  status: item.tipoRegistro,
+  departamento: item.departamento,
+  responsavel: item.usuario,
+})))
+const filtrosExportacao = computed(() => ({
+  busca: props.filtros.busca,
+  categoria: props.filtros.evento ? [props.filtros.evento] : [],
+  status: props.filtros.usuario ? [props.filtros.usuario] : [],
+  departamento: props.filtros.departamento || '',
+}))
 
 const dialogExportar = ref(false)
 </script>

@@ -39,7 +39,7 @@
           dense
           clearable
           label="Categoria"
-          :options="opcoesCategorias"
+          :options="props.opcoesCategorias"
           class="outros-itens-filtro"
         />
       </div>
@@ -51,7 +51,7 @@
           dense
           clearable
           label="Escritório"
-          :options="opcoesEscritorios"
+          :options="props.opcoesEscritorios"
           class="outros-itens-filtro"
         />
       </div>
@@ -96,12 +96,12 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  opcoesEscritorios: { type: Array, default: () => [] },
+  opcoesCategorias: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['update:filtros', 'novo-item'])
 
-const opcoesCategorias = ['Material de escritório', 'Suprimentos', 'Mobiliário', 'Outros']
-const opcoesEscritorios = ['Salvador', 'Feira de Santana', 'Vitória da Conquista']
 const opcoesStatus = ['Ativo', 'Inativo', 'Esgotado']
 
 const busca = computed({

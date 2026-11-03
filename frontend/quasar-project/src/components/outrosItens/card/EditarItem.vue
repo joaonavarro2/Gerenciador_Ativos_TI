@@ -14,19 +14,19 @@
 
       <q-separator />
 
-      <q-form @submit.prevent="salvar">
+      <q-form class="outro-item-form" @submit.prevent="salvar">
         <q-card-section class="outro-item-dialog-scroll">
           <div class="titulo-secao">IDENTIFICAÇÃO DO ITEM</div>
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-4"><q-input v-model="form.codigo" outlined dense label="Código *" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-8"><q-input v-model="form.nome" outlined dense label="Nome do item *" :rules="[obrigatorio]" hide-bottom-space /></div>
-            <div class="col-12 col-md-6"><q-select v-model="form.categoria" outlined dense label="Categoria *" :options="categorias" :rules="[obrigatorio]" hide-bottom-space /></div>
+            <div class="col-12 col-md-6"><q-select v-model="form.categoria" outlined dense label="Categoria *" :options="props.categorias" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-6"><q-select v-model="form.status" outlined dense label="Status *" :options="statusOptions" :rules="[obrigatorio]" hide-bottom-space /></div>
           </div>
 
           <div class="titulo-secao q-mt-xl">LOCALIZAÇÃO E ESTOQUE</div>
           <div class="row q-col-gutter-md">
-            <div class="col-12 col-md-6"><q-select v-model="form.escritorio" outlined dense label="Escritório *" :options="escritorios" :rules="[obrigatorio]" hide-bottom-space /></div>
+            <div class="col-12 col-md-6"><q-select v-model="form.escritorio" outlined dense label="Escritório *" :options="props.escritorios" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-6"><q-input v-model="form.localizacao" outlined dense label="Localização *" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-6"><q-input v-model.number="form.quantidade" outlined dense type="number" min="0" label="Quantidade disponível *" :rules="[quantidadeObrigatoria]" hide-bottom-space /></div>
             <div class="col-12 col-md-6"><q-input v-model.number="form.estoqueMinimo" outlined dense type="number" min="0" label="Estoque mínimo *" :rules="[quantidadeObrigatoria]" hide-bottom-space /></div>
@@ -47,11 +47,9 @@
 import { computed, ref, watch } from 'vue'
 
 const aberto = defineModel({ type: Boolean, default: false })
-const props = defineProps({ item: { type: Object, default: () => ({}) } })
+const props = defineProps({ item: { type: Object, default: () => ({}) }, escritorios: { type: Array, default: () => [] }, categorias: { type: Array, default: () => [] } })
 const emit = defineEmits(['salvar'])
 
-const categorias = ['Material de escritório', 'Suprimentos', 'Mobiliário', 'Outros']
-const escritorios = ['Salvador', 'Feira de Santana', 'Vitória da Conquista']
 const statusOptions = ['Ativo', 'Inativo', 'Esgotado']
 const estadoInicial = () => ({ codigo: '', nome: '', categoria: null, escritorio: null, localizacao: '', quantidade: 0, estoqueMinimo: 0, fornecedor: '', status: 'Ativo' })
 const form = ref(estadoInicial())
@@ -64,12 +62,13 @@ const formValido = computed(() => form.value.codigo && form.value.nome && form.v
 function obrigatorio(valor) { return !!valor || 'Campo obrigatório' }
 function quantidadeObrigatoria(valor) { return valor >= 0 || 'Informe uma quantidade válida' }
 function fechar() { aberto.value = false }
-function salvar() { if (!formValido.value) return; emit('salvar', { ...form.value }); fechar() }
+function salvar() { if (!formValido.value) return; emit('salvar', { ...form.value }) }
 </script>
 
 <style scoped>
 .outro-item-dialog-card { width: min(760px, 92vw); max-width: 92vw; max-height: 90vh; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
-.outro-item-dialog-scroll { overflow-y: auto; flex: 1 1 auto; }
-.outro-item-dialog-actions { border-top: 1px solid #e5e7eb; background: #fff; }
+.outro-item-form { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.outro-item-dialog-scroll { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+.outro-item-dialog-actions { flex: 0 0 auto; border-top: 1px solid #e5e7eb; background: #fff; }
 .titulo-secao { margin-bottom: 16px; color: #1f2937; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; }
 </style>

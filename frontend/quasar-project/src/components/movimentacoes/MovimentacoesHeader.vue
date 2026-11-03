@@ -123,7 +123,7 @@
       />
     </div>
 
-    <MovimentacoesCadastroMovimentos v-model="dialogCadastroMovimentacao" />
+    <MovimentacoesCadastroMovimentos v-model="dialogCadastroMovimentacao" @registrar="emit('registrar')" />
   </q-card>
 </template>
 
@@ -143,7 +143,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:filtros'])
+const emit = defineEmits(['update:filtros', 'registrar'])
 
 const dialogCadastroMovimentacao = ref(false)
 

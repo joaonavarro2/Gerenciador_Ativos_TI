@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
+        boolean existsByIdAndExcluidoFalse(Long id);
+
         boolean existsByCodigoAndExcluidoFalse(String codigo);
 
         boolean existsByCodigoAndIdNotAndExcluidoFalse(String codigo, Long id);

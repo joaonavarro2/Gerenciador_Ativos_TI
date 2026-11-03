@@ -10,6 +10,7 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <q-form class="q-pa-lg" @submit.prevent="salvar">
+      <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro }}</q-banner>
       <div class="form-stack">
         <div class="field">
           <label class="label">
@@ -36,6 +37,10 @@
             clearable
             :options="escritorios"
             label="Selecione o escritório"
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
             class="departamento-input"
           />
         </div>
@@ -55,14 +60,14 @@
 
       <div class="footer-actions">
         <q-btn flat color="grey-8" label="Cancelar" no-caps @click="fechar" />
-        <q-btn color="positive" icon="check_circle" label="Cadastrar Departamento" no-caps type="submit" />
+        <q-btn color="positive" icon="check_circle" label="Cadastrar Departamento" no-caps type="submit" :loading="salvando" :disable="salvando" />
       </div>
     </q-form>
   </BaseDialog>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseDialog from '@/components/common/BaseDialog.vue'
 
 const props = defineProps({
@@ -70,6 +75,9 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  escritorios: { type: Array, default: () => [] },
+  salvando: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'salvar'])
@@ -81,27 +89,22 @@ const dialog = computed({
 
 const form = ref({
   nome: '',
-  escritorio: null,
+  escritorioId: null,
   status: 'Ativo',
 })
 
-const escritorios = [
-  'Escritório Regional Salvador',
-  'Escritório de Feira de Santana',
-  'Escritório de Vitória da Conquista',
-  'Escritório de Barreiras',
-  'Escritório de Alagoinhas',
-  'Escritório de Aracaju',
-]
-
 const statusOptions = ['Ativo', 'Inativo']
+
+watch(() => props.modelValue, (aberto, anterior) => {
+  if (aberto && !anterior) form.value = { nome: '', escritorioId: null, status: 'Ativo' }
+})
 
 function fechar() {
   emit('update:modelValue', false)
 }
 
 function salvar() {
-  if (!form.value.nome) return
+  if (!form.value.nome?.trim() || props.salvando) return
 
   emit('salvar', {
     ...form.value,
@@ -114,13 +117,6 @@ function salvar() {
       .toUpperCase(),
   })
 
-  form.value = {
-    nome: '',
-    escritorio: null,
-    status: 'Ativo',
-  }
-
-  emit('update:modelValue', false)
 }
 </script>
 

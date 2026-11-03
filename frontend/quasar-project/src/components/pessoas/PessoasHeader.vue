@@ -137,63 +137,16 @@ const props = defineProps({
   filtros: {
     type: Object,
     required: true
-  }
+  },
+  escritorios: { type: Array, default: () => [] },
+  departamentos: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['update:filtros', 'nova-pessoa'])
 
-const opcoesEscritorios = [
-  'Alagoinhas',
-  'Amargosa',
-  'Barreiras',
-  'Bom Jesus da Lapa',
-  'Caetité',
-  'Salvador',
-  'Cruz das Almas',
-  'Eunápolis',
-  'Ribeira do Pombal',
-  'Feira de Santana',
-  'Irecê',
-  'Itaberaba',
-  'Itabuna',
-  'Itapetinga',
-  'Jacobina',
-  'Jequié',
-  'Juazeiro',
-  'Macaúbas',
-  'Paulo Afonso',
-  'Riachão do Jacuípe',
-  'Santa Maria da Vitória',
-  'Seabra',
-  'Senhor do Bonfim',
-  'Serrinha',
-  'Teixeira de Freitas',
-  'Valença',
-  'Vitória da Conquista'
-]
-
-const opcoesDepartamentos = [
- 'Assessoria da Diretoria',
-            'Controle Interno',
-            'Comitê Técnico Ambiental',
-            'Diretoria Geral',
-            'Assessoria de Comunicação',
-            'Assessoria Jurídica',
-            'Dep.Recursos Humanos',
-            'Dep.Administrativo',
-            'Dep.Convênios e Contratos',
-            'Dep.Financeiro',
-            'Dep.Licitações',
-            'Dep.Capacitação',
-            'Dep.Engenharia',
-            'Coord.Água para Todos',
-            'Coord.Pró-Semiárido',
-            'Coord.Bahia Produtiva',
-            'Coord.Projetos Especiais',
-            'Coord.Articulação de Políticas'
-]
-
-const opcoesStatus = ['Status', 'Ativo', 'Inativo']
+const opcoesEscritorios = computed(() => [...new Set(props.escritorios.map((item) => item.nome).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR')))
+const opcoesDepartamentos = computed(() => [...new Set(props.departamentos.map((item) => item.nome).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR')))
+const opcoesStatus = ['Ativo', 'Inativo']
 
 const busca = computed({
   get: () => props.filtros.busca || '',

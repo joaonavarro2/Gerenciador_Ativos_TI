@@ -10,6 +10,7 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <q-form class="q-pa-lg" @submit.prevent="salvar">
+      <q-banner v-if="erro || erroLocal" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro || erroLocal }}</q-banner>
       <div class="pessoa-form-grid">
         <div class="pessoa-form-group">
           <label class="pessoa-label">Nome completo <span class="required">*</span></label>
@@ -44,11 +45,15 @@
         <div class="pessoa-form-group">
           <label class="pessoa-label">Escritório <span class="required">*</span></label>
           <q-select
-            v-model="form.escritorio"
+            v-model="form.escritorioId"
             outlined
             dense
             :options="opcoesEscritorios"
             label="Selecione..."
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
             class="pessoa-input"
           />
         </div>
@@ -56,11 +61,16 @@
         <div class="pessoa-form-group">
           <label class="pessoa-label">Departamento <span class="required">*</span></label>
           <q-select
-            v-model="form.departamento"
+            v-model="form.departamentoId"
             outlined
             dense
             :options="opcoesDepartamentos"
             label="Selecione..."
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
+            :disable="!form.escritorioId"
             class="pessoa-input"
           />
         </div>
@@ -89,14 +99,14 @@
 
       <div class="pessoa-footer-actions">
         <q-btn flat color="grey-8" label="Cancelar" no-caps @click="fechar" />
-        <q-btn color="positive" label="Salvar Registro" no-caps type="submit" />
+        <q-btn color="positive" label="Salvar Registro" no-caps type="submit" :loading="salvando" :disable="salvando" />
       </div>
     </q-form>
   </BaseDialog>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import BaseDialog from '@/components/common/BaseDialog.vue'
 
 const props = defineProps({
@@ -104,6 +114,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  escritorios: { type: Array, default: () => [] },
+  departamentos: { type: Array, default: () => [] },
+  salvando: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'salvar'])
@@ -119,37 +133,48 @@ const form = ref({
   email: '',
   telefone: '',
   cargo: '',
-  escritorio: null,
-  departamento: null,
+  escritorioId: null,
+  departamentoId: null,
   status: 'Ativo',
   senha: '',
   confirmarSenha: '',
 })
 
-const opcoesEscritorios = [
-  'Escritório Regional Salvador',
-  'Escritório de Feira de Santana',
-  'Escritório de Vitória da Conquista',
-  'Escritório de Barreiras',
-  'Escritório de Alagoinhas',
-]
-
-const opcoesDepartamentos = [
-  'Assessoria da Diretoria',
-  'Controle Interno',
-  'Diretoria Geral',
-  'Recursos Humanos',
-  'Financeiro',
-]
+const opcoesEscritorios = computed(() => props.escritorios.map((item) => ({ label: item.nome, value: item.id })))
+const opcoesDepartamentos = computed(() => props.departamentos
+  .filter((item) => !item.escritorioId || Number(item.escritorioId) === Number(form.value.escritorioId))
+  .map((item) => ({ label: item.nome, value: item.id })))
 
 const statusOptions = ['Ativo', 'Inativo']
+const erroLocal = ref('')
+
+function resetarFormulario() {
+  erroLocal.value = ''
+  form.value = { nome: '', cpf: '', email: '', telefone: '', cargo: '', escritorioId: null, departamentoId: null, status: 'Ativo', senha: '', confirmarSenha: '' }
+}
+
+watch(() => props.modelValue, (aberto, anterior) => { if (aberto && !anterior) resetarFormulario() })
+watch(() => form.value.escritorioId, (id, anterior) => { if (id !== anterior) form.value.departamentoId = null })
 
 function fechar() {
   emit('update:modelValue', false)
 }
 
 function salvar() {
-  if (!form.value.nome || !form.value.cpf || !form.value.email || !form.value.escritorio || !form.value.departamento) return
+  erroLocal.value = ''
+  if (props.salvando) return
+  if (!form.value.nome?.trim() || !form.value.cpf || !form.value.email || !form.value.cargo?.trim() || !form.value.escritorioId || !form.value.departamentoId || !form.value.senha) {
+    erroLocal.value = 'Preencha todos os campos obrigatórios.'
+    return
+  }
+  if (form.value.senha.length < 8) {
+    erroLocal.value = 'A senha deve ter pelo menos 8 caracteres.'
+    return
+  }
+  if (form.value.senha !== form.value.confirmarSenha) {
+    erroLocal.value = 'A senha e a confirmação não conferem.'
+    return
+  }
 
   emit('salvar', {
     ...form.value,
@@ -158,20 +183,6 @@ function salvar() {
     bens: 0,
   })
 
-  form.value = {
-    nome: '',
-    cpf: '',
-    email: '',
-    telefone: '',
-    cargo: '',
-    escritorio: null,
-    departamento: null,
-    status: 'Ativo',
-    senha: '',
-    confirmarSenha: '',
-  }
-
-  emit('update:modelValue', false)
 }
 </script>
 

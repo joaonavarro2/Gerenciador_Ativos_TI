@@ -10,6 +10,7 @@
     @update:model-value="emit('update:modelValue', $event)"
   >
     <q-form class="q-pa-lg" @submit.prevent="salvar">
+      <q-banner v-if="erro || erroLocal" dense rounded class="bg-red-1 text-negative q-mb-md">{{ erro || erroLocal }}</q-banner>
       <div class="pessoa-form-grid">
         <div class="pessoa-form-group">
           <label class="pessoa-label">Nome completo</label>
@@ -43,12 +44,12 @@
 
         <div class="pessoa-form-group">
           <label class="pessoa-label">Escritório</label>
-          <q-select v-model="form.escritorio" outlined dense :options="opcoesEscritorios" class="pessoa-input" />
+          <q-select v-model="form.escritorioId" outlined dense :options="opcoesEscritorios" option-label="label" option-value="value" emit-value map-options class="pessoa-input" />
         </div>
 
         <div class="pessoa-form-group">
           <label class="pessoa-label">Departamento</label>
-          <q-select v-model="form.departamento" outlined dense :options="opcoesDepartamentos" class="pessoa-input" />
+          <q-select v-model="form.departamentoId" outlined dense :options="opcoesDepartamentos" option-label="label" option-value="value" emit-value map-options :disable="!form.escritorioId" class="pessoa-input" />
         </div>
       </div>
 
@@ -68,14 +69,36 @@
 
       <div class="pessoa-section-title">BENS ATRIBUÍDOS</div>
 
-      <div class="pessoa-bens-box">
+      <q-banner v-if="erroBens" dense rounded class="bg-red-1 text-negative q-mb-md">
+        {{ erroBens }}
+        <template #action><q-btn flat color="negative" label="Tentar novamente" @click="carregarBens" /></template>
+      </q-banner>
+      <div v-if="carregandoBens" class="pessoa-bens-loading">
+        <q-spinner size="28px" color="primary" />
+        <span>Carregando bens vinculados...</span>
+      </div>
+      <q-list v-else-if="bensPessoa.length" bordered separator class="pessoa-bens-lista">
+        <q-item v-for="bem in bensPessoa" :key="bem.id">
+          <q-item-section avatar><q-avatar color="blue-1" text-color="primary" icon="inventory_2" /></q-item-section>
+          <q-item-section>
+            <q-item-label class="text-weight-medium">{{ bem.nome || 'Bem sem nome' }}</q-item-label>
+            <q-item-label caption>
+              {{ bem.patrimonio || bem.codigo || `Bem #${bem.id}` }}
+              <span v-if="bem.categoria"> · {{ bem.categoria }}</span>
+              <span v-if="bem.fabricante || bem.modelo"> · {{ [bem.fabricante, bem.modelo].filter(Boolean).join(' / ') }}</span>
+            </q-item-label>
+          </q-item-section>
+          <q-item-section side><q-chip dense :color="bem.status?.toLowerCase() === 'ativo' ? 'green-1' : 'grey-3'" :text-color="bem.status?.toLowerCase() === 'ativo' ? 'green-9' : 'grey-8'">{{ bem.status || 'Sem status' }}</q-chip></q-item-section>
+        </q-item>
+      </q-list>
+      <div v-else class="pessoa-bens-box">
         <q-icon name="inventory_2" size="28px" color="grey-6" />
-        <div class="pessoa-bens-placeholder">Nenhum bem atribuído</div>
+        <div class="pessoa-bens-placeholder">Nenhum bem ativo vinculado a esta pessoa.</div>
       </div>
 
       <div class="pessoa-footer-actions">
         <q-btn flat color="grey-8" label="Cancelar" no-caps @click="fechar" />
-        <q-btn color="positive" label="Salvar Alterações" no-caps type="submit" />
+        <q-btn color="positive" label="Salvar Alterações" no-caps type="submit" :loading="salvando" :disable="salvando" />
       </div>
     </q-form>
   </BaseDialog>
@@ -84,6 +107,7 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
 import BaseDialog from '@/components/common/BaseDialog.vue'
+import { api } from '@/boot/axios.js'
 
 const props = defineProps({
   modelValue: {
@@ -94,6 +118,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  escritorios: { type: Array, default: () => [] },
+  departamentos: { type: Array, default: () => [] },
+  salvando: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'salvar'])
@@ -104,19 +132,14 @@ const dialog = computed({
 })
 
 const statusOptions = ['Ativo', 'Inativo']
-const opcoesEscritorios = [
-  'Escritório Regional Salvador',
-  'Escritório de Feira de Santana',
-  'Escritório de Vitória da Conquista',
-  'Escritório de Barreiras',
-]
-const opcoesDepartamentos = [
-  'Assessoria da Diretoria',
-  'Controle Interno',
-  'Diretoria Geral',
-  'Recursos Humanos',
-  'Financeiro',
-]
+const erroLocal = ref('')
+const bensPessoa = ref([])
+const carregandoBens = ref(false)
+const erroBens = ref('')
+const opcoesEscritorios = computed(() => props.escritorios.map((item) => ({ label: item.nome, value: item.id })))
+const opcoesDepartamentos = computed(() => props.departamentos
+  .filter((item) => !item.escritorioId || Number(item.escritorioId) === Number(form.value.escritorioId))
+  .map((item) => ({ label: item.nome, value: item.id })))
 
 const form = ref({
   nome: '',
@@ -126,8 +149,8 @@ const form = ref({
   telefone: '',
   cargo: '',
   status: 'Ativo',
-  escritorio: '',
-  departamento: '',
+  escritorioId: null,
+  departamentoId: null,
   senha: '',
   confirmarSenha: '',
 })
@@ -143,8 +166,8 @@ watch(
       telefone: value.telefone || '',
       cargo: value.cargo || '',
       status: value.status || 'Ativo',
-      escritorio: value.escritorio || '',
-      departamento: value.departamento || '',
+      escritorioId: value.escritorioId || null,
+      departamentoId: value.departamentoId || null,
       senha: '',
       confirmarSenha: '',
     }
@@ -152,16 +175,55 @@ watch(
   { immediate: true }
 )
 
+watch(() => form.value.escritorioId, (id, anterior) => {
+  if (id !== anterior) form.value.departamentoId = null
+})
+
+let requisicaoBens = 0
+async function carregarBens() {
+  const id = props.pessoa?.id
+  if (!props.modelValue || !id) {
+    requisicaoBens++
+    bensPessoa.value = []
+    carregandoBens.value = false
+    erroBens.value = ''
+    return
+  }
+  const atual = ++requisicaoBens
+  carregandoBens.value = true
+  erroBens.value = ''
+  try {
+    const { data } = await api.get(`/pessoas/${id}/bens`)
+    if (atual === requisicaoBens) bensPessoa.value = Array.isArray(data) ? data : []
+  } catch (error) {
+    if (atual === requisicaoBens) erroBens.value = error.response?.data?.mensagem || 'Não foi possível carregar os bens vinculados.'
+  } finally {
+    if (atual === requisicaoBens) carregandoBens.value = false
+  }
+}
+
+watch(() => [props.modelValue, props.pessoa?.id], carregarBens, { immediate: true })
+
 function fechar() {
   emit('update:modelValue', false)
 }
 
 function salvar() {
+  erroLocal.value = ''
+  if (props.salvando) return
+  if (props.salvando || !form.value.nome?.trim() || !form.value.cpf || !form.value.email || !form.value.cargo?.trim() || !form.value.escritorioId || !form.value.departamentoId) return
+  if (form.value.senha && form.value.senha.length < 8) {
+    erroLocal.value = 'A senha deve ter pelo menos 8 caracteres.'
+    return
+  }
+  if (form.value.senha && form.value.senha !== form.value.confirmarSenha) {
+    erroLocal.value = 'A senha e a confirmação não conferem.'
+    return
+  }
   emit('salvar', {
     ...props.pessoa,
     ...form.value,
   })
-  emit('update:modelValue', false)
 }
 </script>
 
@@ -215,6 +277,9 @@ function salvar() {
   font-size: 14px;
   color: #667085;
 }
+
+.pessoa-bens-loading { display: flex; align-items: center; justify-content: center; gap: 12px; min-height: 88px; color: #667085; }
+.pessoa-bens-lista { max-height: 260px; overflow-y: auto; border-radius: 12px; }
 
 .pessoa-footer-actions {
   display: flex;

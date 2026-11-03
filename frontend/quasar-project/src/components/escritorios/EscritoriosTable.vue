@@ -23,6 +23,7 @@
       flat
       :rows="escritorios"
       :columns="columns"
+      :pagination="{ rowsPerPage: 0 }"
       row-key="id"
       separator="horizontal"
       class="bens-qtable "

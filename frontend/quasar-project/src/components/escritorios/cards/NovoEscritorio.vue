@@ -49,6 +49,7 @@
       ====================================================== -->
 
       <div class="escritorio-cadastro-content">
+        <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-ma-md">{{ erro }}</q-banner>
 
         <div class="escritorio-form">
 
@@ -119,6 +120,11 @@
 
             </div>
 
+          </div>
+
+          <div class="escritorio-form-group">
+            <label class="escritorio-form-label">Estado</label>
+            <q-input v-model="form.estado" outlined dense maxlength="2" placeholder="BA" class="escritorio-input" />
           </div>
 
 
@@ -262,6 +268,8 @@
           unelevated
           color="positive"
           label="Salvar"
+          :loading="salvando"
+          :disable="salvando"
           no-caps
           class="escritorio-btn-salvar"
           @click="salvar"
@@ -278,7 +286,7 @@
 
 <script setup>
 
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 
 /* ==========================================================
@@ -290,7 +298,9 @@ const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false
-  }
+  },
+  salvando: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 
 })
 
@@ -352,6 +362,8 @@ const form = ref({
 
   cidade: '',
 
+  estado: '',
+
   cep: '',
 
   endereco: '',
@@ -364,6 +376,10 @@ const form = ref({
 
   status: 'Ativo'
 
+})
+
+watch(() => props.modelValue, (aberto, anterior) => {
+  if (aberto && !anterior) limparFormulario()
 })
 
 
@@ -381,6 +397,10 @@ const statusOptions = [
   {
     label: 'Inativo',
     value: 'Inativo'
+  },
+  {
+    label: 'Em expansão',
+    value: 'Em expansão'
   }
 
 ]
@@ -410,7 +430,7 @@ function salvar() {
      VALIDAÇÃO
   ======================================================== */
 
-  if (!form.value.nome || !form.value.cidade) {
+  if (!form.value.nome || !form.value.cidade || props.salvando) {
 
     console.warn(
       'Nome e cidade são obrigatórios.'
@@ -455,18 +475,6 @@ function salvar() {
      FECHA O DIALOG
   ======================================================== */
 
-  emit(
-    'update:modelValue',
-    false
-  )
-
-
-  /* ========================================================
-     LIMPA O FORMULÁRIO
-  ======================================================== */
-
-  limparFormulario()
-
 }
 
 
@@ -481,6 +489,8 @@ function limparFormulario() {
     nome: '',
 
     cidade: '',
+
+    estado: '',
 
     cep: '',
 

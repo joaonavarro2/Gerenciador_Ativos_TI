@@ -30,6 +30,7 @@
       <q-separator />
 
       <div class="escritorio-cadastro-content">
+        <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-ma-md">{{ erro }}</q-banner>
         <div class="escritorio-form">
           <div class="escritorio-form-group">
             <label class="escritorio-form-label">
@@ -44,6 +45,11 @@
               placeholder="Ex: Filial Feira de Santana"
               class="escritorio-input"
             />
+          </div>
+
+          <div class="escritorio-form-group">
+            <label class="escritorio-form-label">Estado</label>
+            <q-input v-model="form.estado" outlined dense maxlength="2" placeholder="BA" class="escritorio-input" />
           </div>
 
           <div class="escritorio-form-row">
@@ -171,6 +177,8 @@
           unelevated
           color="positive"
           label="Salvar alterações"
+          :loading="salvando"
+          :disable="salvando"
           no-caps
           class="escritorio-btn-salvar"
           @click="salvar"
@@ -192,6 +200,8 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  salvando: { type: Boolean, default: false },
+  erro: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:modelValue', 'salvar'])
@@ -211,6 +221,7 @@ const form = ref({
   id: null,
   nome: '',
   cidade: '',
+  estado: '',
   cep: '',
   endereco: '',
   telefone: '',
@@ -226,11 +237,12 @@ watch(
       id: value?.id || null,
       nome: value?.nome || '',
       cidade: value?.cidade || '',
+      estado: value?.estado || '',
       cep: value?.cep || '',
       endereco: value?.endereco || '',
       telefone: value?.telefone || '',
       email: value?.email || '',
-      gestor: value?.responsavel || '',
+      gestor: value?.gestor || value?.responsavel || '',
       status: value?.status || 'Ativo',
     }
   },
@@ -242,7 +254,7 @@ function fechar() {
 }
 
 function salvar() {
-  if (!form.value.nome || !form.value.cidade) {
+  if (!form.value.nome || !form.value.cidade || props.salvando) {
     return
   }
 
@@ -252,7 +264,6 @@ function salvar() {
     responsavel: form.value.gestor,
   })
 
-  emit('update:modelValue', false)
 }
 </script>
 

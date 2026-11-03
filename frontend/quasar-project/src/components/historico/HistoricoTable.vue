@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <q-card flat bordered class="historico-table-card">
     <div class="historico-table-header">
       <div class="historico-table-title">
@@ -63,14 +63,86 @@
 
             </div>
 
+            <q-btn flat round dense icon="visibility" color="primary" aria-label="Visualizar operação" @click="abrirDetalhes(item)">
+              <q-tooltip>Visualizar operação</q-tooltip>
+            </q-btn>
           </div>
         </div>
       </div>
+
+    <q-dialog v-model="dialogDetalhes">
+      <q-card class="historico-dialog-card">
+        <q-card-section class="row items-center justify-between q-pb-sm">
+          <div class="row items-center">
+            <q-avatar color="green-1" text-color="teal" icon="visibility" size="48px" />
+            <div class="q-ml-md">
+              <div class="text-h5 text-weight-bold">Detalhes da operação</div>
+              <div class="text-subtitle2 text-grey-7">Informações do registro selecionado no histórico.</div>
+            </div>
+          </div>
+          <q-space />
+          <q-btn flat round dense icon="close" v-close-popup aria-label="Fechar" />
+        </q-card-section>
+        <q-separator />
+        <q-card-section v-if="registroSelecionado" class="dialog-scroll">
+          <div class="historico-secao">
+            <div class="titulo-secao row items-center q-mb-md">
+              <q-icon name="inventory_2" color="positive" size="20px" />
+              <div class="q-ml-sm">{{ registroSelecionado.evento }}</div>
+            </div>
+            <div class="info-grid">
+              <div class="info-item">
+                <q-icon name="tag" class="info-icon" />
+                <div><div class="info-label">BEM / PATRIMÔNIO</div><div class="info-value">{{ registroSelecionado.ativoId || '—' }}</div></div>
+              </div>
+              <div class="info-item">
+                <q-icon name="event" class="info-icon" />
+                <div><div class="info-label">DATA</div><div class="info-value">{{ formatDate(registroSelecionado.data) || '—' }}</div></div>
+              </div>
+              <div class="info-item full-width">
+                <q-icon name="description" class="info-icon" />
+                <div><div class="info-label">DESCRIÇÃO</div><div class="info-value">{{ registroSelecionado.descricao || '—' }}</div></div>
+              </div>
+              <div class="info-item" v-for="(valor, chave) in registroSelecionado.detalhes" :key="chave">
+                <q-icon :name="iconeDetalhe(chave)" class="info-icon" />
+                <div><div class="info-label">{{ chave }}</div><div class="info-value">{{ formatarDetalhe(valor) }}</div></div>
+              </div>
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-actions align="right"><q-btn flat label="Fechar" color="primary" v-close-popup /></q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-card>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+
+const dialogDetalhes = ref(false)
+const registroSelecionado = ref(null)
+
+function abrirDetalhes(item) {
+  registroSelecionado.value = item
+  dialogDetalhes.value = true
+}
+
+function formatarDetalhe(valor) {
+  if (valor === null || valor === undefined || valor === '') return '—'
+  if (typeof valor === 'object') return JSON.stringify(valor)
+  return String(valor)
+}
+
+function iconeDetalhe(chave) {
+  const campo = String(chave).toLowerCase()
+  if (campo.includes('data')) return 'event'
+  if (campo.includes('pessoa') || campo.includes('respons') || campo.includes('técnico') || campo.includes('usuário')) return 'person'
+  if (campo.includes('departamento') || campo.includes('escritório')) return 'business'
+  if (campo.includes('status')) return 'info'
+  if (campo.includes('problema') || campo.includes('justificativa')) return 'report_problem'
+  if (campo.includes('solução')) return 'build'
+  return 'description'
+}
 
 const props = defineProps({
   historicos: { type: Array, default: () => [] },
@@ -134,3 +206,18 @@ function eventoClasse(evento) {
   return 'preventiva'
 }
 </script>
+
+<style scoped>
+.historico-dialog-card { width: min(900px, 92vw); max-width: 92vw; max-height: 90vh; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+.dialog-scroll { overflow-y: auto; flex: 1 1 auto; }
+.historico-secao { border-top: 1px solid #e5e7eb; padding-top: 20px; }
+.titulo-secao { font-size: 14px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #1f2937; gap: 8px; }
+.info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.info-item { display: flex; align-items: flex-start; gap: 12px; min-height: 60px; }
+.info-item.full-width { grid-column: 1 / -1; }
+.info-icon { color: #16a34a; font-size: 22px; margin-top: 2px; }
+.info-label { font-size: 11px; line-height: 1.2; color: #6b7280; letter-spacing: .08em; margin-bottom: 6px; text-transform: uppercase; font-weight: 700; }
+.info-value { color: #111827; font-size: 15px; line-height: 1.5; font-weight: 500; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 600px) { .info-grid { grid-template-columns: 1fr; } .info-item.full-width { grid-column: auto; } }
+</style>
+
