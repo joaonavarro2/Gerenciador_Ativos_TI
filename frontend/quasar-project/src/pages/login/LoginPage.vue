@@ -181,7 +181,7 @@ async function entrar() {
       texto.includes('bad credentials') ||
       texto.includes('credenciais')
     ) {
-      senhaError.value = 'Senha incorreta. Verifique a senha e tente novamente.'
+      senhaError.value = 'E-mail ou senha inválidos.'
       return
     }
 
