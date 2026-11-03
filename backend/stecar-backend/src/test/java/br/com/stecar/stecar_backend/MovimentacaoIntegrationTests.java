@@ -59,6 +59,17 @@ class MovimentacaoIntegrationTests {
         var registrada = movimentacaoService.cadastrar(dto, usuario.getId());
         Assertions.assertEquals(destino.id(), itemService.buscarPorId(bem.id()).escritorioId());
 
+        MovimentacaoRequestDTO retroativa = new MovimentacaoRequestDTO();
+        retroativa.setTipo("Transferência");
+        retroativa.setData(dto.getData().minusDays(10));
+        retroativa.setStatus("Concluída");
+        retroativa.setItemId(bem.id());
+        retroativa.setEscritorioOrigemId(destino.id());
+        retroativa.setEscritorioDestinoId(origem.id());
+        movimentacaoService.cadastrar(retroativa, usuario.getId());
+        Assertions.assertEquals(destino.id(), itemService.buscarPorId(bem.id()).escritorioId(),
+                "Lançamento retroativo não deve alterar a localização atual.");
+
         dto.setStatus("Cancelada");
         dto.setJustificativa("Status corrigido");
         var atualizada = movimentacaoService.atualizar(registrada.getId(), dto);

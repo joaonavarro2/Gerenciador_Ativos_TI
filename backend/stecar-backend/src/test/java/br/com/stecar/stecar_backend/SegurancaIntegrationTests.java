@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
@@ -65,12 +67,45 @@ class SegurancaIntegrationTests {
     }
 
     private String bearer(String email) {
-        return "Bearer " + jwtService.gerarToken(email);
+        return "Bearer " + jwtService.gerarToken(email, Instant.now());
+    }
+
+    private String tokenEmitidoHa(String email, Duration idade, Instant inicioSessao) {
+        Instant emissao = Instant.now().minus(idade);
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(Date.from(emissao))
+                .expiration(Date.from(Instant.now().plusSeconds(600)))
+                .claim(JwtService.CLAIM_INICIO_SESSAO, inicioSessao.getEpochSecond())
+                .signWith(jwtSecretKey, Jwts.SIG.HS512)
+                .compact();
+    }
+
+    @Test
+    void tokenEmitidoAntesDaTrocaDeSenhaEhRecusado() throws Exception {
+        String token = tokenEmitidoHa(usuarioComum, Duration.ofMinutes(1), Instant.now());
+        Usuario usuario = usuarioRepository.findByEmail(usuarioComum).orElseThrow();
+        usuario.setSenha(passwordEncoder.encode("NovaSenha123"));
+        usuarioRepository.save(usuario);
+
+        mockMvc.perform(get("/api/dashboard").header("Authorization", "Bearer " + token))
+                .andExpect(status().isUnauthorized());
+        mockMvc.perform(post("/api/auth/renovar").header("Authorization", "Bearer " + token))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void renovacaoExigeNovoLoginAposSessaoMaxima() throws Exception {
+        String token = tokenEmitidoHa(usuarioComum, Duration.ZERO, Instant.now().minus(Duration.ofHours(13)));
+        mockMvc.perform(get("/api/dashboard").header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+        mockMvc.perform(post("/api/auth/renovar").header("Authorization", "Bearer " + token))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
     void tokenEmitidoUsaHs512EEhAceitoPelaApi() throws Exception {
-        String token = jwtService.gerarToken(usuarioComum);
+        String token = jwtService.gerarToken(usuarioComum, Instant.now());
         String cabecalho = new String(Base64.getUrlDecoder().decode(token.split("\\.")[0]), StandardCharsets.UTF_8);
         Assertions.assertTrue(cabecalho.contains("\"HS512\""), cabecalho);
 

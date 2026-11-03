@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Notify } from 'quasar'
 import {
   atualizarToken,
+  atualizarUsuario,
   clearSession,
   ehAdministradorGeral,
   podeEditar,
@@ -71,8 +72,20 @@ api.interceptors.response.use(
   },
 )
 
-export default boot(({ app }) => {
+export default boot(async ({ app }) => {
   app.config.globalProperties.$api = api
+
+  // Papel e status podem ter mudado desde o login: atualiza os dados salvos
+  // antes de montar a aplicação, para os botões refletirem a permissão atual.
+  if (tokenAtual()) {
+    try {
+      const { data } = await api.get('/auth/me')
+      atualizarUsuario(data)
+    } catch {
+      // 401 já é tratado pelo interceptor; outros erros mantêm os dados salvos.
+    }
+  }
+
   app.config.globalProperties.$podeEditar = podeEditar
   app.config.globalProperties.$ehAdministradorGeral = ehAdministradorGeral
 })

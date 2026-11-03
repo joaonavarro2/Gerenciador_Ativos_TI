@@ -24,13 +24,17 @@ public class JwtService {
         this.validade = Duration.ofMinutes(expiracaoMinutos);
     }
 
-    public String gerarToken(String email) {
+    public static final String CLAIM_INICIO_SESSAO = "auth_time";
+
+    /** Gera o token; {@code inicioSessao} é o instante do login com senha e é mantido nas renovações. */
+    public String gerarToken(String email, Instant inicioSessao) {
         Instant agora = Instant.now();
 
         // O algoritmo é fixado para coincidir com o JwtDecoder (HS512).
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(Date.from(agora))
+                .claim(CLAIM_INICIO_SESSAO, inicioSessao.getEpochSecond())
                 .expiration(Date.from(agora.plus(validade)))
                 .signWith(chave, Jwts.SIG.HS512)
                 .compact();

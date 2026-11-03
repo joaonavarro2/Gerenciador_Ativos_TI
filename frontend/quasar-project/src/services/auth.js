@@ -63,3 +63,8 @@ export function segundosParaExpirar (token) {
     return -1
   }
 }
+
+export function atualizarUsuario (usuario) {
+  const storage = localStorage.getItem(USER_KEY) ? localStorage : sessionStorage
+  storage.setItem(USER_KEY, JSON.stringify(usuario))
+}

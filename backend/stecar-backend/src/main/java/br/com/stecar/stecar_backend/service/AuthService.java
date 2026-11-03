@@ -8,6 +8,7 @@ import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.TokenRecuperacaoSenhaRepository;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Locale;
@@ -22,6 +23,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,6 +43,7 @@ public class AuthService {
     private final JavaMailSender mailSender;
     private final String frontendUrl;
     private final String mailFrom;
+    private final Duration sessaoMaxima;
 
     public AuthService(
             AuthenticationManager authenticationManager,
@@ -50,7 +53,8 @@ public class AuthService {
             PasswordEncoder passwordEncoder,
             JavaMailSender mailSender,
             @Value("${stecar.frontend-url}") String frontendUrl,
-            @Value("${stecar.mail.from}") String mailFrom) {
+            @Value("${stecar.mail.from}") String mailFrom,
+            @Value("${stecar.jwt.sessao-maxima-horas:12}") long sessaoMaximaHoras) {
 
         this.authenticationManager = authenticationManager;
         this.usuarioRepository = usuarioRepository;
@@ -60,6 +64,7 @@ public class AuthService {
         this.mailSender = mailSender;
         this.frontendUrl = frontendUrl;
         this.mailFrom = mailFrom;
+        this.sessaoMaxima = Duration.ofHours(sessaoMaximaHoras);
     }
 
     public LoginResponseDTO login(LoginRequestDTO dados) {
@@ -70,20 +75,26 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, dados.getSenha()));
 
-        return emitirToken(email);
+        return emitirToken(email, Instant.now());
     }
 
-    /** Emite um novo token para quem já está autenticado com um token válido. */
-    public LoginResponseDTO renovar(String email) {
-        return emitirToken(email);
+    /**
+     * Emite um novo token mantendo o início da sessão. Depois de
+     * {@code sessaoMaxima} desde o login com senha, é preciso entrar de novo.
+     */
+    public LoginResponseDTO renovar(String email, Instant inicioSessao) {
+        if (inicioSessao == null || inicioSessao.plus(sessaoMaxima).isBefore(Instant.now())) {
+            throw new CredentialsExpiredException("Sessão expirada. Faça login novamente.");
+        }
+        return emitirToken(email, inicioSessao);
     }
 
-    private LoginResponseDTO emitirToken(String email) {
+    private LoginResponseDTO emitirToken(String email, Instant inicioSessao) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("Usuário não encontrado."));
 
         return new LoginResponseDTO(
-                jwtService.gerarToken(usuario.getEmail()),
+                jwtService.gerarToken(usuario.getEmail(), inicioSessao),
                 "Bearer",
                 new UsuarioResponseDTO(
                         usuario.getId(),

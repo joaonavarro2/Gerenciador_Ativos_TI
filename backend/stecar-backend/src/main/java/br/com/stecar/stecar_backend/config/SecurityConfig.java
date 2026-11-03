@@ -1,6 +1,8 @@
 package br.com.stecar.stecar_backend.config;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -10,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -28,6 +31,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import br.com.stecar.stecar_backend.entity.Usuario;
+import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import io.jsonwebtoken.security.Keys;
 
 @Configuration
@@ -41,7 +46,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            UserDetailsService usuarioDetailsService) throws Exception {
+            UserDetailsService usuarioDetailsService,
+            UsuarioRepository usuarioRepository) throws Exception {
 
         http
             // API stateless com JWT: não há sessão nem cookie para proteger com CSRF.
@@ -73,6 +79,14 @@ public class SecurityConfig {
                     UserDetails usuario = usuarioDetailsService.loadUserByUsername(token.getSubject());
                     if (!usuario.isEnabled()) {
                         throw new DisabledException("Usuário inativo.");
+                    }
+                    // Tokens emitidos antes da última troca de senha são recusados.
+                    Instant senhaAlteradaEm = usuarioRepository.findByEmail(usuario.getUsername())
+                            .map(Usuario::getSenhaAlteradaEm)
+                            .orElse(null);
+                    if (senhaAlteradaEm != null && (token.getIssuedAt() == null
+                            || token.getIssuedAt().isBefore(senhaAlteradaEm.truncatedTo(ChronoUnit.SECONDS)))) {
+                        throw new CredentialsExpiredException("Senha alterada após a emissão do token.");
                     }
                     return new JwtAuthenticationToken(token, usuario.getAuthorities(), usuario.getUsername());
                 })

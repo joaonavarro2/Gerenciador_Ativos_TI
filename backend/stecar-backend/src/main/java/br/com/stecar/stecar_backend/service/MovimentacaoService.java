@@ -166,7 +166,11 @@ public class MovimentacaoService {
         movimentacao.setJustificativa(dto.getJustificativa());
 
         Movimentacao salva = movimentacaoRepository.save(movimentacao);
-        atualizarLocalizacaoDoBem(dto);
+        // Lançamentos retroativos ficam só no histórico: a localização atual
+        // segue a movimentação mais recente.
+        if (!movimentacaoRepository.existeMaisRecente(salva.getItemId(), salva.getData(), salva.getId())) {
+            atualizarLocalizacaoDoBem(dto);
+        }
 
         return movimentacaoRepository.buscarComReferencias(salva.getId()).stream()
                 .findFirst().map(this::converterParaResponse)
@@ -254,9 +258,7 @@ public class MovimentacaoService {
         if (dto.getDepartamentoDestinoId() != null) {
             item.setDepartamentoId(dto.getDepartamentoDestinoId());
         }
-        if (dto.getPessoaDestinoId() != null) {
-            item.setPessoaId(dto.getPessoaDestinoId());
-        }
+        item.setPessoaId(dto.getPessoaDestinoId());
         itemRepository.save(item);
     }
 
