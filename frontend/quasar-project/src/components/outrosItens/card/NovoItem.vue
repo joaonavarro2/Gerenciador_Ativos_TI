@@ -14,7 +14,7 @@
 
       <q-separator />
 
-      <q-form @submit.prevent="salvar">
+      <q-form class="outro-item-form" @submit.prevent="salvar">
         <q-card-section class="outro-item-dialog-scroll">
           <div class="titulo-secao">IDENTIFICAÇÃO DO ITEM</div>
           <div class="row q-col-gutter-md">
@@ -120,11 +120,20 @@ function salvar() {
 .outro-item-dialog-scroll {
   overflow-y: auto;
   flex: 1 1 auto;
+  min-height: 0;
 }
 
 .outro-item-dialog-actions {
+  flex: 0 0 auto;
   border-top: 1px solid #e5e7eb;
   background: #fff;
+}
+
+.outro-item-form {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .titulo-secao {
