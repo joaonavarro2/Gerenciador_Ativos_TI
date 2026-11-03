@@ -70,6 +70,13 @@ class MovimentacaoIntegrationTests {
         Assertions.assertEquals(destino.id(), itemService.buscarPorId(bem.id()).escritorioId(),
                 "Lançamento retroativo não deve alterar a localização atual.");
 
+        var atual = itemService.buscarPorId(bem.id());
+        itemService.movimentar(bem.id(), new br.com.stecar.stecar_backend.dto.MovimentacaoItemRequestDTO(
+                "Transferência", dto.getData().minusDays(5), origem.id(), atual.departamentoId(), null, null),
+                usuario.getEmail());
+        Assertions.assertEquals(destino.id(), itemService.buscarPorId(bem.id()).escritorioId(),
+                "Lançamento retroativo pela tela do bem não deve alterar a localização atual.");
+
         dto.setStatus("Cancelada");
         dto.setJustificativa("Status corrigido");
         var atualizada = movimentacaoService.atualizar(registrada.getId(), dto);

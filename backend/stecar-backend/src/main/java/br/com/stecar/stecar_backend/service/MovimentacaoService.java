@@ -144,6 +144,7 @@ public class MovimentacaoService {
 
         validarOrigemDestino(dto);
         validarReferencias(dto);
+        itemRepository.bloquearPorId(dto.getItemId());
 
         Movimentacao movimentacao = new Movimentacao();
 
