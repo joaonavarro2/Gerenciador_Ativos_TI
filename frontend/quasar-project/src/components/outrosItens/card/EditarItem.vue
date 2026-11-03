@@ -14,7 +14,7 @@
 
       <q-separator />
 
-      <q-form @submit.prevent="salvar">
+      <q-form class="outro-item-form" @submit.prevent="salvar">
         <q-card-section class="outro-item-dialog-scroll">
           <div class="titulo-secao">IDENTIFICAÇÃO DO ITEM</div>
           <div class="row q-col-gutter-md">
@@ -67,7 +67,8 @@ function salvar() { if (!formValido.value) return; emit('salvar', { ...form.valu
 
 <style scoped>
 .outro-item-dialog-card { width: min(760px, 92vw); max-width: 92vw; max-height: 90vh; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
-.outro-item-dialog-scroll { overflow-y: auto; flex: 1 1 auto; }
-.outro-item-dialog-actions { border-top: 1px solid #e5e7eb; background: #fff; }
+.outro-item-form { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.outro-item-dialog-scroll { overflow-y: auto; flex: 1 1 auto; min-height: 0; }
+.outro-item-dialog-actions { flex: 0 0 auto; border-top: 1px solid #e5e7eb; background: #fff; }
 .titulo-secao { margin-bottom: 16px; color: #1f2937; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; }
 </style>
