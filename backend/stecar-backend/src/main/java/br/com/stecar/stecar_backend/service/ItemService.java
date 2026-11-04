@@ -9,6 +9,7 @@ import br.com.stecar.stecar_backend.dto.MovimentacaoItemResponseDTO;
 import br.com.stecar.stecar_backend.dto.ConsertoItemResponseDTO;
 import br.com.stecar.stecar_backend.entity.Item;
 import br.com.stecar.stecar_backend.repository.ItemRepository;
+import br.com.stecar.stecar_backend.repository.MovimentacaoRepository;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,8 +25,11 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
     private final UsuarioRepository usuarioRepository;
+    private final MovimentacaoRepository movimentacaoRepository;
 
-    public ItemService(ItemRepository itemRepository, UsuarioRepository usuarioRepository) {
+    public ItemService(ItemRepository itemRepository, UsuarioRepository usuarioRepository,
+            MovimentacaoRepository movimentacaoRepository) {
+        this.movimentacaoRepository = movimentacaoRepository;
         this.itemRepository = itemRepository;
         this.usuarioRepository = usuarioRepository;
     }
@@ -134,7 +138,7 @@ public class ItemService {
         validarDepartamento(dados.departamentoDestinoId());
         validarPessoa(dados.responsavelDestinoId());
 
-        Item item = itemRepository.findById(id)
+        Item item = itemRepository.bloquearPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
         if (item.isExcluido()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado.");
@@ -148,10 +152,14 @@ public class ItemService {
                 item.getEscritorioId(), dados.escritorioDestinoId(), item.getPessoaId(),
                 dados.responsavelDestinoId(), item.getId(), usuarioId, dados.justificativa());
 
-        item.setEscritorioId(dados.escritorioDestinoId());
-        item.setDepartamentoId(dados.departamentoDestinoId());
-        item.setPessoaId(dados.responsavelDestinoId());
-        itemRepository.save(item);
+        // Lançamentos retroativos ficam só no histórico: a localização atual
+        // segue a movimentação mais recente.
+        if (!movimentacaoRepository.existsByItemIdAndDataAfter(id, dados.data())) {
+            item.setEscritorioId(dados.escritorioDestinoId());
+            item.setDepartamentoId(dados.departamentoDestinoId());
+            item.setPessoaId(dados.responsavelDestinoId());
+            itemRepository.save(item);
+        }
         return buscarPorId(id);
     }
 

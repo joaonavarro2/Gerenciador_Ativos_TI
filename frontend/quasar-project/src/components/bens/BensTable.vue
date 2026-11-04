@@ -66,6 +66,7 @@
               ><q-icon name="visibility" size="18px" /><q-tooltip>Visualizar bem</q-tooltip></q-btn
             >
             <q-btn
+              v-if="$podeEditar()"
               flat
               round
               dense
@@ -75,6 +76,7 @@
               ><q-icon name="sync_alt" size="18px" /><q-tooltip>Movimentar bem</q-tooltip></q-btn
             >
             <q-btn
+              v-if="$podeEditar()"
               flat
               round
               dense
@@ -84,6 +86,7 @@
               ><q-icon name="edit" size="18px" /><q-tooltip>Editar bem</q-tooltip></q-btn
             >
             <q-btn
+              v-if="$podeEditar()"
               flat
               round
               dense
