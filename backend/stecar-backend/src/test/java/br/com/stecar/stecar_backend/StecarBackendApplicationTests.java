@@ -3,6 +3,7 @@ package br.com.stecar.stecar_backend;
 import br.com.stecar.stecar_backend.dto.DashboardResponseDTO;
 import br.com.stecar.stecar_backend.dto.ItemRequestDTO;
 import br.com.stecar.stecar_backend.dto.MovimentacaoItemRequestDTO;
+import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import br.com.stecar.stecar_backend.service.DashboardService;
 import br.com.stecar.stecar_backend.service.ItemService;
@@ -90,18 +91,21 @@ class StecarBackendApplicationTests {
 				dados.escritorioId(), dados.departamentoId(), dados.pessoaId()));
 		Assertions.assertEquals("Bem atualizado", atualizado.nome());
 
-		usuarioRepository.findAll().stream()
-				.filter(usuario -> "ATIVO".equalsIgnoreCase(usuario.getStatus()))
-				.findFirst()
-				.ifPresent(usuario -> {
-					var movimentado = itemService.movimentar(criado.id(), new MovimentacaoItemRequestDTO(
-							"Transferência", LocalDateTime.now(), escritorio.id(), departamento.id(), null, "Teste transacional"),
-							usuario.getEmail());
-					Assertions.assertEquals(criado.id(), movimentado.id());
-					Assertions.assertEquals(1, itemService.listarMovimentacoes(criado.id()).size());
-					itemService.excluir(criado.id());
-					Assertions.assertEquals(1, itemService.listarMovimentacoes(criado.id()).size());
-				});
+		Usuario usuario = new Usuario();
+		usuario.setNomeCompleto("Usuário de teste");
+		usuario.setEmail("teste-" + System.nanoTime() + "@exemplo.com");
+		usuario.setSenha("hash-de-teste");
+		usuario.setFuncao("ADMINISTRADOR");
+		usuario.setStatus("ATIVO");
+		usuarioRepository.save(usuario);
+
+		var movimentado = itemService.movimentar(criado.id(), new MovimentacaoItemRequestDTO(
+				"Transferência", LocalDateTime.now(), escritorio.id(), departamento.id(), null, "Teste transacional"),
+				usuario.getEmail());
+		Assertions.assertEquals(criado.id(), movimentado.id());
+		Assertions.assertEquals(1, itemService.listarMovimentacoes(criado.id()).size());
+		itemService.excluir(criado.id());
+		Assertions.assertEquals(1, itemService.listarMovimentacoes(criado.id()).size());
 		Assertions.assertTrue(itemService.listar(null, "Bem atualizado", null, null).stream()
 				.noneMatch(item -> item.id().equals(criado.id())));
 

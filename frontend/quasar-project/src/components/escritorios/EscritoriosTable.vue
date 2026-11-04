@@ -46,8 +46,8 @@
       <template #body-cell-acoes="props">
         <q-td :props="props" class="text-center">
           <q-btn flat round dense class="acao-btn" @click="emit('visualizar', props.row)"><q-icon name="visibility" size="18px" /></q-btn>
-          <q-btn flat round dense class="acao-btn" @click="emit('editar', props.row)"><q-icon name="edit" size="18px" /></q-btn>
-          <q-btn flat round dense class="acao-btn" @click="emit('excluir', props.row)"><q-icon name="delete" size="18px" /></q-btn>
+          <q-btn v-if="$podeEditar()" flat round dense class="acao-btn" @click="emit('editar', props.row)"><q-icon name="edit" size="18px" /></q-btn>
+          <q-btn v-if="$podeEditar()" flat round dense class="acao-btn" @click="emit('excluir', props.row)"><q-icon name="delete" size="18px" /></q-btn>
         </q-td>
       </template>
     </q-table>

@@ -18,6 +18,19 @@ public interface MovimentacaoRepository
     // Busca movimentações de um determinado item.
     List<Movimentacao> findByItemIdOrderByDataDesc(Long itemId);
 
+    boolean existsByItemIdAndDataAfter(Long itemId, java.time.LocalDateTime data);
+
+    // Indica se há movimentação do item posterior a (data, id), na mesma ordem do histórico.
+    @org.springframework.data.jpa.repository.Query("""
+            select count(m) > 0 from Movimentacao m
+            where m.itemId = :itemId
+              and (m.data > :data or (m.data = :data and m.id > :id))
+            """)
+    boolean existeMaisRecente(
+            @org.springframework.data.repository.query.Param("itemId") Long itemId,
+            @org.springframework.data.repository.query.Param("data") java.time.LocalDateTime data,
+            @org.springframework.data.repository.query.Param("id") Long id);
+
     // Busca movimentações por status.
     List<Movimentacao> findByStatusIgnoreCaseOrderByDataDesc(
             String status

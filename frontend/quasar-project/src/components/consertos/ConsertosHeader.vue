@@ -10,7 +10,7 @@
       </div>
 
       <div class="row q-gutter-sm">
-        <q-btn @click="$emit('novo')" color="positive" icon="add" label="Novo Reparo" no-caps />
+        <q-btn v-if="$podeEditar()" @click="$emit('novo')" color="positive" icon="add" label="Novo Reparo" no-caps />
       </div>
 
     </div>

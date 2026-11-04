@@ -75,17 +75,47 @@ public class ConsertoAnexoService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato não permitido. Envie PDF, JPG, PNG, GIF, DOC ou DOCX.");
         }
         try {
+            byte[] conteudo = arquivo.getBytes();
+            if (!conteudoCompativel(extensao, conteudo)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "O conteúdo do arquivo não corresponde à extensão ." + extensao + ".");
+            }
             ConsertoAnexo anexo = new ConsertoAnexo();
             anexo.setConsertoId(consertoId);
             anexo.setNomeArquivo(nomeSeguro);
             anexo.setTipoConteudo(tipoConteudo(extensao));
             anexo.setTamanho(arquivo.getSize());
-            anexo.setConteudo(arquivo.getBytes());
+            anexo.setConteudo(conteudo);
             anexo.setDataUpload(LocalDateTime.now());
             return dto(anexoRepository.save(anexo));
         } catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Não foi possível ler o arquivo enviado.");
         }
+    }
+
+    /** Confere a assinatura (magic bytes) do arquivo com a extensão informada. */
+    static boolean conteudoCompativel(String extensao, byte[] conteudo) {
+        return switch (extensao) {
+            case "pdf" -> comecaCom(conteudo, 0x25, 0x50, 0x44, 0x46);
+            case "png" -> comecaCom(conteudo, 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A);
+            case "jpg", "jpeg" -> comecaCom(conteudo, 0xFF, 0xD8, 0xFF);
+            case "gif" -> comecaCom(conteudo, 0x47, 0x49, 0x46, 0x38);
+            case "doc" -> comecaCom(conteudo, 0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1);
+            case "docx" -> comecaCom(conteudo, 0x50, 0x4B, 0x03, 0x04);
+            default -> false;
+        };
+    }
+
+    private static boolean comecaCom(byte[] conteudo, int... assinatura) {
+        if (conteudo.length < assinatura.length) {
+            return false;
+        }
+        for (int i = 0; i < assinatura.length; i++) {
+            if ((conteudo[i] & 0xFF) != assinatura[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void validarConserto(Long id) {
