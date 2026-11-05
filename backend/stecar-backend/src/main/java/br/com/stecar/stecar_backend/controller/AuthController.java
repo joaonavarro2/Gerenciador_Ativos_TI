@@ -15,9 +15,6 @@ import jakarta.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import br.com.stecar.stecar_backend.service.JwtService;
-import java.time.Instant;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -63,13 +60,6 @@ public class AuthController {
             @Valid @RequestBody RedefinirSenhaRequestDTO dados) {
         authService.redefinirSenha(dados.getToken(), dados.getNovaSenha());
         return ResponseEntity.noContent().build();
-    }
-
-    @PostMapping("/renovar")
-    public ResponseEntity<LoginResponseDTO> renovar(JwtAuthenticationToken authentication) {
-        Object inicio = authentication.getToken().getClaims().get(JwtService.CLAIM_INICIO_SESSAO);
-        Instant inicioSessao = inicio instanceof Number n ? Instant.ofEpochSecond(n.longValue()) : null;
-        return ResponseEntity.ok(authService.renovar(authentication.getName(), inicioSessao));
     }
 
     @GetMapping("/me")

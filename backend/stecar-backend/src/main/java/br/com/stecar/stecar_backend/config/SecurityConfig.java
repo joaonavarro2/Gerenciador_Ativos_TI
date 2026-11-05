@@ -1,61 +1,52 @@
 package br.com.stecar.stecar_backend.config;
 
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.CredentialsExpiredException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.SecurityFilterChain;
+
+import io.jsonwebtoken.security.Keys;
+
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import br.com.stecar.stecar_backend.entity.Usuario;
-import br.com.stecar.stecar_backend.repository.UsuarioRepository;
-import io.jsonwebtoken.security.Keys;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
 
-    /** HS512 exige chave de pelo menos 512 bits. */
-    static final int TAMANHO_MINIMO_CHAVE_BYTES = 64;
-
-    static final String[] PAPEIS_ESCRITA = {"ADMINISTRADOR", "ADMINISTRADOR_GERAL"};
+    @Value("${stecar.jwt.secret}")
+    private String secret;
 
     @Bean
     public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            UserDetailsService usuarioDetailsService,
-            UsuarioRepository usuarioRepository) throws Exception {
+            HttpSecurity http) throws Exception {
 
         http
-            // API stateless com JWT: não há sessão nem cookie para proteger com CSRF.
+            // Como a API utiliza JWT, não precisamos de sessão tradicional.
             .csrf(csrf -> csrf.disable())
             .cors(Customizer.withDefaults())
+
+            // Configura a aplicação para trabalhar de forma stateless.
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+
+            // Define quais endpoints precisam de autenticação.
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/auth/login",
@@ -65,32 +56,13 @@ public class SecurityConfig {
                     "/error"
                 ).permitAll()
                 .requestMatchers("/api/usuarios/**").hasAuthority("ADMINISTRADOR_GERAL")
-                .requestMatchers("/api/auth/**").authenticated()
-                // Excluir histórico de movimentação é restrito ao administrador geral.
-                .requestMatchers(HttpMethod.DELETE, "/api/movimentacoes/**").hasAuthority("ADMINISTRADOR_GERAL")
-                .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
-                .requestMatchers("/api/**").hasAnyAuthority(PAPEIS_ESCRITA)
                 .anyRequest().authenticated()
             )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
-                jwt.jwtAuthenticationConverter(token -> {
-                    // Papel e status vêm do banco a cada requisição: alterações e
-                    // desativações têm efeito imediato, sem esperar o token expirar.
-                    UserDetails usuario = usuarioDetailsService.loadUserByUsername(token.getSubject());
-                    if (!usuario.isEnabled()) {
-                        throw new DisabledException("Usuário inativo.");
-                    }
-                    // Tokens emitidos antes da última troca de senha são recusados.
-                    Instant senhaAlteradaEm = usuarioRepository.findByEmail(usuario.getUsername())
-                            .map(Usuario::getSenhaAlteradaEm)
-                            .orElse(null);
-                    if (senhaAlteradaEm != null && (token.getIssuedAt() == null
-                            || token.getIssuedAt().isBefore(senhaAlteradaEm.truncatedTo(ChronoUnit.SECONDS)))) {
-                        throw new CredentialsExpiredException("Senha alterada após a emissão do token.");
-                    }
-                    return new JwtAuthenticationToken(token, usuario.getAuthorities(), usuario.getUsername());
-                })
-            ));
+
+            // Configura o Spring Security para validar os JWTs recebidos.
+            .oauth2ResourceServer(oauth2 ->
+                oauth2.jwt(jwt -> {})
+            );
 
         return http.build();
     }
@@ -121,20 +93,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecretKey jwtSecretKey(@Value("${stecar.jwt.secret}") String secret) {
-        byte[] chaveBytes = secret.getBytes(StandardCharsets.UTF_8);
-        if (chaveBytes.length < TAMANHO_MINIMO_CHAVE_BYTES) {
-            throw new IllegalStateException(
-                    "STECAR_JWT_SECRET deve ter pelo menos " + TAMANHO_MINIMO_CHAVE_BYTES
-                    + " bytes (atual: " + chaveBytes.length + ").");
-        }
-        return Keys.hmacShaKeyFor(chaveBytes);
-    }
+    public JwtDecoder jwtDecoder() {
 
-    @Bean
-    public JwtDecoder jwtDecoder(SecretKey jwtSecretKey) {
+        byte[] chaveBytes =
+                secret.getBytes(StandardCharsets.UTF_8);
+
+        SecretKey chave =
+                Keys.hmacShaKeyFor(chaveBytes);
+
         return NimbusJwtDecoder
-                .withSecretKey(jwtSecretKey)
+                .withSecretKey(chave)
                 .macAlgorithm(MacAlgorithm.HS512)
                 .build();
     }

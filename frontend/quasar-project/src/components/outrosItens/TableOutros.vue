@@ -33,8 +33,8 @@
       <template #body-cell-acoes="slotProps">
         <q-td :props="slotProps" class="text-center">
           <q-btn flat round dense class="acao-btn" icon="visibility" @click="emit('visualizar', slotProps.row)" />
-          <q-btn v-if="$podeEditar()" flat round dense class="acao-btn" icon="edit" @click="emit('editar', slotProps.row)" />
-          <q-btn v-if="$podeEditar()" flat round dense class="acao-btn" icon="delete" @click="emit('excluir', slotProps.row)" />
+          <q-btn flat round dense class="acao-btn" icon="edit" @click="emit('editar', slotProps.row)" />
+          <q-btn flat round dense class="acao-btn" icon="delete" @click="emit('excluir', slotProps.row)" />
         </q-td>
       </template>
     </q-table>

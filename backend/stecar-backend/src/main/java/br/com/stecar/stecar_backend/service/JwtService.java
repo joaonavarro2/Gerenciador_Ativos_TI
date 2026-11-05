@@ -1,42 +1,55 @@
 package br.com.stecar.stecar_backend.service;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
 
 @Service
 public class JwtService {
 
-    private final SecretKey chave;
-    private final Duration validade;
+    @Value("${stecar.jwt.secret}")
+    private String secret;
 
-    public JwtService(
-            SecretKey jwtSecretKey,
-            @Value("${stecar.jwt.expiracao-minutos:30}") long expiracaoMinutos) {
-        this.chave = jwtSecretKey;
-        this.validade = Duration.ofMinutes(expiracaoMinutos);
+    // Tempo de validade do token: 15 minutos
+    private final long tempoExpiracao = 15 * 60 * 1000;
+
+    /**
+     * Gera o JWT para o usuário autenticado.
+     */
+    public String gerarToken(UserDetails usuario) {
+
+        Date agora = new Date();
+
+        Date expiracao = new Date(
+                agora.getTime() + tempoExpiracao
+        );
+
+        return Jwts.builder()
+                .subject(usuario.getUsername())
+                .issuedAt(agora)
+                .expiration(expiracao)
+                .signWith(getChave())
+                .compact();
     }
 
-    public static final String CLAIM_INICIO_SESSAO = "auth_time";
+    /**
+     * Cria a chave utilizada para assinar o JWT.
+     */
+    private SecretKey getChave() {
 
-    /** Gera o token; {@code inicioSessao} é o instante do login com senha e é mantido nas renovações. */
-    public String gerarToken(String email, Instant inicioSessao) {
-        Instant agora = Instant.now();
+        byte[] chaveBytes = secret.getBytes(
+                StandardCharsets.UTF_8
+        );
 
-        // O algoritmo é fixado para coincidir com o JwtDecoder (HS512).
-        return Jwts.builder()
-                .subject(email)
-                .issuedAt(Date.from(agora))
-                .claim(CLAIM_INICIO_SESSAO, inicioSessao.getEpochSecond())
-                .expiration(Date.from(agora.plus(validade)))
-                .signWith(chave, Jwts.SIG.HS512)
-                .compact();
+        return Keys.hmacShaKeyFor(chaveBytes);
     }
 }
