@@ -5,7 +5,7 @@
         <div class="text-h4 text-weight-bold">Escritórios</div>
         <div class="text-subtitle1 text-grey-7 q-mt-xs">Gerencie os escritórios e suas informações cadastrais.</div>
       </div>
-      <q-btn @click="$emit('novo-escritorio')" color="positive" icon="add" label="Novo Escritório" no-caps />
+      <q-btn v-if="$podeEditar()" @click="$emit('novo-escritorio')" color="positive" icon="add" label="Novo Escritório" no-caps />
     </div>
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-5">
