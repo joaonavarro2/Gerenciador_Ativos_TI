@@ -59,7 +59,7 @@ const routes = [
     },
     {
       path:'departamentos',
-      component:() => import('@/pages/departamentos/DepartamentosPages.vue')
+      component:() => import('@/pages/departamentos/DepartamentosPage.vue')
     },
 
     {
@@ -69,7 +69,7 @@ const routes = [
 
     {
       path:'outros-itens',
-      component:() => import('@/pages/outrosItens/OutrosItensPagge.vue')
+      component:() => import('@/pages/outrosItens/OutrosItensPage.vue')
     },
 
     {

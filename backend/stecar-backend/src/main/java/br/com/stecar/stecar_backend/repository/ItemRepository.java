@@ -1,17 +1,25 @@
 package br.com.stecar.stecar_backend.repository;
 
 import br.com.stecar.stecar_backend.entity.Item;
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 
         boolean existsByIdAndExcluidoFalse(Long id);
+
+        // Trava a linha do bem para serializar movimentações simultâneas do mesmo bem.
+        @Lock(LockModeType.PESSIMISTIC_WRITE)
+        @Query("select i from Item i where i.id = :id")
+        Optional<Item> bloquearPorId(@Param("id") Long id);
 
         boolean existsByCodigoAndExcluidoFalse(String codigo);
 

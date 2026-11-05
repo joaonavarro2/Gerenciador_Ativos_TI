@@ -25,6 +25,9 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private String status;
 
+    @Column(name = "senha_alterada_em")
+    private java.time.Instant senhaAlteradaEm;
+
     // Construtor vazio exigido pelo JPA
     public Usuario() {
     }
@@ -61,6 +64,11 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+        this.senhaAlteradaEm = java.time.Instant.now();
+    }
+
+    public java.time.Instant getSenhaAlteradaEm() {
+        return senhaAlteradaEm;
     }
 
     public String getFuncao() {
