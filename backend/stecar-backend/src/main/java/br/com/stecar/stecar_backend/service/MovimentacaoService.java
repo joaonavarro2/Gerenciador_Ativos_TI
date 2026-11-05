@@ -3,7 +3,6 @@ package br.com.stecar.stecar_backend.service;
 
 import br.com.stecar.stecar_backend.dto.MovimentacaoRequestDTO;
 import br.com.stecar.stecar_backend.dto.MovimentacaoResponseDTO;
-import br.com.stecar.stecar_backend.entity.Item;
 import br.com.stecar.stecar_backend.entity.Movimentacao;
 import br.com.stecar.stecar_backend.repository.MovimentacaoRepository;
 import br.com.stecar.stecar_backend.repository.ItemRepository;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 import java.util.List;
 
 @Service
@@ -144,7 +142,6 @@ public class MovimentacaoService {
 
         validarOrigemDestino(dto);
         validarReferencias(dto);
-        itemRepository.bloquearPorId(dto.getItemId());
 
         Movimentacao movimentacao = new Movimentacao();
 
@@ -167,11 +164,6 @@ public class MovimentacaoService {
         movimentacao.setJustificativa(dto.getJustificativa());
 
         Movimentacao salva = movimentacaoRepository.save(movimentacao);
-        // Lançamentos retroativos ficam só no histórico: a localização atual
-        // segue a movimentação mais recente.
-        if (!movimentacaoRepository.existeMaisRecente(salva.getItemId(), salva.getData(), salva.getId())) {
-            atualizarLocalizacaoDoBem(dto);
-        }
 
         return movimentacaoRepository.buscarComReferencias(salva.getId()).stream()
                 .findFirst().map(this::converterParaResponse)
@@ -200,26 +192,24 @@ public class MovimentacaoService {
             );
         }
 
-        // O histórico é imutável: bem, tipo, data, origem e destino não mudam
-        // depois de registrados. Apenas status e justificativa podem ser atualizados.
-        boolean alterouHistorico =
-                !Objects.equals(dto.getItemId(), movimentacao.getItemId())
-                || !dto.getTipo().trim().equals(movimentacao.getTipo())
-                || (dto.getData() != null && !dto.getData().equals(movimentacao.getData()))
-                || !Objects.equals(dto.getDepartamentoOrigemId(), movimentacao.getDepartamentoOrigemId())
-                || !Objects.equals(dto.getDepartamentoDestinoId(), movimentacao.getDepartamentoDestinoId())
-                || !Objects.equals(dto.getEscritorioOrigemId(), movimentacao.getEscritorioOrigemId())
-                || !Objects.equals(dto.getEscritorioDestinoId(), movimentacao.getEscritorioDestinoId())
-                || !Objects.equals(dto.getPessoaOrigemId(), movimentacao.getPessoaOrigemId())
-                || !Objects.equals(dto.getPessoaDestinoId(), movimentacao.getPessoaDestinoId());
-        if (alterouHistorico) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    "Bem, tipo, data, origem e destino de uma movimentação registrada não podem ser alterados."
-                    + " Registre uma nova movimentação para corrigir.");
-        }
+        validarOrigemDestino(dto);
+        validarReferencias(dto);
 
+        movimentacao.setTipo(dto.getTipo().trim());
+        movimentacao.setData(
+                dto.getData() != null
+                        ? dto.getData()
+                        : movimentacao.getData()
+        );
         movimentacao.setStatus(dto.getStatus().trim());
+
+        movimentacao.setDepartamentoOrigemId(dto.getDepartamentoOrigemId());
+        movimentacao.setDepartamentoDestinoId(dto.getDepartamentoDestinoId());
+        movimentacao.setEscritorioOrigemId(dto.getEscritorioOrigemId());
+        movimentacao.setEscritorioDestinoId(dto.getEscritorioDestinoId());
+        movimentacao.setPessoaOrigemId(dto.getPessoaOrigemId());
+        movimentacao.setPessoaDestinoId(dto.getPessoaDestinoId());
+        movimentacao.setItemId(dto.getItemId());
         movimentacao.setJustificativa(dto.getJustificativa());
 
         // Mantém o usuário original que registrou a movimentação.
@@ -247,20 +237,6 @@ public class MovimentacaoService {
                 ));
 
         movimentacaoRepository.delete(movimentacao);
-    }
-
-    /** Mantém a localização do bem coerente com o destino da movimentação. */
-    private void atualizarLocalizacaoDoBem(MovimentacaoRequestDTO dto) {
-        Item item = itemRepository.findById(dto.getItemId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
-        if (dto.getEscritorioDestinoId() != null) {
-            item.setEscritorioId(dto.getEscritorioDestinoId());
-        }
-        if (dto.getDepartamentoDestinoId() != null) {
-            item.setDepartamentoId(dto.getDepartamentoDestinoId());
-        }
-        item.setPessoaId(dto.getPessoaDestinoId());
-        itemRepository.save(item);
     }
 
     private void validarOrigemDestino(MovimentacaoRequestDTO dto) {

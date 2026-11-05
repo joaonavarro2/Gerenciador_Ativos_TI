@@ -11,12 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UsuarioService {
-
-    private static final Set<String> STATUS_VALIDOS = Set.of("ATIVO", "INATIVO");
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -97,9 +94,7 @@ public class UsuarioService {
         Usuario usuario = buscarEntidadePorId(id);
 
         // Verifica se o novo e-mail pertence a outro usuário
-        String email = normalizarEmail(dados.getEmail());
-
-        usuarioRepository.findByEmail(email)
+        usuarioRepository.findByEmail(dados.getEmail())
                 .ifPresent(usuarioEncontrado -> {
 
                     if (!usuarioEncontrado.getId().equals(id)) {
@@ -109,7 +104,7 @@ public class UsuarioService {
                 });
 
         usuario.setNomeCompleto(dados.getNomeCompleto());
-        usuario.setEmail(email);
+        usuario.setEmail(dados.getEmail());
         usuario.setFuncao(dados.getFuncao());
 
         /*
@@ -127,15 +122,9 @@ public class UsuarioService {
             Long id,
             String status) {
 
-        String statusNormalizado = status == null ? "" : status.trim().toUpperCase(Locale.ROOT);
-        if (!STATUS_VALIDOS.contains(statusNormalizado)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Status inválido. Use ATIVO ou INATIVO.");
-        }
-
         Usuario usuario = buscarEntidadePorId(id);
 
-        usuario.setStatus(statusNormalizado);
+        usuario.setStatus(status);
 
         Usuario usuarioAtualizado = usuarioRepository.save(usuario);
 

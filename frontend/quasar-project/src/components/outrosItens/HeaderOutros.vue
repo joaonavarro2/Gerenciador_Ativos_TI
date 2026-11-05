@@ -9,7 +9,6 @@
       </div>
 
       <q-btn
-        v-if="$podeEditar()"
         color="positive"
         icon="add"
         label="Novo Item"

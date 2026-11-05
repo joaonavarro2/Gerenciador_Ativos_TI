@@ -19,10 +19,9 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-stecar}
       POSTGRES_USER: ${POSTGRES_USER:-ativos_ti}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
-    # Exposto só no host local (útil para desenvolvimento); não fica acessível pela rede.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ativos_ti_dev}
     ports:
-      - "127.0.0.1:5432:5432"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -44,12 +43,9 @@ services:
       DB_PORT: 5432
       DB_NAME: ${POSTGRES_DB:-stecar}
       DB_USER: ${POSTGRES_USER:-ativos_ti}
-      DB_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD}
-      STECAR_JWT_SECRET: ${STECAR_JWT_SECRET:?Defina STECAR_JWT_SECRET com pelo menos 64 caracteres}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-ativos_ti_dev}
+      STECAR_JWT_SECRET: ${STECAR_JWT_SECRET:?Defina STECAR_JWT_SECRET com pelo menos 32 caracteres}
       STECAR_ADMIN_PASSWORD: ${STECAR_ADMIN_PASSWORD:?Defina STECAR_ADMIN_PASSWORD}
-      STECAR_ADMIN_EMAIL: ${STECAR_ADMIN_EMAIL:-joaonavarro@car.ba.gov.br}
-      STECAR_ADMIN_NOME: ${STECAR_ADMIN_NOME:-João Navarro}
-      STECAR_JWT_EXPIRACAO_MINUTOS: ${STECAR_JWT_EXPIRACAO_MINUTOS:-30}
       MAIL_HOST: ${MAIL_HOST:-}
       MAIL_PORT: ${MAIL_PORT:-587}
       MAIL_USERNAME: ${MAIL_USERNAME:-}
