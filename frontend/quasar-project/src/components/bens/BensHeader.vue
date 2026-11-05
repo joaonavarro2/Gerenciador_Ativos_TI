@@ -32,7 +32,7 @@
         <ExportarRelatorio v-model="dialogExportar" :filtros="filtros" :itens="props.itens" />
 
         <!-- Novo bem -->
-        <q-btn v-if="$podeEditar()" @click="cadastrarBem" color="positive" icon="add" label="Novo Bem" no-caps />
+        <q-btn @click="cadastrarBem" color="positive" icon="add" label="Novo Bem" no-caps />
 
         <BemCadastro
           v-model="dialogCadastro"

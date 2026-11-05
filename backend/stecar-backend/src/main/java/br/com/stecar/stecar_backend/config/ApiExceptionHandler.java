@@ -6,7 +6,9 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,11 +35,22 @@ public class ApiExceptionHandler {
                 .body(Map.of("mensagem", exception.getReason() == null ? "Erro na requisição." : exception.getReason()));
     }
 
-    // Mesma resposta para e-mail inexistente, senha incorreta e conta inativa.
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, String>> badCredentials(BadCredentialsException exception) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("mensagem", "Senha incorreta. Verifique a senha e tente novamente."));
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<Map<String, String>> usernameNotFound(UsernameNotFoundException exception) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of("mensagem", "Usuário não cadastrado. Verifique o e-mail ou cadastre-se."));
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Map<String, String>> authentication(AuthenticationException exception) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("mensagem", "E-mail ou senha inválidos."));
+                .body(Map.of("mensagem", "Senha incorreta. Verifique a senha e tente novamente."));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

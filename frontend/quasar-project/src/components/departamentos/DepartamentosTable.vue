@@ -34,7 +34,6 @@
         </div>
 
         <q-btn
-          v-if="$podeEditar()"
           flat
           round
           dense

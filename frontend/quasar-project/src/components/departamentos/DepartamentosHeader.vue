@@ -30,7 +30,6 @@
       <div class="row q-gutter-sm">
 
         <q-btn
-          v-if="$podeEditar()"
           color="positive"
           icon="add"
           label="Novo Departamento"

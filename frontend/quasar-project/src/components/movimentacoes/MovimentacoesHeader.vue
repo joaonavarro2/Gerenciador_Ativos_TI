@@ -10,7 +10,6 @@
 
       <div class="movimentacoes-header-actions">
         <q-btn
-          v-if="$podeEditar()"
           color="warning"
           icon="add"
           label="Nova Movimentação"

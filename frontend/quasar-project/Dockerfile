@@ -3,8 +3,7 @@ FROM node:22-alpine AS build
 WORKDIR /app
 
 COPY package*.json ./
-# O postinstall (quasar prepare) precisa do código-fonte; roda no build abaixo.
-RUN npm ci --ignore-scripts
+RUN npm ci
 
 COPY . .
 RUN npm run build
