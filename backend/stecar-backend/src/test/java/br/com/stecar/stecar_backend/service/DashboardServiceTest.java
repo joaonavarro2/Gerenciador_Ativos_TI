@@ -23,7 +23,7 @@ class DashboardServiceTest {
 
         when(repository.contarTotalBens()).thenReturn(4L);
         when(repository.contarMovimentacoesPorStatus("PENDENTE")).thenReturn(2L);
-        when(repository.contarConsertosPorStatus("ABERTO")).thenReturn(1L);
+        when(repository.contarConsertosAbertos()).thenReturn(1L);
         when(repository.contarItensPorStatus("EM_ANALISE")).thenReturn(1L);
         when(repository.contarMovimentacoesPorMes(anoAtual))
                 .thenReturn(List.<Object[]>of(new Object[]{1, 3L}));
@@ -53,5 +53,6 @@ class DashboardServiceTest {
         assertEquals("Notebook", resposta.getBens().get(0).getDescricao());
         verify(repository).contarMovimentacoesPorMes(anoAtual);
         verify(repository).contarConsertosPorMes(anoAtual);
+        verify(repository).contarConsertosAbertos();
     }
 }

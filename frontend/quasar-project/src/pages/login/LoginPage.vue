@@ -81,10 +81,6 @@
           class="login-submit"
         />
 
-        <div class="login-register">
-          <span>Não possui uma conta?</span>
-          <q-btn flat dense no-caps type="button" label="Cadastre-se" class="login-link" @click="cadastrar" />
-        </div>
       </q-form>
 
       <div class="login-footer">Sistema de Gestão Agrorrural - Governo da Bahia</div>
@@ -93,7 +89,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { api } from '@/boot/axios.js'
@@ -112,21 +108,6 @@ function limparErrosLogin() {
   emailError.value = ''
   senhaError.value = ''
 }
-
-onMounted(() => {
-  if (router.currentRoute.value.query.cadastro !== 'sucesso') {
-    return
-  }
-
-  $q.notify({
-    type: 'positive',
-    message: 'Usuário cadastrado com sucesso.',
-    position: 'top',
-    timeout: 4000,
-  })
-
-  router.replace({ path: '/login' })
-})
 
 function valorObrigatorio(valor) {
   return !!valor || 'Campo obrigatório'
@@ -176,12 +157,16 @@ async function entrar() {
 
     if (
       status === 401 ||
-      status === 403 ||
       texto.includes('senha incorreta') ||
       texto.includes('bad credentials') ||
       texto.includes('credenciais')
     ) {
       senhaError.value = 'E-mail ou senha inválidos.'
+      return
+    }
+
+    if (status === 403 && payload?.mensagem) {
+      senhaError.value = payload.mensagem
       return
     }
 
@@ -200,7 +185,4 @@ function recuperarSenha() {
   router.push('/recuperar-senha')
 }
 
-function cadastrar() {
-  router.push('/cadastro-usuario')
-}
 </script>

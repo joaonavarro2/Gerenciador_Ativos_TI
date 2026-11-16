@@ -1,5 +1,10 @@
 const routes = [
   {
+    path: '/acesso-negado',
+    component: () => import('@/pages/AcessoNegado.vue'),
+    meta: { public: true }
+  },
+  {
     path: '/',
     component: () => import('@/pages/login/LoginPage.vue'),
     meta: { public: true }
@@ -17,11 +22,6 @@ const routes = [
   {
     path: '/redefinir-senha',
     component: () => import('@/pages/login/RedefinirSenhaPage.vue'),
-    meta: { public: true }
-  },
-  {
-    path: '/cadastro-usuario',
-    component: () => import('@/pages/login/CadastroUsuarioPage.vue'),
     meta: { public: true }
   },
   {
@@ -75,6 +75,11 @@ const routes = [
     {
       path:'perfil',
       component:() => import('@/pages/perfil/PerfilPage.vue')
+    },
+    {
+      path:'usuarios',
+      component:() => import('@/pages/usuarios/UsuariosPage.vue'),
+      meta: { roles: ['ADMINISTRADOR', 'ADMINISTRADOR GERAL', 'ADMINISTRADOR_GERAL'] }
     }
     ]
   },

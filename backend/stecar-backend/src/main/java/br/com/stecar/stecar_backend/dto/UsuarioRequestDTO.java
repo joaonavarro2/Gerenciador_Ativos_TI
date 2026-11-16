@@ -27,6 +27,9 @@ public class UsuarioRequestDTO {
     @NotBlank(message = "A função é obrigatória.")
     private String funcao;
 
+    @jakarta.validation.constraints.Pattern(regexp = "ATIVO|INATIVO", message = "O status deve ser ATIVO ou INATIVO.")
+    private String status;
+
     public UsuarioRequestDTO() {
     }
 
@@ -61,4 +64,7 @@ public class UsuarioRequestDTO {
     public void setFuncao(String funcao) {
         this.funcao = funcao;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

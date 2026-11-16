@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @SpringBootTest
-class StecarBackendApplicationTests {
+class StecarBackendApplicationTests extends PostgresIntegrationTest {
 
 	@Autowired
 	private DashboardService dashboardService;

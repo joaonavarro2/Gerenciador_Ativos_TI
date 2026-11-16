@@ -1,0 +1,135 @@
+{
+  "planHash": "781e89b1b44b916e036b56ebeec2b313cbd18ccf07e7c6d28a2fe770d5379712",
+  "phase": "standalone",
+  "recordedAtUtc": "2026-11-12T12:12:03.9677541Z",
+  "retryCount": 0,
+  "resetBaseline": false,
+  "complete": true,
+  "result": {
+    "setupSucceeded": true,
+    "setupDurationMs": 17037,
+    "setupFailureOutput": null,
+    "assertions": [
+      {
+        "name": "frontend-lint",
+        "kind": "process",
+        "verificationMethod": "exit-code",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\r\n\u003E quasar-project@0.0.1 lint:check\r\n\u003E prettier \u0022**/*.{js,vue,css,scss,html,md,json}\u0022 --ignore-path .gitignore \u0026\u0026 eslint -c ./eslint.config.js \u0022./src*/**/*.{js,cjs,mjs,vue}\u0022\r\n\r\n{\r\n  \u0022$schema\u0022: \u0022https://json.schemastore.org/prettierrc\u0022,\r\n  \u0022semi\u0022: false,\r\n  \u0022singleQuote\u0022: true,\r\n  \u0022printWidth\u0022: 100\r\n}\r\n/* oxlint-disable */\r\n/**\r\n * THIS FILE IS GENERATED AUTOMATICALLY.\r\n * DO NOT EDIT.\r\n *\r\n * You are probably looking on adding startup/initialization code.\r\n * Use \u0022quasar new boot \u003Cname\u003E\u0022 and add it there.\r\n * One boot file per concern. Then reference the file(s) in quasar.config file \u003E boot:\r\n * boot: [\u0027file\u0027, ...] // do not add \u0022.js\u0022 extension to it.\r\n *\r\n * Boot files are your \u0022main.js\u0022\r\n **/\r\n\r\n\r\n\r\nimport { Quasar } from \u0027quasar\u0027\r\nimport { markRaw } from \u0027vue\u0027\r\nimport RootComponent from \u0027@/../src/App.vue\u0027\r\n\r\nimport createRouter from \u0027@/../src/router/index\u0027\r\n\r\n\r\n\r\nexport default async function (createAppFn, quasarUserOptions) {\r\n\r\n  // Create the app instance.\r\n  // Here we inject into it the Quasar UI, the router \u0026 possibly the store.\r\n  const app = createAppFn(RootComponent)\r\n\r\n  app.config.performance = true\r\n\r\n  app.use(Quasar, quasarUserOptions)\r\n\r\n\r\n\r\n  const router = markRaw(\r\n    typeof createRouter === \u0027function\u0027\r\n      ? await createRouter({})\r\n      : createRouter\r\n  )\r\n\r\n\r\n  // Expose the app, the router and the store.\r\n  // Note that we are not mounting the app here, since bootstrapping will be\r\n  // different depending on whether we are in a browser or on the server.\r\n  return {\r\n    app,\r\n        router\r\n  }\r\n}\r\n/* oxlint-disable */\r\n/**\r\n * THIS FILE IS GENERATED AUTOMATICALLY.\r\n * DO NOT EDIT.\r\n *\r\n * You are probably looking on adding startup/initialization code.\r\n * Use \u0022quasar new boot \u003Cname\u003E\u0022 and add it there.\r\n * One boot file per concern. Then reference the file(s) in quasar.config file \u003E boot:\r\n * boot: [\u0027file\u0027, ...] // do not add \u0022.js\u0022 extension to it.\r\n *\r\n * Boot files are your \u0022main.js\u0022\r\n **/\r\n\r\nimport { createApp } from \u0027vue\u0027\r\n\r\n\r\n\r\nimport \u0027@quasar/extras/roboto-font/roboto-font.css\u0027\r\nimport \u0027@quasar/extras/material-icons/material-icons.css\u0027\r\n\r\n\r\n// We load Quasar stylesheet file\r\nimport \u0027quasar/dist/quasar.sass\u0027\r\n\r\n\r\nimport \u0027@/css/app.scss\u0027\r\n\r\nimport createQuasarApp from \u0027./app.js\u0027\r\nimport quasarUserOptions from \u0027./quasar-user-options.js\u0027\r\n\r\n\r\n\r\nconsole.info(\u0027[Quasar] Running SPA.\u0027)\r\n\r\nconst publicPath = \u0060/\u0060\r\n\r\nasync function start ({\r\n  app,\r\n  router\r\n  }, bootFiles) {\r\n    let hasRedirected = false\r\n  const getRedirectUrl = url =\u003E {\r\n    try { return router.resolve(url).href }\r\n    catch (err) {}\r\n\r\n    return Object(url) === url\r\n      ? null\r\n      : url\r\n  }\r\n  const redirect = url =\u003E {\r\n    hasRedirected = true\r\n\r\n    if (typeof url === \u0027string\u0027 \u0026\u0026 /^https?:\\/\\//.test(url)) {\r\n      window.location.href = url\r\n      return\r\n    }\r\n\r\n    const href = getRedirectUrl(url)\r\n\r\n    // continue if we didn\u0027t fail to resolve the url\r\n    if (href !== null) {\r\n      window.location.href = href\r\n      window.location.reload()    }\r\n  }\r\n\r\n  // the router-facing URL: no publicPath, no hash-mode \u0022#\u0022\r\n  const urlPath = window.location.hash.slice(1) || \u0027/\u0027\r\n\r\n  for (let i = 0; hasRedirected === false \u0026\u0026 i \u003C bootFiles.length; i\u002B\u002B) {\r\n    try {\r\n      await bootFiles[i]({\r\n        app,\r\n        router,\r\n                ssrContext: null,\r\n        redirect,\r\n        urlPath,\r\n        publicPath\r\n      })\r\n    }\r\n    catch (err) {\r\n      if (!hasRedirected) console.error(\u0027[Quasar] boot error:\u0027, err)\r\n      return\r\n    }\r\n  }\r\n\r\n  if (hasRedirected) return\r\n  \r\n  app.use(router)\r\n\r\n    \r\n          app.mount(\u0027#q-app\u0027)\r\n    \r\n}\r\n\r\ncreateQuasarApp(createApp, quasarUserOptions)\r\n  .then(app =\u003E {\r\n    // eventually remove this when Cordova/Capacitor/Electron support becomes old\r\n    const [ method, mapFn ] = Promise.allSettled !== void 0\r\n      ? [\r\n        \u0027allSettled\u0027,\r\n        bootFiles =\u003E bootFiles.map(result =\u003E {\r\n          if (result.status === \u0027rejected\u0027) {\r\n            console.error(\u0027[Quasar] boot error:\u0027, result.reason)\r\n            return\r\n          }\r\n          return result.value.default\r\n       \n\u2026[truncated]",
+        "durationMs": 8097
+      },
+      {
+        "name": "tests-pass",
+        "kind": "process",
+        "verificationMethod": "test-results",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\r\n\u003E quasar-project@0.0.1 test\r\n\u003E vitest run\r\n\r\n\r\n RUN  v5.1.0 C:/Users/joaonavarro/Downloads/Gerenciador/Gerenciador_Ativos_TI/frontend/quasar-project\r\n\r\n\r\n Test Files  3 passed (3)\r\n      Tests  8 passed (8)\r\n   Start at  09:11:51\r\n   Duration  6.16s (environment 96%, import 2%, transform 2%, tests 1%)\r\n\r\n",
+        "durationMs": 7416,
+        "testResults": {
+          "testFramework": "vitest",
+          "runnerDetectedFrom": "package_json",
+          "testsTotal": 8,
+          "testsPassed": 8,
+          "testsFailed": 0,
+          "testsSkipped": 0,
+          "parseFailed": false
+        }
+      },
+      {
+        "name": "production-build",
+        "kind": "process",
+        "verificationMethod": "exit-code",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": 0,
+        "outputSample": "\r\n\u003E quasar-project@0.0.1 build\r\n\u003E quasar build\r\n\r\n\r\n\u001B[38;2;25;118;210m \u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2588\u001B[39m\u001B[38;2;34;114;201m\u2588\u001B[39m\u001B[38;2;37;112;197m\u2588\u001B[39m\u001B[38;2;40;111;194m\u2588\u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2557\u001B[39m\u001B[38;2;48;106;185m \u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2557\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2557\u001B[39m\u001B[38;2;78;92;153m \u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2588\u001B[39m\u001B[38;2;86;88;144m\u2588\u001B[39m\u001B[38;2;89;86;140m\u2588\u001B[39m\u001B[38;2;92;85;137m\u2588\u001B[39m\u001B[38;2;95;83;134m\u2557\u001B[39m\u001B[38;2;98;82;131m \u001B[39m\u001B[38;2;101;80;128m\u2588\u001B[39m\u001B[38;2;104;79;125m\u2588\u001B[39m\u001B[38;2;107;77;121m\u2588\u001B[39m\u001B[38;2;110;76;118m\u2588\u001B[39m\u001B[38;2;113;75;115m\u2588\u001B[39m\u001B[38;2;115;73;112m\u2588\u001B[39m\u001B[38;2;118;72;109m\u2588\u001B[39m\u001B[38;2;121;70;106m\u2557\u001B[39m\u001B[38;2;124;69;102m \u001B[39m\u001B[38;2;127;67;99m\u2588\u001B[39m\u001B[38;2;130;66;96m\u2588\u001B[39m\u001B[38;2;133;64;93m\u2588\u001B[39m\u001B[38;2;136;63;90m\u2588\u001B[39m\u001B[38;2;139;61;87m\u2588\u001B[39m\u001B[38;2;142;60;83m\u2557\u001B[39m\u001B[38;2;145;59;80m \u001B[39m\u001B[38;2;148;57;77m\u2588\u001B[39m\u001B[38;2;150;56;74m\u2588\u001B[39m\u001B[38;2;153;54;71m\u2588\u001B[39m\u001B[38;2;156;53;68m\u2588\u001B[39m\u001B[38;2;159;51;64m\u2588\u001B[39m\u001B[38;2;162;50;61m\u2588\u001B[39m\u001B[38;2;165;48;58m\u2557\u001B[39m\r\n\u001B[38;2;25;118;210m\u2588\u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2554\u001B[39m\u001B[38;2;34;114;201m\u2550\u001B[39m\u001B[38;2;37;112;197m\u2550\u001B[39m\u001B[38;2;40;111;194m\u2550\u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2588\u001B[39m\u001B[38;2;48;106;185m\u2557\u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2551\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2551\u001B[39m\u001B[38;2;78;92;153m\u2588\u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2554\u001B[39m\u001B[38;2;86;88;144m\u2550\u001B[39m\u001B[38;2;89;86;140m\u2550\u001B[39m\u001B[38;2;92;85;137m\u2588\u001B[39m\u001B[38;2;95;83;134m\u2588\u001B[39m\u001B[38;2;98;82;131m\u2557\u001B[39m\u001B[38;2;101;80;128m\u2588\u001B[39m\u001B[38;2;104;79;125m\u2588\u001B[39m\u001B[38;2;107;77;121m\u2554\u001B[39m\u001B[38;2;110;76;118m\u2550\u001B[39m\u001B[38;2;113;75;115m\u2550\u001B[39m\u001B[38;2;115;73;112m\u2550\u001B[39m\u001B[38;2;118;72;109m\u2550\u001B[39m\u001B[38;2;121;70;106m\u255D\u001B[39m\u001B[38;2;124;69;102m\u2588\u001B[39m\u001B[38;2;127;67;99m\u2588\u001B[39m\u001B[38;2;130;66;96m\u2554\u001B[39m\u001B[38;2;133;64;93m\u2550\u001B[39m\u001B[38;2;136;63;90m\u2550\u001B[39m\u001B[38;2;139;61;87m\u2588\u001B[39m\u001B[38;2;142;60;83m\u2588\u001B[39m\u001B[38;2;145;59;80m\u2557\u001B[39m\u001B[38;2;148;57;77m\u2588\u001B[39m\u001B[38;2;150;56;74m\u2588\u001B[39m\u001B[38;2;153;54;71m\u2554\u001B[39m\u001B[38;2;156;53;68m\u2550\u001B[39m\u001B[38;2;159;51;64m\u2550\u001B[39m\u001B[38;2;162;50;61m\u2588\u001B[39m\u001B[38;2;165;48;58m\u2588\u001B[39m\u001B[38;2;168;47;55m\u2557\u001B[39m\r\n\u001B[38;2;25;118;210m\u2588\u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2551\u001B[39m\u001B[38;2;34;114;201m \u001B[39m\u001B[38;2;37;112;197m \u001B[39m\u001B[38;2;40;111;194m \u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2588\u001B[39m\u001B[38;2;48;106;185m\u2551\u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2551\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2551\u001B[39m\u001B[38;2;78;92;153m\u2588\u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2588\u001B[39m\u001B[38;2;86;88;144m\u2588\u001B[39m\u001B[38;2;89;86;140m\u2588\u001B[39m\u001B[38;2;92;85;137m\u2588\u001B[39m\u001B[38;2;95;83;134m\u2588\u001B[39m\u001B[38;2;98;82;131m\u2551\u001B[39m\u001B[38;2;101;80;128m\u2588\u001B[39m\u001B[38;2;104;79;125m\u2588\u001B[39m\u001B[38;2;107;77;121m\u2588\u001B[39m\u001B[38;2;110;76;118m\u2588\u001B[39m\u001B[38;2;113;75;115m\u2588\u001B[39m\u001B[38;2;115;73;112m\u2588\u001B[39m\u001B[38;2;118;72;109m\u2588\u001B[39m\u001B[38;2;121;70;106m\u2557\u001B[39m\u001B[38;2;124;69;102m\u2588\u001B[39m\u001B[38;2;127;67;99m\u2588\u001B[39m\u001B[38;2;130;66;96m\u2588\u001B[39m\u001B[38;2;133;64;93m\u2588\u001B[39m\u001B[38;2;136;63;90m\u2588\u001B[39m\u001B[38;2;139;61;87m\u2588\u001B[39m\u001B[38;2;142;60;83m\u2588\u001B[39m\u001B[38;2;145;59;80m\u2551\u001B[39m\u001B[38;2;148;57;77m\u2588\u001B[39m\u001B[38;2;150;56;74m\u2588\u001B[39m\u001B[38;2;153;54;71m\u2588\u001B[39m\u001B[38;2;156;53;68m\u2588\u001B[39m\u001B[38;2;159;51;64m\u2588\u001B[39m\u001B[38;2;162;50;61m\u2588\u001B[39m\u001B[38;2;165;48;58m\u2554\u001B[39m\u001B[38;2;168;47;55m\u255D\u001B[39m\r\n\u001B[38;2;25;118;210m\u2588\u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2551\u001B[39m\u001B[38;2;34;114;201m\u2584\u001B[39m\u001B[38;2;37;112;197m\u2584\u001B[39m\u001B[38;2;40;111;194m \u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2588\u001B[39m\u001B[38;2;48;106;185m\u2551\u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2551\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2551\u001B[39m\u001B[38;2;78;92;153m\u2588\u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2554\u001B[39m\u001B[38;2;86;88;144m\u2550\u001B[39m\u001B[38;2;89;86;140m\u2550\u001B[39m\u001B[3\n\u2026[truncated]",
+        "durationMs": 3969
+      },
+      {
+        "name": "login-page-serves",
+        "kind": "http-probe",
+        "verificationMethod": "http-status",
+        "passed": true,
+        "timedOut": false,
+        "skipped": false,
+        "skippedReason": null,
+        "exitCode": null,
+        "outputSample": "HTTP 200\n\u003C!doctype html\u003E\n\u003Chtml\u003E\n  \u003Chead\u003E\n    \u003Cscript type=\u0022module\u0022\u003E\nimport { inject } from \u0022/@vite-plugin-checker-runtime\u0022;\ninject({\n  overlayConfig: {},\n  base: \u0022/\u0022,\n});\n\u003C/script\u003E\n\n    \u003Cscript type=\u0022module\u0022 src=\u0022/@vite/client\u0022\u003E\u003C/script\u003E\n\n    \u003Ctitle\u003EQuasar App\u003C/title\u003E\n\n    \u003Cmeta charset=\u0022utf-8\u0022\u003E\n    \u003Cmeta name=\u0022description\u0022 content=\u0022A Quasar Project\u0022\u003E\n    \u003Cmeta name=\u0022format-detection\u0022 content=\u0022telephone=no\u0022\u003E\n    \u003Cmeta name=\u0022msapplication-tap-highlight\u0022 content=\u0022no\u0022\u003E\n    \u003Cmeta name=\u0022viewport\u0022 content=\u0022user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width\u0022\u003E\n\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u0022128x128\u0022 href=\u0022/icons/favicon-128x128.png\u0022\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u002296x96\u0022 href=\u0022/icons/favicon-96x96.png\u0022\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u002232x32\u0022 href=\u0022/icons/favicon-32x32.png\u0022\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/png\u0022 sizes=\u002216x16\u0022 href=\u0022/icons/favicon-16x16.png\u0022\u003E\n    \u003Clink rel=\u0022icon\u0022 type=\u0022image/ico\u0022 href=\u0022/favicon.ico\u0022\u003E\n  \u003C/head\u003E\n  \u003Cbody\u003E\n    \u003Cdiv id=\u0022q-app\u0022\u003E\u003C/div\u003E\u003Cscript type=\u0022module\u0022 src=\u0022/.quasar\\dev-spa\\client-entry.js\u0022\u003E\u003C/script\u003E\n  \u003C/body\u003E\n\u003C/html\u003E\n\n--- server output ---\n\r\n\u003E quasar-project@0.0.1 dev\r\n\u003E quasar dev --hostname 127.0.0.1\r\n\r\n\r\n\u001B[38;2;25;118;210m \u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2588\u001B[39m\u001B[38;2;34;114;201m\u2588\u001B[39m\u001B[38;2;37;112;197m\u2588\u001B[39m\u001B[38;2;40;111;194m\u2588\u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2557\u001B[39m\u001B[38;2;48;106;185m \u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2557\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2557\u001B[39m\u001B[38;2;78;92;153m \u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2588\u001B[39m\u001B[38;2;86;88;144m\u2588\u001B[39m\u001B[38;2;89;86;140m\u2588\u001B[39m\u001B[38;2;92;85;137m\u2588\u001B[39m\u001B[38;2;95;83;134m\u2557\u001B[39m\u001B[38;2;98;82;131m \u001B[39m\u001B[38;2;101;80;128m\u2588\u001B[39m\u001B[38;2;104;79;125m\u2588\u001B[39m\u001B[38;2;107;77;121m\u2588\u001B[39m\u001B[38;2;110;76;118m\u2588\u001B[39m\u001B[38;2;113;75;115m\u2588\u001B[39m\u001B[38;2;115;73;112m\u2588\u001B[39m\u001B[38;2;118;72;109m\u2588\u001B[39m\u001B[38;2;121;70;106m\u2557\u001B[39m\u001B[38;2;124;69;102m \u001B[39m\u001B[38;2;127;67;99m\u2588\u001B[39m\u001B[38;2;130;66;96m\u2588\u001B[39m\u001B[38;2;133;64;93m\u2588\u001B[39m\u001B[38;2;136;63;90m\u2588\u001B[39m\u001B[38;2;139;61;87m\u2588\u001B[39m\u001B[38;2;142;60;83m\u2557\u001B[39m\u001B[38;2;145;59;80m \u001B[39m\u001B[38;2;148;57;77m\u2588\u001B[39m\u001B[38;2;150;56;74m\u2588\u001B[39m\u001B[38;2;153;54;71m\u2588\u001B[39m\u001B[38;2;156;53;68m\u2588\u001B[39m\u001B[38;2;159;51;64m\u2588\u001B[39m\u001B[38;2;162;50;61m\u2588\u001B[39m\u001B[38;2;165;48;58m\u2557\u001B[39m\r\n\u001B[38;2;25;118;210m\u2588\u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2554\u001B[39m\u001B[38;2;34;114;201m\u2550\u001B[39m\u001B[38;2;37;112;197m\u2550\u001B[39m\u001B[38;2;40;111;194m\u2550\u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2588\u001B[39m\u001B[38;2;48;106;185m\u2557\u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2551\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2551\u001B[39m\u001B[38;2;78;92;153m\u2588\u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2554\u001B[39m\u001B[38;2;86;88;144m\u2550\u001B[39m\u001B[38;2;89;86;140m\u2550\u001B[39m\u001B[38;2;92;85;137m\u2588\u001B[39m\u001B[38;2;95;83;134m\u2588\u001B[39m\u001B[38;2;98;82;131m\u2557\u001B[39m\u001B[38;2;101;80;128m\u2588\u001B[39m\u001B[38;2;104;79;125m\u2588\u001B[39m\u001B[38;2;107;77;121m\u2554\u001B[39m\u001B[38;2;110;76;118m\u2550\u001B[39m\u001B[38;2;113;75;115m\u2550\u001B[39m\u001B[38;2;115;73;112m\u2550\u001B[39m\u001B[38;2;118;72;109m\u2550\u001B[39m\u001B[38;2;121;70;106m\u255D\u001B[39m\u001B[38;2;124;69;102m\u2588\u001B[39m\u001B[38;2;127;67;99m\u2588\u001B[39m\u001B[38;2;130;66;96m\u2554\u001B[39m\u001B[38;2;133;64;93m\u2550\u001B[39m\u001B[38;2;136;63;90m\u2550\u001B[39m\u001B[38;2;139;61;87m\u2588\u001B[39m\u001B[38;2;142;60;83m\u2588\u001B[39m\u001B[38;2;145;59;80m\u2557\u001B[39m\u001B[38;2;148;57;77m\u2588\u001B[39m\u001B[38;2;150;56;74m\u2588\u001B[39m\u001B[38;2;153;54;71m\u2554\u001B[39m\u001B[38;2;156;53;68m\u2550\u001B[39m\u001B[38;2;159;51;64m\u2550\u001B[39m\u001B[38;2;162;50;61m\u2588\u001B[39m\u001B[38;2;165;48;58m\u2588\u001B[39m\u001B[38;2;168;47;55m\u2557\u001B[39m\r\n\u001B[38;2;25;118;210m\u2588\u001B[39m\u001B[38;2;28;117;207m\u2588\u001B[39m\u001B[38;2;31;115;204m\u2551\u001B[39m\u001B[38;2;34;114;201m \u001B[39m\u001B[38;2;37;112;197m \u001B[39m\u001B[38;2;40;111;194m \u001B[39m\u001B[38;2;43;109;191m\u2588\u001B[39m\u001B[38;2;45;108;188m\u2588\u001B[39m\u001B[38;2;48;106;185m\u2551\u001B[39m\u001B[38;2;51;105;182m\u2588\u001B[39m\u001B[38;2;54;104;178m\u2588\u001B[39m\u001B[38;2;57;102;175m\u2551\u001B[39m\u001B[38;2;60;101;172m \u001B[39m\u001B[38;2;63;99;169m \u001B[39m\u001B[38;2;66;98;166m \u001B[39m\u001B[38;2;69;96;163m\u2588\u001B[39m\u001B[38;2;72;95;159m\u2588\u001B[39m\u001B[38;2;75;93;156m\u2551\u001B[39m\u001B[38;2;78;92;153m\u2588\u001B[39m\u001B[38;2;80;90;150m\u2588\u001B[39m\u001B[38;2;83;89;147m\u2588\u001B[39m\u001B[38;2;86;88;144m\u2588\u001B[39m\u001B[38;2;89;86;140m\u2588\u001B[39m\u001B[3\n\u2026[truncated]",
+        "durationMs": 1761
+      }
+    ],
+    "executions": [
+      {
+        "source": "setup[0]",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "ci"
+        ],
+        "cwd": "C:\\Users\\joaonavarro\\Downloads\\Gerenciador\\Gerenciador_Ativos_TI\\frontend\\quasar-project",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "frontend-lint",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "lint:check"
+        ],
+        "cwd": "C:\\Users\\joaonavarro\\Downloads\\Gerenciador\\Gerenciador_Ativos_TI\\frontend\\quasar-project",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "tests-pass",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "test"
+        ],
+        "cwd": "C:\\Users\\joaonavarro\\Downloads\\Gerenciador\\Gerenciador_Ativos_TI\\frontend\\quasar-project",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "production-build",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "build"
+        ],
+        "cwd": "C:\\Users\\joaonavarro\\Downloads\\Gerenciador\\Gerenciador_Ativos_TI\\frontend\\quasar-project",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      },
+      {
+        "source": "login-page-serves",
+        "resolvedExecutable": "C:\\Program Files\\nodejs\\npm.CMD",
+        "args": [
+          "run",
+          "dev",
+          "--",
+          "--hostname",
+          "127.0.0.1"
+        ],
+        "cwd": "C:\\Users\\joaonavarro\\Downloads\\Gerenciador\\Gerenciador_Ativos_TI\\frontend\\quasar-project",
+        "env": {},
+        "prependPath": [],
+        "platform": "win32"
+      }
+    ]
+  }
+}

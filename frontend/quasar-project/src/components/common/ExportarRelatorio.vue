@@ -126,15 +126,7 @@ const modoExportacao = ref('filtrados')
 const opcoesExportacao = [ { label: 'Exportar somente os itens filtrados', value: 'filtrados' }, { label: 'Exportar todos os itens', value: 'todos' } ]
 
 const filtros = props.filtros
-// Mocks usados enquanto o backend não fornece dados via prop `itens`.
-// TODO: Remover este fallback quando a API estiver disponível e sempre passar `itens` pela página.
-const MOCK_ITENS = [
-  { id: 'BEM-001', descricao: 'PC Dell OptiPlex', categoria: 'PC', marca: 'Dell', departamento: 'Dep. Financeiro', responsavel: 'João Silva', status: 'Ativo' },
-  { id: 'BEM-002', descricao: 'Notebook Lenovo ThinkPad', categoria: 'Notebook', marca: 'Lenovo', departamento: 'Diretoria Geral', responsavel: 'Maria Souza', status: 'Manutenção' },
-  { id: 'BEM-003', descricao: 'Monitor LG 24"', categoria: 'Monitor', marca: 'LG', departamento: 'Assessoria da Diretoria', responsavel: 'Carlos Andrade', status: 'Ativo' }
-]
-
-const itensDisponiveis = computed(() => (props.itens && props.itens.length) ? props.itens : MOCK_ITENS)
+const itensDisponiveis = computed(() => props.itens)
 
 function texto(valor) {
   if (valor === null || valor === undefined) return ''

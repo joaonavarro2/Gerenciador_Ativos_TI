@@ -60,6 +60,17 @@ public class ItemService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
     }
 
+    @Transactional(readOnly = true)
+    public List<ItemResponseDTO> listarPorEscritorio(Long escritorioId) {
+        if (itemRepository.contarEscritorio(escritorioId) == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Escritório não encontrado.");
+        }
+        return itemRepository.listarComReferencias().stream()
+                .map(this::mapearItem)
+                .filter(item -> escritorioId.equals(item.escritorioId()))
+                .toList();
+    }
+
         @Transactional(readOnly = true)
         public List<MovimentacaoItemResponseDTO> listarMovimentacoes(Long id) {
             validarExistencia(id);
@@ -136,7 +147,12 @@ public class ItemService {
         }
         validarEscritorio(dados.escritorioDestinoId());
         validarDepartamento(dados.departamentoDestinoId());
+        validarDepartamentoNoEscritorio(dados.departamentoDestinoId(), dados.escritorioDestinoId());
         validarPessoa(dados.responsavelDestinoId());
+        validarPessoaNoLocal(
+                dados.responsavelDestinoId(),
+                dados.escritorioDestinoId(),
+                dados.departamentoDestinoId());
 
         Item item = itemRepository.bloquearPorId(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
@@ -193,7 +209,9 @@ public class ItemService {
     private void validarReferencias(ItemRequestDTO dados) {
         validarEscritorio(dados.escritorioId());
         validarDepartamento(dados.departamentoId());
+        validarDepartamentoNoEscritorio(dados.departamentoId(), dados.escritorioId());
         validarPessoa(dados.pessoaId());
+        validarPessoaNoLocal(dados.pessoaId(), dados.escritorioId(), dados.departamentoId());
     }
 
     private void validarEscritorio(Long id) {
@@ -208,9 +226,24 @@ public class ItemService {
         }
     }
 
+    private void validarDepartamentoNoEscritorio(Long departamentoId, Long escritorioId) {
+        if (itemRepository.contarDepartamentoNoEscritorio(departamentoId, escritorioId) == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O departamento selecionado pertence a outro escritório.");
+        }
+    }
+
     private void validarPessoa(Long id) {
         if (id != null && itemRepository.contarPessoaAtiva(id) == 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Responsável inválido ou inativo.");
+        }
+    }
+
+    private void validarPessoaNoLocal(Long pessoaId, Long escritorioId, Long departamentoId) {
+        if (pessoaId != null
+                && itemRepository.contarPessoaAtivaNoLocal(pessoaId, escritorioId, departamentoId) == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O responsável selecionado não pertence ao escritório e departamento informados.");
         }
     }
 

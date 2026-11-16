@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 public interface MovimentacaoRepository
         extends JpaRepository<Movimentacao, Long> {
 
+    long countByUsuarioId(Long usuarioId);
+
     // Busca as movimentações mais recentes primeiro.
     List<Movimentacao> findAllByOrderByDataDesc();
 

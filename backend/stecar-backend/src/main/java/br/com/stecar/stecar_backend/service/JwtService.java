@@ -25,18 +25,25 @@ public class JwtService {
     }
 
     public static final String CLAIM_INICIO_SESSAO = "auth_time";
+    public static final String CLAIM_VERSAO_AUTENTICACAO = "auth_ver";
 
     /** Gera o token; {@code inicioSessao} é o instante do login com senha e é mantido nas renovações. */
     public String gerarToken(String email, Instant inicioSessao) {
+        return gerarToken(email, inicioSessao, null);
+    }
+
+    public String gerarToken(String email, Instant inicioSessao, Instant senhaAlteradaEm) {
         Instant agora = Instant.now();
 
         // O algoritmo é fixado para coincidir com o JwtDecoder (HS512).
-        return Jwts.builder()
+        var builder = Jwts.builder()
                 .subject(email)
                 .issuedAt(Date.from(agora))
                 .claim(CLAIM_INICIO_SESSAO, inicioSessao.getEpochSecond())
-                .expiration(Date.from(agora.plus(validade)))
-                .signWith(chave, Jwts.SIG.HS512)
-                .compact();
+                .expiration(Date.from(agora.plus(validade)));
+        if (senhaAlteradaEm != null) {
+            builder.claim(CLAIM_VERSAO_AUTENTICACAO, senhaAlteradaEm.toString());
+        }
+        return builder.signWith(chave, Jwts.SIG.HS512).compact();
     }
 }

@@ -15,7 +15,5 @@ public record PessoaRequestDTO(
         @NotBlank @Size(max = 100) String cargo,
         @NotNull @Positive Long escritorioId,
         @NotNull @Positive Long departamentoId,
-        @NotBlank @Size(max = 20) String status,
-        @Size(min = 8, max = 100) String senha,
-        @Size(max = 100) String confirmarSenha) {
+        @NotBlank @Size(max = 20) String status) {
 }

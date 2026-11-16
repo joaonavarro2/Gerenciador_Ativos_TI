@@ -27,14 +27,9 @@ public class AdminInitializer {
 
             String email = emailConfigurado.trim().toLowerCase(java.util.Locale.ROOT);
 
-            // Atualiza a função do administrador criado pelas versões anteriores.
+            // Não altera os dados nem a função de uma conta já existente.
             var administradorExistente = usuarioRepository.findByEmail(email);
             if (administradorExistente.isPresent()) {
-                Usuario usuario = administradorExistente.get();
-                if ("Estagiario".equals(usuario.getFuncao())) {
-                    usuario.setFuncao("ADMINISTRADOR GERAL");
-                    usuarioRepository.save(usuario);
-                }
                 return;
             }
 

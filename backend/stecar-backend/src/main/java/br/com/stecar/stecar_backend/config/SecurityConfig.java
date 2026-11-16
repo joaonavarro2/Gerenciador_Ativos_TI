@@ -2,7 +2,6 @@ package br.com.stecar.stecar_backend.config;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.crypto.SecretKey;
@@ -41,7 +40,7 @@ public class SecurityConfig {
     /** HS512 exige chave de pelo menos 512 bits. */
     static final int TAMANHO_MINIMO_CHAVE_BYTES = 64;
 
-    static final String[] PAPEIS_ESCRITA = {"ADMINISTRADOR", "ADMINISTRADOR_GERAL"};
+    static final String[] PAPEIS_VALIDOS = {"ADMINISTRADOR", "ADMINISTRADOR_GERAL"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(
@@ -59,18 +58,16 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/auth/login",
-                    "/api/auth/cadastro",
                     "/api/auth/recuperar-senha",
                     "/api/auth/redefinir-senha",
                     "/error"
                 ).permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/usuarios/**").hasAnyAuthority(PAPEIS_VALIDOS)
                 .requestMatchers("/api/usuarios/**").hasAuthority("ADMINISTRADOR_GERAL")
-                .requestMatchers("/api/auth/**").authenticated()
-                // Excluir histórico de movimentação é restrito ao administrador geral.
-                .requestMatchers(HttpMethod.DELETE, "/api/movimentacoes/**").hasAuthority("ADMINISTRADOR_GERAL")
-                .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
-                .requestMatchers("/api/**").hasAnyAuthority(PAPEIS_ESCRITA)
-                .anyRequest().authenticated()
+                .requestMatchers("/api/auth/**").hasAnyAuthority(PAPEIS_VALIDOS)
+                .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority(PAPEIS_VALIDOS)
+                .requestMatchers("/api/**").hasAnyAuthority(PAPEIS_VALIDOS)
+                .anyRequest().hasAnyAuthority(PAPEIS_VALIDOS)
             )
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                 jwt.jwtAuthenticationConverter(token -> {
@@ -84,8 +81,10 @@ public class SecurityConfig {
                     Instant senhaAlteradaEm = usuarioRepository.findByEmail(usuario.getUsername())
                             .map(Usuario::getSenhaAlteradaEm)
                             .orElse(null);
-                    if (senhaAlteradaEm != null && (token.getIssuedAt() == null
-                            || token.getIssuedAt().isBefore(senhaAlteradaEm.truncatedTo(ChronoUnit.SECONDS)))) {
+                    String versaoAutenticacaoNoToken = token.getClaimAsString(
+                            br.com.stecar.stecar_backend.service.JwtService.CLAIM_VERSAO_AUTENTICACAO);
+                    if (senhaAlteradaEm != null && (versaoAutenticacaoNoToken == null
+                            || !versaoAutenticacaoNoToken.equals(senhaAlteradaEm.toString()))) {
                         throw new CredentialsExpiredException("Senha alterada após a emissão do token.");
                     }
                     return new JwtAuthenticationToken(token, usuario.getAuthorities(), usuario.getUsername());

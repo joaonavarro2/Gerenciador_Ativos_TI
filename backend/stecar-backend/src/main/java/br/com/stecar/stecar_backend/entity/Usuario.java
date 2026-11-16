@@ -64,6 +64,11 @@ public class Usuario {
 
     public void setSenha(String senha) {
         this.senha = senha;
+        marcarAlteracaoAutenticacao();
+    }
+
+    /** O timestamp também versiona a autorização para revogar JWT após mudanças de perfil/status. */
+    public void marcarAlteracaoAutenticacao() {
         this.senhaAlteradaEm = java.time.Instant.now();
     }
 

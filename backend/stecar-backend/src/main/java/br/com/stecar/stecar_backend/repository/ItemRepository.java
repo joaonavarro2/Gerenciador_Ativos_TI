@@ -106,8 +106,29 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = "SELECT COUNT(*) FROM departamento WHERE id = :id", nativeQuery = true)
     long contarDepartamento(@Param("id") Long id);
 
+    @Query(value = """
+            SELECT COUNT(*) FROM departamento
+            WHERE id = :departamentoId
+              AND (escritorio_id IS NULL OR escritorio_id = :escritorioId)
+            """, nativeQuery = true)
+    long contarDepartamentoNoEscritorio(
+            @Param("departamentoId") Long departamentoId,
+            @Param("escritorioId") Long escritorioId);
+
     @Query(value = "SELECT COUNT(*) FROM pessoa WHERE id = :id AND UPPER(status) = 'ATIVO'", nativeQuery = true)
     long contarPessoaAtiva(@Param("id") Long id);
+
+    @Query(value = """
+            SELECT COUNT(*) FROM pessoa
+            WHERE id = :pessoaId
+              AND UPPER(status) = 'ATIVO'
+              AND escritorio_id = :escritorioId
+              AND departamento_id = :departamentoId
+            """, nativeQuery = true)
+    long contarPessoaAtivaNoLocal(
+            @Param("pessoaId") Long pessoaId,
+            @Param("escritorioId") Long escritorioId,
+            @Param("departamentoId") Long departamentoId);
 
     @Modifying
     @Query(value = """

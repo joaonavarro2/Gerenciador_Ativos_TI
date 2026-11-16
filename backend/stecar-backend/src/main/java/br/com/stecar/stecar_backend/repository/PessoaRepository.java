@@ -3,11 +3,16 @@ package br.com.stecar.stecar_backend.repository;
 import br.com.stecar.stecar_backend.entity.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
+
+    @Modifying
+    @Query("update Pessoa p set p.usuarioId = null where p.usuarioId = :usuarioId")
+    int desvincularUsuario(@Param("usuarioId") Long usuarioId);
     List<Pessoa> findAllByOrderByNomeCompletoAsc();
     boolean existsByCpf(String cpf);
     boolean existsByCpfAndIdNot(String cpf, Long id);

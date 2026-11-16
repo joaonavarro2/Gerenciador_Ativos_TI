@@ -26,26 +26,6 @@ const filtros = ref({ busca: '', evento: null, escritorio: null, departamento: n
 const nomeLocal = (...partes) => partes.filter(Boolean).join(' / ') || '—'
 const timestamp = (valor) => valor ? new Date(valor).getTime() : 0
 
-function carregarBens(registros) {
-  return registros.map((item) => ({
-    id: `bem-${item.id}`,
-    ativoId: item.patrimonio || item.codigo || `Bem #${item.id}`,
-    evento: 'Cadastro de bem',
-    descricao: `${item.nome || 'Bem'} cadastrado${item.categoria ? ` na categoria ${item.categoria}` : ''}${item.responsavel ? `, responsável: ${item.responsavel}` : ''}.`,
-    usuario: item.responsavel || '—',
-    escritorio: item.escritorio || '—',
-    departamento: item.departamento || '—',
-    data: item.dataCadastro || item.dataAquisicao || null,
-    tipoRegistro: 'Cadastro',
-    detalhes: {
-      'Patrimônio': item.patrimonio || '—', 'Código': item.codigo || '—', 'Bem': item.nome || '—',
-      'Categoria': item.categoria || '—', 'Número de série': item.serial || '—', 'Fabricante': item.fabricante || '—',
-      'Modelo': item.modelo || '—', 'Status': item.status || '—', 'Data de aquisição': item.dataAquisicao || '—',
-      'Escritório': item.escritorio || '—', 'Departamento': item.departamento || '—', 'Responsável': item.responsavel || '—',
-    },
-  }))
-}
-
 function carregarMovimentacoes(registros) {
   return registros.map((item) => ({
     id: `mov-${item.id}`,
@@ -93,7 +73,6 @@ async function carregarHistorico() {
   erro.value = ''
   try {
     const resultados = await Promise.allSettled([
-      api.get('/bens'),
       api.get('/movimentacoes'),
       api.get('/consertos'),
     ])
@@ -102,9 +81,8 @@ async function carregarHistorico() {
     if (fontes.every((fonte) => fonte === null)) {
       throw falhas[0]?.reason || new Error('Não foi possível carregar o histórico.')
     }
-    const [bens, movimentacoes, consertos] = fontes
+    const [movimentacoes, consertos] = fontes
     historicos.value = [
-      ...(Array.isArray(bens) ? carregarBens(bens) : []),
       ...(Array.isArray(movimentacoes) ? carregarMovimentacoes(movimentacoes) : []),
       ...(Array.isArray(consertos) ? carregarConsertos(consertos) : []),
     ].sort((a, b) => timestamp(b.data) - timestamp(a.data))

@@ -11,23 +11,6 @@ jobs:
     defaults:
       run:
         working-directory: backend/stecar-backend
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: stecar
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 10
-    env:
-      DB_HOST: localhost
-      DB_PASSWORD: postgres
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -35,6 +18,15 @@ jobs:
           distribution: temurin
           java-version: '25'
           cache: maven
+      - name: Start native PostgreSQL for backend tests
+        run: |
+          sudo systemctl start postgresql
+          password="$(openssl rand -hex 32)"
+          echo "::add-mask::$password"
+          echo "STECAR_TEST_DB_USER=stecar_test" >> "$GITHUB_ENV"
+          echo "STECAR_TEST_DB_PASSWORD=$password" >> "$GITHUB_ENV"
+          printf "CREATE ROLE stecar_test LOGIN PASSWORD '%s';\n" "$password" | sudo -u postgres psql -v ON_ERROR_STOP=1
+          sudo -u postgres createdb --owner=stecar_test stecar_test
       - run: mvn -B verify
 
   frontend:
@@ -51,5 +43,6 @@ jobs:
           cache-dependency-path: frontend/quasar-project/package-lock.json
       - run: npm ci
       - run: npm run lint:check
+      - run: npm test
       - run: npm run build
       - run: npm audit --audit-level=high

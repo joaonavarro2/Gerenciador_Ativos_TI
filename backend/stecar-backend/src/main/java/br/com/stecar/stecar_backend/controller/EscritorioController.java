@@ -2,7 +2,9 @@ package br.com.stecar.stecar_backend.controller;
 
 import br.com.stecar.stecar_backend.dto.EscritorioRequestDTO;
 import br.com.stecar.stecar_backend.dto.EscritorioResponseDTO;
+import br.com.stecar.stecar_backend.dto.ItemResponseDTO;
 import br.com.stecar.stecar_backend.service.EscritorioService;
+import br.com.stecar.stecar_backend.service.ItemService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api/escritorios")
 public class EscritorioController {
     private final EscritorioService service;
+    private final ItemService itemService;
 
-    public EscritorioController(EscritorioService service) { this.service = service; }
+    public EscritorioController(EscritorioService service, ItemService itemService) {
+        this.service = service;
+        this.itemService = itemService;
+    }
 
     @GetMapping
     public ResponseEntity<List<EscritorioResponseDTO>> listar(
@@ -28,6 +34,12 @@ public class EscritorioController {
     @GetMapping("/{id}")
     public ResponseEntity<EscritorioResponseDTO> buscar(@PathVariable Long id) {
         return ResponseEntity.ok(service.buscar(id));
+    }
+
+    @GetMapping("/{id}/bens")
+    public ResponseEntity<List<ItemResponseDTO>> listarBens(@PathVariable Long id) {
+        service.buscar(id);
+        return ResponseEntity.ok(itemService.listarPorEscritorio(id));
     }
 
     @PostMapping

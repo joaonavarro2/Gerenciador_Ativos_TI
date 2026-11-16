@@ -37,8 +37,7 @@ public class DashboardService {
         long movimentacoesPendentes =
                 dashboardRepository.contarMovimentacoesPorStatus("PENDENTE");
 
-        long consertosAbertos =
-                dashboardRepository.contarConsertosPorStatus("ABERTO");
+        long consertosAbertos = dashboardRepository.contarConsertosAbertos();
 
         long itensEmAnalise =
                 dashboardRepository.contarItensPorStatus("EM_ANALISE");

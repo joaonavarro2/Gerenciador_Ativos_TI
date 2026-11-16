@@ -62,7 +62,6 @@
         <q-card-section class="edit-form">
           <q-input v-model="edicao.nome" outlined label="Nome completo" />
           <q-input v-model="edicao.email" outlined type="email" label="E-mail" />
-          <q-input v-model="edicao.cargo" outlined label="Função no sistema" />
           <q-input v-model="edicao.telefone" outlined label="Telefone" />
           <q-input v-model="edicao.escritorio" outlined label="Escritório / Unidade" />
           <q-input v-model="edicao.departamento" outlined label="Departamento" />
@@ -105,8 +104,12 @@
 import { computed, reactive, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { usuarioAtual } from '@/services/auth.js'
+import { useRouter } from 'vue-router'
+import { api } from '@/boot/axios.js'
+import { clearSession } from '@/services/auth.js'
 
 const $q = useQuasar()
+const router = useRouter()
 const dialogEdicao = ref(false)
 const dialogSenha = ref(false)
 const mostrarSenhaAtual = ref(false)
@@ -122,7 +125,7 @@ const perfil = reactive({
   departamento: localStorage.getItem('usuario_departamento') || 'Tecnologia da Informação',
   foto: localStorage.getItem('usuario_foto') || 'https://i.pravatar.cc/176?img=47'
 })
-const edicao = reactive({ nome: '', email: '', cargo: '', telefone: '', escritorio: '', departamento: '', foto: '' })
+const edicao = reactive({ nome: '', email: '', telefone: '', escritorio: '', departamento: '', foto: '' })
 const senha = reactive({ atual: '', nova: '', confirmacao: '' })
 const iniciais = computed(() => (perfil.nome || '?').split(' ').filter(Boolean).slice(0, 2).map((parte) => parte[0]).join('').toUpperCase())
 const dadosResumo = computed(() => [{ icon: 'tag', label: 'ID do Servidor', value: perfil.id || '—' }, { icon: 'business', label: 'Escritório', value: perfil.escritorio || '—' }, { icon: 'account_tree', label: 'Departamento', value: perfil.departamento || '—' }])
@@ -131,13 +134,24 @@ const secoes = computed(() => [
   { icon: 'business_center', titulo: 'Informações Organizacionais', itens: [{ icon: 'business', label: 'Escritório / Unidade', value: perfil.escritorio || '—' }, { icon: 'account_tree', label: 'Departamento', value: perfil.departamento || '—' }, { icon: 'shield', label: 'Função no sistema', value: perfil.cargo || '—' }, { icon: 'check_circle_outline', label: 'Status da conta', value: 'Ativo' }] },
   { icon: 'schedule', titulo: 'Atividade Recente da Conta' }
 ])
-function abrirEdicao () { Object.assign(edicao, { nome: perfil.nome, email: perfil.email, cargo: perfil.cargo, telefone: perfil.telefone, escritorio: perfil.escritorio, departamento: perfil.departamento, foto: perfil.foto }); dialogEdicao.value = true }
+function abrirEdicao () { Object.assign(edicao, { nome: perfil.nome, email: perfil.email, telefone: perfil.telefone, escritorio: perfil.escritorio, departamento: perfil.departamento, foto: perfil.foto }); dialogEdicao.value = true }
 function salvar () { Object.assign(perfil, edicao); Object.entries(edicao).forEach(([chave, valor]) => localStorage.setItem(`usuario_${chave}`, valor)); dialogEdicao.value = false; $q.notify({ type: 'positive', message: 'Perfil atualizado com sucesso.' }) }
 function alterarSenha () { Object.assign(senha, { atual: '', nova: '', confirmacao: '' }); dialogSenha.value = true }
 function obrigatorio (valor) { return Boolean(valor) || 'Preencha este campo.' }
-function senhaValida (valor) { return valor.length >= 6 || 'A senha deve ter pelo menos 6 caracteres.' }
+function senhaValida (valor) { return valor.length >= 8 && valor.length <= 100 || 'A senha deve ter entre 8 e 100 caracteres.' }
 function senhaConfirmada (valor) { return valor === senha.nova || 'As senhas não conferem.' }
-function salvarSenha () { localStorage.setItem('usuario_senha', senha.nova); dialogSenha.value = false; $q.notify({ type: 'positive', message: 'Senha alterada com sucesso.' }) }
+async function salvarSenha () {
+  try {
+    await api.put('/auth/alterar-senha', { senhaAtual: senha.atual, novaSenha: senha.nova, confirmarSenha: senha.confirmacao })
+    dialogSenha.value = false
+    Object.assign(senha, { atual: '', nova: '', confirmacao: '' })
+    clearSession()
+    $q.notify({ type: 'positive', message: 'Senha alterada. Entre novamente com a nova senha.' })
+    await router.replace('/login')
+  } catch (error) {
+    $q.notify({ type: 'negative', message: error.response?.data?.mensagem || 'Não foi possível alterar a senha.' })
+  }
+}
 </script>
 
 <style scoped>

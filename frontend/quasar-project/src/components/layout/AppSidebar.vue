@@ -191,6 +191,11 @@
           </q-item-section>
         </q-item>
 
+        <q-item v-if="podeEditar()" clickable to="/usuarios" active-class="menu-active">
+          <q-item-section avatar><q-icon name="manage_accounts" class="menu-icon" /></q-item-section>
+          <q-item-section v-if="!mini" class="menu-text">Usuários</q-item-section>
+        </q-item>
+
       </q-list>
 
       <div class="sidebar-footer">
@@ -222,7 +227,7 @@
 <script setup>
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { clearSession } from '@/services/auth.js'
+import { clearSession, podeEditar } from '@/services/auth.js'
 
 const $q = useQuasar()
 defineProps({

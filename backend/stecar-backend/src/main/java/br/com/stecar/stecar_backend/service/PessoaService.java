@@ -5,12 +5,9 @@ import br.com.stecar.stecar_backend.dto.PessoaResponseDTO;
 import br.com.stecar.stecar_backend.entity.Departamento;
 import br.com.stecar.stecar_backend.entity.Escritorio;
 import br.com.stecar.stecar_backend.entity.Pessoa;
-import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.DepartamentoRepository;
 import br.com.stecar.stecar_backend.repository.EscritorioRepository;
 import br.com.stecar.stecar_backend.repository.PessoaRepository;
-import br.com.stecar.stecar_backend.repository.UsuarioRepository;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,17 +21,12 @@ public class PessoaService {
     private final PessoaRepository pessoaRepository;
     private final EscritorioRepository escritorioRepository;
     private final DepartamentoRepository departamentoRepository;
-    private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public PessoaService(PessoaRepository pessoaRepository, EscritorioRepository escritorioRepository,
-                         DepartamentoRepository departamentoRepository, UsuarioRepository usuarioRepository,
-                         PasswordEncoder passwordEncoder) {
+                         DepartamentoRepository departamentoRepository) {
         this.pessoaRepository = pessoaRepository;
         this.escritorioRepository = escritorioRepository;
         this.departamentoRepository = departamentoRepository;
-        this.usuarioRepository = usuarioRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -56,25 +48,10 @@ public class PessoaService {
 
     @Transactional
     public PessoaResponseDTO criar(PessoaRequestDTO dados) {
-        validarSenha(dados.senha(), dados.confirmarSenha(), true);
         validarIdentificadores(dados.cpf(), dados.matricula(), null);
         validarReferencias(dados.escritorioId(), dados.departamentoId());
-        String email = dados.email().trim().toLowerCase(Locale.ROOT);
-        if (usuarioRepository.existsByEmail(email)) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma conta cadastrada com este e-mail.");
-        }
-
-        Usuario usuario = new Usuario();
-        usuario.setNomeCompleto(dados.nomeCompleto().trim());
-        usuario.setEmail(email);
-        usuario.setSenha(passwordEncoder.encode(dados.senha()));
-        usuario.setFuncao("USUARIO");
-        usuario.setStatus(validarStatus(dados.status()).toUpperCase(Locale.ROOT));
-        usuario = usuarioRepository.save(usuario);
-
         Pessoa pessoa = new Pessoa();
         aplicar(pessoa, dados);
-        pessoa.setUsuarioId(usuario.getId());
         Pessoa salva = pessoaRepository.saveAndFlush(pessoa);
         if (salva.getMatricula() == null) {
             salva.setMatricula(String.format(Locale.ROOT, "MAT-%06d", salva.getId()));
@@ -86,19 +63,9 @@ public class PessoaService {
     @Transactional
     public PessoaResponseDTO atualizar(Long id, PessoaRequestDTO dados) {
         Pessoa pessoa = buscarEntidade(id);
-        validarSenha(dados.senha(), dados.confirmarSenha(), false);
         validarIdentificadores(dados.cpf(), dados.matricula(), id);
         validarReferencias(dados.escritorioId(), dados.departamentoId());
-        validarEmailDisponivel(dados.email(), pessoa.getUsuarioId());
         aplicar(pessoa, dados);
-        if (pessoa.getUsuarioId() != null) {
-            Usuario usuario = usuarioRepository.findById(pessoa.getUsuarioId()).orElse(null);
-            if (usuario != null) {
-                atualizarUsuario(usuario, dados);
-            }
-        } else if (dados.senha() != null && !dados.senha().isBlank()) {
-            pessoa.setUsuarioId(criarUsuario(dados).getId());
-        }
         return mapear(pessoaRepository.save(pessoa));
     }
 
@@ -106,12 +73,6 @@ public class PessoaService {
     public PessoaResponseDTO alterarStatus(Long id, String status) {
         Pessoa pessoa = buscarEntidade(id);
         pessoa.setStatus(validarStatus(status));
-        if (pessoa.getUsuarioId() != null) {
-            usuarioRepository.findById(pessoa.getUsuarioId()).ifPresent(usuario -> {
-                usuario.setStatus(pessoa.getStatus().toUpperCase(Locale.ROOT));
-                usuarioRepository.save(usuario);
-            });
-        }
         return mapear(pessoaRepository.save(pessoa));
     }
 
@@ -121,12 +82,6 @@ public class PessoaService {
         if (pessoaRepository.contarVinculos(id) > 0) {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Esta pessoa possui bens, movimentações ou vínculo como gestor de escritório. Altere o status para Inativo.");
-        }
-        if (pessoa.getUsuarioId() != null) {
-            usuarioRepository.findById(pessoa.getUsuarioId()).ifPresent(usuario -> {
-                usuario.setStatus("INATIVO");
-                usuarioRepository.save(usuario);
-            });
         }
         pessoaRepository.delete(pessoa);
     }
@@ -151,50 +106,6 @@ public class PessoaService {
         if (departamento.getEscritorioId() != null && !departamento.getEscritorioId().equals(escritorio.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "O departamento selecionado está vinculado a outro escritório.");
-        }
-    }
-
-    private Usuario criarUsuario(PessoaRequestDTO dados) {
-        Usuario usuario = new Usuario();
-        usuario.setNomeCompleto(dados.nomeCompleto().trim());
-        usuario.setEmail(dados.email().trim().toLowerCase(Locale.ROOT));
-        usuario.setSenha(passwordEncoder.encode(dados.senha()));
-        usuario.setFuncao("USUARIO");
-        usuario.setStatus(validarStatus(dados.status()).toUpperCase(Locale.ROOT));
-        return usuarioRepository.save(usuario);
-    }
-
-    private void atualizarUsuario(Usuario usuario, PessoaRequestDTO dados) {
-        usuario.setNomeCompleto(dados.nomeCompleto().trim());
-        usuario.setEmail(dados.email().trim().toLowerCase(Locale.ROOT));
-        usuario.setStatus(validarStatus(dados.status()).toUpperCase(Locale.ROOT));
-        if (dados.senha() != null && !dados.senha().isBlank()) {
-            usuario.setSenha(passwordEncoder.encode(dados.senha()));
-        }
-        usuarioRepository.save(usuario);
-    }
-
-    private void validarEmailDisponivel(String email, Long usuarioId) {
-        usuarioRepository.findByEmail(email.trim().toLowerCase(Locale.ROOT)).ifPresent(usuario -> {
-            if (!usuario.getId().equals(usuarioId)) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Já existe uma conta cadastrada com este e-mail.");
-            }
-        });
-    }
-
-    private void validarSenha(String senha, String confirmacao, boolean obrigatoria) {
-        boolean preenchida = senha != null && !senha.isBlank();
-        if (obrigatoria && !preenchida) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha de acesso é obrigatória.");
-        }
-        if (preenchida && senha.length() < 8) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha deve ter pelo menos 8 caracteres.");
-        }
-        if (preenchida && !senha.equals(confirmacao)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha e a confirmação não conferem.");
-        }
-        if (!preenchida && confirmacao != null && !confirmacao.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe a senha para confirmar a alteração.");
         }
     }
 

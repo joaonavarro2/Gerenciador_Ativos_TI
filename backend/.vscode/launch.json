@@ -4,11 +4,12 @@
             "type": "java",
             "name": "Spring Boot-StecarBackendApplication<stecar-backend>",
             "request": "launch",
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}\\stecar-backend",
+            "envFile": "${workspaceFolder}\\..\\.env",
             "mainClass": "br.com.stecar.stecar_backend.StecarBackendApplication",
             "projectName": "stecar-backend",
             "args": "",
-            "envFile": "${workspaceFolder}/.env"
+            "vmArgs": "-Dspring.profiles.active=local"
         }
     ]
 }

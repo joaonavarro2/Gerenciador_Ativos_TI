@@ -7,7 +7,7 @@ import {
 } from 'vue-router'
 
 import routes from './routes.js'
-import { hasSession } from '@/services/auth.js'
+import { hasSession, usuarioAtual } from '@/services/auth.js'
 
 /*
  * If not building with SSR mode, you can
@@ -40,6 +40,13 @@ export default defineRouter((/* { store, ssrContext } */) => {
 
     if (to.meta.public && hasSession() && (to.path === '/' || to.path === '/login')) {
       return '/dashboard'
+    }
+
+    const papeisPermitidos = to.matched.flatMap((route) => route.meta.roles || [])
+    if (papeisPermitidos.length) {
+      const funcao = String(usuarioAtual()?.funcao || '').trim().toUpperCase()
+      const normalizada = funcao === 'ADMINISTRADOR_GERAL' ? 'ADMINISTRADOR GERAL' : funcao
+      if (!papeisPermitidos.includes(normalizada) && !papeisPermitidos.includes(funcao)) return '/acesso-negado'
     }
   })
 

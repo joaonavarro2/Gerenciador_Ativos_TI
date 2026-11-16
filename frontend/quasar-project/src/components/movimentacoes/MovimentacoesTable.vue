@@ -53,7 +53,8 @@
       row-key="id"
       class="movimentacoes-table"
       hide-pagination
-      :rows-per-page-options="[8]"
+      v-model:pagination="paginacao"
+      :rows-per-page-options="[8, 16, 32]"
     >
 
 
@@ -276,49 +277,36 @@
     <div class="movimentacoes-body-footer">
 
       <div class="movimentacoes-registros">
-
-        Exibindo
-        <strong>{{ movimentacoes.length }}</strong>
-        registros
-
+        <template v-if="movimentacoes.length">
+          Exibindo <strong>{{ primeiroRegistro }}–{{ ultimoRegistro }}</strong>
+          de <strong>{{ movimentacoes.length }}</strong> registros
+        </template>
+        <template v-else>
+          Exibindo <strong>0</strong> registros
+        </template>
       </div>
 
-
-      <!-- PAGINAÇÃO -->
-
       <div class="movimentacoes-paginacao">
-
-        <q-btn
-          flat
-          round
+        <q-select
+          v-model="paginacao.rowsPerPage"
           dense
-          icon="chevron_left"
-          class="movimentacoes-paginacao-btn"
-          disable
+          outlined
+          emit-value
+          map-options
+          :options="opcoesPorPagina"
+          label="Por página"
+          aria-label="Registros por página"
+          class="movimentacoes-paginacao-tamanho"
         />
-
-        <q-btn
-          unelevated
-          dense
-          label="1"
-          class="movimentacoes-paginacao-atual"
+        <q-pagination
+          v-model="paginacao.page"
+          :max="totalPaginas"
+          :max-pages="5"
+          direction-links
+          boundary-links
+          active-color="positive"
+          aria-label="Paginação das movimentações"
         />
-
-        <q-btn
-          flat
-          dense
-          label="2"
-          class="movimentacoes-paginacao-btn"
-        />
-
-        <q-btn
-          flat
-          round
-          dense
-          icon="chevron_right"
-          class="movimentacoes-paginacao-btn"
-        />
-
       </div>
 
     </div>
@@ -328,7 +316,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 /*
 |--------------------------------------------------------------------------
@@ -336,8 +324,7 @@ import { computed } from 'vue'
 |--------------------------------------------------------------------------
 | A página principal será responsável por fornecer as movimentações.
 |
-| Atualmente os dados são mocks.
-| Futuramente essa mesma lista virá do backend Java + Spring Boot.
+| A página carrega os registros da API e fornece a lista por props.
 |--------------------------------------------------------------------------
 */
 
@@ -441,4 +428,34 @@ const columns = [
 */
 
 const movimentacoes = computed(() => props.movimentacoes)
+
+const opcoesPorPagina = [8, 16, 32].map((value) => ({
+  label: String(value),
+  value,
+}))
+
+const paginacao = ref({ page: 1, rowsPerPage: 8 })
+const totalPaginas = computed(() =>
+  Math.max(1, Math.ceil(movimentacoes.value.length / paginacao.value.rowsPerPage)),
+)
+const primeiroRegistro = computed(
+  () => (paginacao.value.page - 1) * paginacao.value.rowsPerPage + 1,
+)
+const ultimoRegistro = computed(() =>
+  Math.min(paginacao.value.page * paginacao.value.rowsPerPage, movimentacoes.value.length),
+)
+
+watch(
+  () => props.movimentacoes,
+  () => {
+    paginacao.value.page = 1
+  },
+)
+
+watch(
+  () => paginacao.value.rowsPerPage,
+  () => {
+    paginacao.value.page = 1
+  },
+)
 </script>

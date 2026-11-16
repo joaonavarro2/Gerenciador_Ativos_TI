@@ -49,7 +49,9 @@
       ====================================================== -->
 
       <div class="escritorio-cadastro-content">
-        <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-ma-md">{{ erro }}</q-banner>
+        <q-banner v-if="erroLocal || erro" dense rounded class="bg-red-1 text-negative q-ma-md">
+          {{ erroLocal || erro }}
+        </q-banner>
 
         <div class="escritorio-form">
 
@@ -341,20 +343,12 @@ const dialog = computed({
 
 })
 
+const erroLocal = ref('')
+
 
 /* ==========================================================
    FORMULÁRIO
 ========================================================== */
-
-/*
- * MOCK TEMPORÁRIO
- *
- * FUTURO BACKEND:
- *
- * Estes dados deverão ser enviados para:
- *
- * POST /api/escritorios
- */
 
 const form = ref({
 
@@ -379,7 +373,10 @@ const form = ref({
 })
 
 watch(() => props.modelValue, (aberto, anterior) => {
-  if (aberto && !anterior) limparFormulario()
+  if (aberto && !anterior) {
+    limparFormulario()
+    erroLocal.value = ''
+  }
 })
 
 
@@ -425,56 +422,16 @@ function fechar() {
 ========================================================== */
 
 function salvar() {
-
-  /* ========================================================
-     VALIDAÇÃO
-  ======================================================== */
-
+  erroLocal.value = ''
   if (!form.value.nome || !form.value.cidade || props.salvando) {
-
-    console.warn(
-      'Nome e cidade são obrigatórios.'
-    )
-
+    erroLocal.value = 'Nome e cidade são obrigatórios.'
     return
-
   }
-
-
-  /* ========================================================
-     BACKEND
-  ========================================================
-
-  FUTURAMENTE:
-
-  const response = await api.post(
-    '/escritorios',
-    form.value
-  )
-
-  ======================================================== */
-
-
-  console.log(
-    'Escritório cadastrado:',
-    form.value
-  )
-
-
-  /* ========================================================
-     ENVIA O ESCRITÓRIO PARA A PÁGINA
-  ======================================================== */
 
   emit(
     'salvo',
     { ...form.value }
   )
-
-
-  /* ========================================================
-     FECHA O DIALOG
-  ======================================================== */
-
 }
 
 

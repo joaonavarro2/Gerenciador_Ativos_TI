@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ConsertoRepository extends JpaRepository<Conserto, Long> {
+    long countByUsuarioId(Long usuarioId);
+
     @Query(value = """
             SELECT c.id, c.tipo, c.descricao_problema, c.descricao_solucao,
                    c.data_entrada, c.data_saida, c.status, c.tecnico,

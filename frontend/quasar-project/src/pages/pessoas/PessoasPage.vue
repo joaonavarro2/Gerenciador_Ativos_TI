@@ -90,13 +90,12 @@ function abrirVisualizacaoPessoa(pessoa) { pessoaSelecionada.value = pessoa; dia
 function abrirEdicaoPessoa(pessoa) { erroFormulario.value = ''; pessoaSelecionada.value = pessoa; dialogEditarPessoa.value = true }
 function abrirExclusaoPessoa(pessoa) { erroFormulario.value = ''; pessoaSelecionada.value = pessoa; dialogExcluirPessoa.value = true }
 
-function payload(pessoa, incluirSenha = true) {
+function payload(pessoa) {
   return {
     nomeCompleto: pessoa.nome?.trim(), matricula: pessoa.matricula?.trim() || null,
     cpf: pessoa.cpf?.trim(), email: pessoa.email?.trim(), telefone: pessoa.telefone?.trim() || null,
     cargo: pessoa.cargo?.trim(), escritorioId: pessoa.escritorioId || null,
     departamentoId: pessoa.departamentoId || null, status: pessoa.status || 'Ativo',
-    ...(incluirSenha ? { senha: pessoa.senha || null, confirmarSenha: pessoa.confirmarSenha || null } : {}),
   }
 }
 

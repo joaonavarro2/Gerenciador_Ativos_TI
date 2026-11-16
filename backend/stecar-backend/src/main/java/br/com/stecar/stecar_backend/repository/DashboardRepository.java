@@ -43,6 +43,13 @@ public interface DashboardRepository extends JpaRepository<Item, Long>  {
     """, nativeQuery = true)
     long contarConsertosPorStatus(@Param("status") String status);
 
+    @Query(value = """
+        SELECT COUNT(*)
+        FROM conserto
+        WHERE LOWER(status) IN ('pendente', 'em andamento')
+    """, nativeQuery = true)
+    long contarConsertosAbertos();
+
     /*
      * Quantidade de itens com determinado status.
      */

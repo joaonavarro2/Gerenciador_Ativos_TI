@@ -3438,17 +3438,17 @@ textarea {
   width: 100%;
 }
 
-.movimentacoes-filtro-pesquisa :deep(.q-field__control) {
+.movimentacoes-filtro-pesquisa .q-field__control {
   height: 40px;
   border-radius: 8px;
   background: #ffffff;
 }
 
-.movimentacoes-filtro-pesquisa :deep(.q-field__native) {
+.movimentacoes-filtro-pesquisa .q-field__native {
   font-size: 13px;
 }
 
-.movimentacoes-filtro-pesquisa :deep(.q-icon) {
+.movimentacoes-filtro-pesquisa .q-icon {
   color: #98a2b3;
 }
 
@@ -3460,14 +3460,14 @@ textarea {
   width: 180px;
 }
 
-.movimentacoes-filtro-tipo :deep(.q-field__control) {
+.movimentacoes-filtro-tipo .q-field__control {
   height: 40px;
   border-radius: 8px;
   background: #ffffff;
 }
 
-.movimentacoes-filtro-tipo :deep(.q-field__native),
-.movimentacoes-filtro-tipo :deep(.q-field__label) {
+.movimentacoes-filtro-tipo .q-field__native,
+.movimentacoes-filtro-tipo .q-field__label {
   font-size: 13px;
 }
 
@@ -3479,17 +3479,17 @@ textarea {
   width: 160px;
 }
 
-.movimentacoes-filtro-data :deep(.q-field__control) {
+.movimentacoes-filtro-data .q-field__control {
   height: 40px;
   border-radius: 8px;
   background: #ffffff;
 }
 
-.movimentacoes-filtro-data :deep(.q-field__native) {
+.movimentacoes-filtro-data .q-field__native {
   font-size: 13px;
 }
 
-.movimentacoes-filtro-data :deep(.q-icon) {
+.movimentacoes-filtro-data .q-icon {
   color: #98a2b3;
 }
 
@@ -4054,13 +4054,13 @@ textarea {
    CABEÇALHO DAS COLUNAS
 ========================================================== */
 
-.movimentacoes-table :deep(thead tr) {
+.movimentacoes-table thead tr {
   height: 40px;
 
   background: #f8fafc;
 }
 
-.movimentacoes-table :deep(thead th) {
+.movimentacoes-table thead th {
   padding: 0 16px;
 
   color: #667085;
@@ -4077,7 +4077,7 @@ textarea {
    LINHAS
 ========================================================== */
 
-.movimentacoes-table :deep(tbody tr) {
+.movimentacoes-table tbody tr {
   height: 67px;
 
   background: #ffffff;
@@ -4085,11 +4085,11 @@ textarea {
   transition: background 0.15s ease;
 }
 
-.movimentacoes-table :deep(tbody tr:nth-child(even)) {
+.movimentacoes-table tbody tr:nth-child(even) {
   background: #fafafa;
 }
 
-.movimentacoes-table :deep(tbody tr:hover) {
+.movimentacoes-table tbody tr:hover {
   background: #f5fbfb;
 }
 
@@ -4097,7 +4097,7 @@ textarea {
    CÉLULAS
 ========================================================== */
 
-.movimentacoes-table :deep(tbody td) {
+.movimentacoes-table tbody td {
   padding: 8px 16px;
 
   color: #344054;
@@ -4403,7 +4403,11 @@ textarea {
   gap: 5px;
 }
 
-.movimentacoes-paginacao-btn {
+.movimentacoes-paginacao-tamanho {
+  width: 120px;
+}
+
+.movimentacoes-paginacao .q-btn {
   min-width: 32px;
   min-height: 32px;
 
@@ -4414,17 +4418,9 @@ textarea {
   border-radius: 8px;
 }
 
-.movimentacoes-paginacao-atual {
-  min-width: 32px;
-  min-height: 32px;
-
+.movimentacoes-paginacao .q-btn--active {
   background: #08666f !important;
-
   color: #ffffff !important;
-
-  border-radius: 8px;
-
-  font-size: 12px;
 }
 
 /* ==========================================================
@@ -4436,7 +4432,7 @@ textarea {
     overflow-x: auto;
   }
 
-  .movimentacoes-table :deep(table) {
+  .movimentacoes-table table {
     min-width: 1000px;
   }
 }
@@ -4627,7 +4623,7 @@ textarea {
   width: 100%;
 }
 
-.escritorio-input :deep(.q-field__control) {
+.escritorio-input .q-field__control {
   min-height: 40px;
 
   border-radius: 9px;
@@ -4635,23 +4631,23 @@ textarea {
   color: #334155;
 }
 
-.escritorio-input :deep(.q-field__native) {
+.escritorio-input .q-field__native {
   color: #334155;
 
   font-size: 13px;
 }
 
-.escritorio-input :deep(.q-field__native::placeholder) {
+.escritorio-input .q-field__native::placeholder {
   color: #a0a9b8;
 
   opacity: 1;
 }
 
-.escritorio-input :deep(.q-field__control:before) {
+.escritorio-input .q-field__control:before {
   border-color: #dbe1e8;
 }
 
-.escritorio-input :deep(.q-field__control:hover:before) {
+.escritorio-input .q-field__control:hover:before {
   border-color: #b8c1cc;
 }
 
@@ -5474,11 +5470,11 @@ textarea {
   background: white;
 }
 
-.visualizacao-departamento-table :deep(thead tr) {
+.visualizacao-departamento-table thead tr {
   background: #f8fafc;
 }
 
-.visualizacao-departamento-table :deep(th) {
+.visualizacao-departamento-table th {
   color: #64748b;
 
   font-size: 11px;
@@ -5488,7 +5484,7 @@ textarea {
   letter-spacing: 0.04em;
 }
 
-.visualizacao-departamento-table :deep(td) {
+.visualizacao-departamento-table td {
   color: #475569;
 
   font-size: 13px;

@@ -505,11 +505,7 @@ import BemDetailsDialog from '@/components/bens/cards/BensDialogs.vue'
  *        ↓
  * VisualizacaoDepartamento
  *
- *
- * FUTURO BACKEND:
- *
- * O departamento poderá vir diretamente
- * da API do Spring Boot.
+ * Os bens associados são carregados pela API em carregarBens().
  */
 
 const props = defineProps({
@@ -577,21 +573,9 @@ function abrirDetalhesBem(bem) {
 ========================================================== */
 
 /*
- * Estes dados são MOCKS temporários.
- *
- * Eles representam os dados que futuramente
- * poderão ser retornados pela API.
- *
- * FUTURO BACKEND:
- *
- * GET /api/departamentos/{id}
- *
- * Poderá retornar:
- *
- * - quantidade total de bens
- * - bens ativos
- * - bens em manutenção
- * - quantidade de consertos
+ * O resumo dos bens é calculado com os registros retornados por
+ * GET /api/departamentos/{id}/bens. A quantidade de consertos vem do
+ * departamento selecionado; o endpoint de bens não informa a última movimentação.
  */
 
 const resumo = computed(() => {
@@ -671,7 +655,7 @@ async function carregarBens() {
       marcaModelo: [item.fabricante, item.modelo].filter(Boolean).join(' / ') || '—',
       responsavel: item.responsavel || '—',
       localizacao: [item.escritorio, item.departamento].filter(Boolean).join(' / ') || '—',
-      ultimaMovimentacao: '—',
+      ultimaMovimentacao: item.ultimaMovimentacao || '—',
     }))
   } catch (error) {
     erroBens.value = error.response?.data?.mensagem || 'Não foi possível carregar os bens deste departamento.'

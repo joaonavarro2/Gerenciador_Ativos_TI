@@ -10,54 +10,73 @@
     @update:model-value="$emit('update:modelValue', $event)"
   >
     <q-card-section class="q-pa-lg">
-      <div class="info-grid">
-        <div class="info-item">
-          <span class="label">Nome</span>
-          <strong>{{ escritorio.nome || '--' }}</strong>
-        </div>
+      <q-tabs v-model="aba" dense align="left" active-color="primary" indicator-color="primary">
+        <q-tab name="dados" label="Dados do escritório" />
+        <q-tab name="bens" label="Bens vinculados" />
+      </q-tabs>
 
-        <div class="info-item">
-          <span class="label">Cidade</span>
-          <strong>{{ escritorio.cidade || '--' }}</strong>
-        </div>
+      <q-separator />
 
-        <div class="info-item">
-          <span class="label">Estado</span>
-          <strong>{{ escritorio.estado || '--' }}</strong>
-        </div>
+      <q-tab-panels v-model="aba" animated>
+        <q-tab-panel name="dados" class="q-px-none">
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="label">Nome</span>
+              <strong>{{ escritorio.nome || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">Cidade</span>
+              <strong>{{ escritorio.cidade || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">Estado</span>
+              <strong>{{ escritorio.estado || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">Status</span>
+              <q-chip dense :class="statusClass(escritorio.status)">
+                {{ escritorio.status || '--' }}
+              </q-chip>
+            </div>
+            <div class="info-item full-width">
+              <span class="label">Endereço</span>
+              <strong>{{ escritorio.endereco || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">Responsável</span>
+              <strong>{{ escritorio.responsavel || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">E-mail</span>
+              <strong>{{ escritorio.email || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">Telefone</span>
+              <strong>{{ escritorio.telefone || '--' }}</strong>
+            </div>
+            <div class="info-item">
+              <span class="label">CEP</span>
+              <strong>{{ escritorio.cep || '--' }}</strong>
+            </div>
+          </div>
+        </q-tab-panel>
 
-        <div class="info-item">
-          <span class="label">Status</span>
-          <q-chip dense :class="statusClass(escritorio.status)">
-            {{ escritorio.status || '--' }}
-          </q-chip>
-        </div>
-
-        <div class="info-item full-width">
-          <span class="label">Endereço</span>
-          <strong>{{ escritorio.endereco || '--' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span class="label">Responsável</span>
-          <strong>{{ escritorio.responsavel || '--' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span class="label">E-mail</span>
-          <strong>{{ escritorio.email || '--' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span class="label">Telefone</span>
-          <strong>{{ escritorio.telefone || '--' }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span class="label">CEP</span>
-          <strong>{{ escritorio.cep || '--' }}</strong>
-        </div>
-      </div>
+        <q-tab-panel name="bens" class="q-px-none">
+          <q-banner v-if="erroBens" dense rounded class="bg-red-1 text-negative q-mb-md">
+            {{ erroBens }}
+            <template #action>
+              <q-btn flat color="negative" label="Tentar novamente" @click="carregarBens" />
+            </template>
+          </q-banner>
+          <q-table
+            :rows="bens"
+            :columns="colunasBens"
+            row-key="id"
+            :loading="carregandoBens"
+            no-data-label="Nenhum bem vinculado a este escritório"
+          />
+        </q-tab-panel>
+      </q-tab-panels>
     </q-card-section>
 
     <template #footer>
@@ -69,9 +88,11 @@
 </template>
 
 <script setup>
+import { ref, watch } from 'vue'
+import { api } from '@/boot/axios.js'
 import BaseDialog from '@/components/common/BaseDialog.vue'
 
-defineProps({
+const props = defineProps({
   modelValue: {
     type: Boolean,
     default: false,
@@ -81,6 +102,48 @@ defineProps({
     default: () => ({}),
   },
 })
+
+const aba = ref('dados')
+const bens = ref([])
+const carregandoBens = ref(false)
+const erroBens = ref('')
+const colunasBens = [
+  { name: 'codigo', label: 'CÓDIGO', field: 'codigo', align: 'left', sortable: true },
+  { name: 'nome', label: 'BEM', field: 'nome', align: 'left', sortable: true },
+  { name: 'categoria', label: 'CATEGORIA', field: 'categoria', align: 'left', sortable: true },
+  { name: 'departamento', label: 'DEPARTAMENTO', field: 'departamento', align: 'left' },
+  { name: 'responsavel', label: 'RESPONSÁVEL', field: 'responsavel', align: 'left' },
+  { name: 'status', label: 'STATUS', field: 'status', align: 'left' },
+]
+
+async function carregarBens() {
+  const id = props.escritorio?.id
+  if (!id) {
+    bens.value = []
+    return
+  }
+  carregandoBens.value = true
+  erroBens.value = ''
+  try {
+    const { data } = await api.get(`/escritorios/${id}/bens`)
+    bens.value = data
+  } catch (error) {
+    erroBens.value = error.response?.data?.mensagem || 'Não foi possível carregar os bens deste escritório.'
+  } finally {
+    carregandoBens.value = false
+  }
+}
+
+watch(
+  () => [props.modelValue, props.escritorio?.id],
+  ([aberto, id]) => {
+    if (aberto && id) {
+      aba.value = 'dados'
+      carregarBens()
+    }
+  },
+  { immediate: true },
+)
 
 function statusClass(status) {
   if (status === 'Ativo') return 'status-chip status-ativo'

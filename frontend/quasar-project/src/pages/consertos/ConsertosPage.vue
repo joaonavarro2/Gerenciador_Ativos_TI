@@ -116,13 +116,6 @@ async function adicionarReparo(reparo) {
       Notify.create({ type: 'warning', message: e.response?.data?.mensagem || 'Reparo registrado, mas não foi possível enviar os anexos. Reenvie pela edição.' })
     }
   } catch (e) {
-    console.error('Falha ao registrar reparo', {
-      status: e.response?.status,
-      resposta: e.response?.data,
-      url: e.config?.baseURL ? `${e.config.baseURL}${e.config.url || ''}` : e.config?.url,
-      payload: corpo(reparo),
-      erro: e.message,
-    })
     Notify.create({ type: 'negative', message: mensagemErroApi(e, 'Registrar reparo'), timeout: 8000 })
     await carregarReparos()
   } finally { salvando.value = false }
@@ -141,11 +134,6 @@ async function atualizarReparo(reparo) {
       Notify.create({ type: 'warning', message: e.response?.data?.mensagem || 'Reparo atualizado, mas não foi possível enviar os anexos.' })
     }
   } catch (e) {
-    console.error('Falha ao atualizar reparo', {
-      status: e.response?.status,
-      resposta: e.response?.data,
-      erro: e.message,
-    })
     Notify.create({ type: 'negative', message: mensagemErroApi(e, 'Atualizar reparo'), timeout: 8000 })
     await carregarReparos()
   } finally { salvando.value = false }

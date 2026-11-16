@@ -2,6 +2,7 @@ package br.com.stecar.stecar_backend.service;
 
 import br.com.stecar.stecar_backend.dto.LoginRequestDTO;
 import br.com.stecar.stecar_backend.dto.LoginResponseDTO;
+import br.com.stecar.stecar_backend.dto.AlterarSenhaRequestDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioResponseDTO;
 import br.com.stecar.stecar_backend.entity.TokenRecuperacaoSenha;
 import br.com.stecar.stecar_backend.entity.Usuario;
@@ -11,6 +12,10 @@ import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -75,6 +80,13 @@ public class AuthService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email, dados.getSenha()));
 
+        Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow();
+        if (!"ADMINISTRADOR".equals(usuario.getFuncao())
+                && !"ADMINISTRADOR GERAL".equals(usuario.getFuncao())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "Esta conta aguarda a classificação de perfil por um administrador geral.");
+        }
+
         return emitirToken(email, Instant.now());
     }
 
@@ -89,12 +101,29 @@ public class AuthService {
         return emitirToken(email, inicioSessao);
     }
 
+    @Transactional
+    public void alterarSenha(String email, AlterarSenhaRequestDTO dados) {
+        if (!dados.novaSenha().equals(dados.confirmarSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A confirmação da nova senha não confere.");
+        }
+        Usuario usuario = usuarioRepository.findByEmail(normalizarEmail(email))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário autenticado não encontrado."));
+        if (!passwordEncoder.matches(dados.senhaAtual(), usuario.getSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A senha atual está incorreta.");
+        }
+        if (dados.senhaAtual().equals(dados.novaSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A nova senha deve ser diferente da senha atual.");
+        }
+        usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
+        usuarioRepository.save(usuario);
+    }
+
     private LoginResponseDTO emitirToken(String email, Instant inicioSessao) {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new BadCredentialsException("Usuário não encontrado."));
 
         return new LoginResponseDTO(
-                jwtService.gerarToken(usuario.getEmail(), inicioSessao),
+                jwtService.gerarToken(usuario.getEmail(), inicioSessao, usuario.getSenhaAlteradaEm()),
                 "Bearer",
                 new UsuarioResponseDTO(
                         usuario.getId(),
@@ -112,19 +141,22 @@ public class AuthService {
                     .forEach(token -> token.setUsado(true));
 
             TokenRecuperacaoSenha recuperacao = new TokenRecuperacaoSenha();
-            recuperacao.setToken(UUID.randomUUID().toString());
+            String token = UUID.randomUUID().toString();
+            recuperacao.setToken(hashToken(token));
             recuperacao.setUsuario(usuario);
             recuperacao.setExpiraEm(Instant.now().plus(30, ChronoUnit.MINUTES));
             recuperacao.setUsado(false);
             tokenRepository.save(recuperacao);
 
-            enviarEmailRecuperacao(usuario.getEmail(), recuperacao.getToken());
+            enviarEmailRecuperacao(usuario.getEmail(), token);
         });
     }
 
     @Transactional
     public void redefinirSenha(String token, String novaSenha) {
-        TokenRecuperacaoSenha recuperacao = tokenRepository.findByTokenAndUsadoFalse(token)
+        TokenRecuperacaoSenha recuperacao = tokenRepository.findByTokenAndUsadoFalse(hashToken(token))
+                // Tokens emitidos antes do armazenamento por hash continuam válidos até expirarem.
+                .or(() -> tokenRepository.findByTokenAndUsadoFalse(token))
                 .filter(item -> item.getExpiraEm().isAfter(Instant.now()))
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.BAD_REQUEST, "O link de redefinição é inválido ou expirou."));
@@ -134,6 +166,16 @@ public class AuthService {
         usuarioRepository.save(usuario);
         recuperacao.setUsado(true);
         tokenRepository.save(recuperacao);
+    }
+
+    static String hashToken(String token) {
+        try {
+            byte[] hash = MessageDigest.getInstance("SHA-256")
+                    .digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException exception) {
+            throw new IllegalStateException("SHA-256 indisponível para proteger o token de recuperação.", exception);
+        }
     }
 
     /**

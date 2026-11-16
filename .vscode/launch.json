@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "STECAR Backend (Windows)",
+            "request": "launch",
+            "cwd": "${workspaceFolder}\\backend\\stecar-backend",
+            "envFile": "${workspaceFolder}\\.env",
+            "mainClass": "br.com.stecar.stecar_backend.StecarBackendApplication",
+            "projectName": "stecar-backend",
+            "vmArgs": "-Dspring.profiles.active=local"
+        }
+    ]
+}

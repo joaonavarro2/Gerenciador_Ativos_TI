@@ -4,7 +4,7 @@
       <div>
         <h1 class="historico-page-title">Histórico de Ativos</h1>
         <p class="historico-page-subtitle">
-          Linha do tempo completa de eventos realizados nos ativos organizacionais.
+          Movimentações e reparos registrados para os ativos organizacionais.
         </p>
       </div>
 

@@ -112,6 +112,7 @@ public class MovimentacaoService {
                 .flatMap(movimentacao ->
                         movimentacaoRepository
                                 .buscarComReferencias(movimentacao.getId())
+
                                 .stream()
                                 .map(this::converterParaResponse)
                 )
@@ -144,7 +145,9 @@ public class MovimentacaoService {
 
         validarOrigemDestino(dto);
         validarReferencias(dto);
-        itemRepository.bloquearPorId(dto.getItemId());
+        Item item = itemRepository.bloquearPorId(dto.getItemId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
+        validarDestino(dto, item);
 
         Movimentacao movimentacao = new Movimentacao();
 
@@ -239,14 +242,12 @@ public class MovimentacaoService {
     // Exclui uma movimentação.
     @Transactional
     public void excluir(Long id) {
-        Movimentacao movimentacao = movimentacaoRepository
-                .findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        "Movimentação não encontrada."
-                ));
-
-        movimentacaoRepository.delete(movimentacao);
+        if (!movimentacaoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movimentação não encontrada.");
+        }
+        throw new ResponseStatusException(HttpStatus.CONFLICT,
+                "Movimentações fazem parte do histórico patrimonial e não podem ser excluídas. "
+                        + "Atualize o status para registrar um cancelamento.");
     }
 
     /** Mantém a localização do bem coerente com o destino da movimentação. */
@@ -289,6 +290,26 @@ public class MovimentacaoService {
         validarReferencia(dto.getEscritorioDestinoId(), "Escritório de destino", itemRepository::contarEscritorio);
         validarReferencia(dto.getPessoaOrigemId(), "Pessoa de origem", itemRepository::contarPessoaAtiva);
         validarReferencia(dto.getPessoaDestinoId(), "Pessoa de destino", itemRepository::contarPessoaAtiva);
+    }
+
+    private void validarDestino(MovimentacaoRequestDTO dto, Item item) {
+        Long escritorioDestinoId = dto.getEscritorioDestinoId() == null
+                ? item.getEscritorioId()
+                : dto.getEscritorioDestinoId();
+        Long departamentoDestinoId = dto.getDepartamentoDestinoId() == null
+                ? item.getDepartamentoId()
+                : dto.getDepartamentoDestinoId();
+
+        if (itemRepository.contarDepartamentoNoEscritorio(departamentoDestinoId, escritorioDestinoId) == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "O departamento de destino pertence a outro escritório.");
+        }
+        if (dto.getPessoaDestinoId() != null
+                && itemRepository.contarPessoaAtivaNoLocal(
+                        dto.getPessoaDestinoId(), escritorioDestinoId, departamentoDestinoId) == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "A pessoa de destino não pertence ao escritório e departamento informados.");
+        }
     }
 
     private void validarReferencia(Long id, String campo, java.util.function.ToLongFunction<Long> contar) {

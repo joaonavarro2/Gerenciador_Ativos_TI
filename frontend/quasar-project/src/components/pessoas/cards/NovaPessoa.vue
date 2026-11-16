@@ -76,20 +76,6 @@
         </div>
       </div>
 
-      <div class="pessoa-section-title">SENHA DE ACESSO</div>
-
-      <div class="pessoa-form-grid">
-        <div class="pessoa-form-group">
-          <label class="pessoa-label">Senha <span class="required">*</span></label>
-          <q-input v-model="form.senha" outlined dense type="password" placeholder="Digite a senha" class="pessoa-input" />
-        </div>
-
-        <div class="pessoa-form-group">
-          <label class="pessoa-label">Confirmar Senha <span class="required">*</span></label>
-          <q-input v-model="form.confirmarSenha" outlined dense type="password" placeholder="Confirme a senha" class="pessoa-input" />
-        </div>
-      </div>
-
       <div class="pessoa-section-title">BENS ATRIBUÍDOS</div>
 
       <div class="pessoa-bens-box">
@@ -136,8 +122,6 @@ const form = ref({
   escritorioId: null,
   departamentoId: null,
   status: 'Ativo',
-  senha: '',
-  confirmarSenha: '',
 })
 
 const opcoesEscritorios = computed(() => props.escritorios.map((item) => ({ label: item.nome, value: item.id })))
@@ -150,7 +134,7 @@ const erroLocal = ref('')
 
 function resetarFormulario() {
   erroLocal.value = ''
-  form.value = { nome: '', cpf: '', email: '', telefone: '', cargo: '', escritorioId: null, departamentoId: null, status: 'Ativo', senha: '', confirmarSenha: '' }
+  form.value = { nome: '', cpf: '', email: '', telefone: '', cargo: '', escritorioId: null, departamentoId: null, status: 'Ativo' }
 }
 
 watch(() => props.modelValue, (aberto, anterior) => { if (aberto && !anterior) resetarFormulario() })
@@ -163,19 +147,10 @@ function fechar() {
 function salvar() {
   erroLocal.value = ''
   if (props.salvando) return
-  if (!form.value.nome?.trim() || !form.value.cpf || !form.value.email || !form.value.cargo?.trim() || !form.value.escritorioId || !form.value.departamentoId || !form.value.senha) {
+  if (!form.value.nome?.trim() || !form.value.cpf || !form.value.email || !form.value.cargo?.trim() || !form.value.escritorioId || !form.value.departamentoId) {
     erroLocal.value = 'Preencha todos os campos obrigatórios.'
     return
   }
-  if (form.value.senha.length < 8) {
-    erroLocal.value = 'A senha deve ter pelo menos 8 caracteres.'
-    return
-  }
-  if (form.value.senha !== form.value.confirmarSenha) {
-    erroLocal.value = 'A senha e a confirmação não conferem.'
-    return
-  }
-
   emit('salvar', {
     ...form.value,
     id: Date.now(),

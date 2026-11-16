@@ -53,20 +53,6 @@
         </div>
       </div>
 
-      <div class="pessoa-section-title">SENHA DE ACESSO</div>
-
-      <div class="pessoa-form-grid">
-        <div class="pessoa-form-group">
-          <label class="pessoa-label">Senha</label>
-          <q-input v-model="form.senha" outlined dense type="password" placeholder="Digite a nova senha" class="pessoa-input" />
-        </div>
-
-        <div class="pessoa-form-group">
-          <label class="pessoa-label">Confirmar Senha</label>
-          <q-input v-model="form.confirmarSenha" outlined dense type="password" placeholder="Confirme a nova senha" class="pessoa-input" />
-        </div>
-      </div>
-
       <div class="pessoa-section-title">BENS ATRIBUÍDOS</div>
 
       <q-banner v-if="erroBens" dense rounded class="bg-red-1 text-negative q-mb-md">
@@ -151,8 +137,6 @@ const form = ref({
   status: 'Ativo',
   escritorioId: null,
   departamentoId: null,
-  senha: '',
-  confirmarSenha: '',
 })
 
 watch(
@@ -168,8 +152,6 @@ watch(
       status: value.status || 'Ativo',
       escritorioId: value.escritorioId || null,
       departamentoId: value.departamentoId || null,
-      senha: '',
-      confirmarSenha: '',
     }
   },
   { immediate: true }
@@ -212,14 +194,6 @@ function salvar() {
   erroLocal.value = ''
   if (props.salvando) return
   if (props.salvando || !form.value.nome?.trim() || !form.value.cpf || !form.value.email || !form.value.cargo?.trim() || !form.value.escritorioId || !form.value.departamentoId) return
-  if (form.value.senha && form.value.senha.length < 8) {
-    erroLocal.value = 'A senha deve ter pelo menos 8 caracteres.'
-    return
-  }
-  if (form.value.senha && form.value.senha !== form.value.confirmarSenha) {
-    erroLocal.value = 'A senha e a confirmação não conferem.'
-    return
-  }
   emit('salvar', {
     ...props.pessoa,
     ...form.value,
