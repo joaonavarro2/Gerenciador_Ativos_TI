@@ -17,6 +17,14 @@
       </div>
 
       <div class="info-item">
+        <q-icon name="account_balance" class="info-icon" />
+        <div>
+          <div class="info-label">INSTITUIÇÃO</div>
+          <div class="info-value">{{ bem.instituicao || 'Não informada' }}</div>
+        </div>
+      </div>
+
+      <div class="info-item">
         <q-icon name="inventory_2" class="info-icon" />
 
         <div>

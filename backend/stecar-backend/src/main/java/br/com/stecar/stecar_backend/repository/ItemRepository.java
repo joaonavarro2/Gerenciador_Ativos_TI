@@ -25,10 +25,22 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
         boolean existsByCodigoAndIdNotAndExcluidoFalse(String codigo, Long id);
 
+        @Query(value = """
+                SELECT EXISTS (
+                    SELECT 1 FROM item
+                    WHERE patrimonio IS NOT NULL
+                      AND UPPER(BTRIM(patrimonio)) = UPPER(BTRIM(:patrimonio))
+                      AND (:itemId IS NULL OR id <> :itemId)
+                )
+                """, nativeQuery = true)
+        boolean existePatrimonio(
+                @Param("patrimonio") String patrimonio,
+                @Param("itemId") Long itemId);
+
     @Query(value = """
             SELECT i.id, i.codigo, i.patrimonio, i.nome, i.categoria, i.serial,
                    i.fabricante, i.modelo, i.descricao, i.status, i.data_aquisicao,
-                   e.id, e.nome, d.id, d.nome, p.id, p.nome_completo
+                   e.id, e.nome, d.id, d.nome, p.id, p.nome_completo, i.instituicao
             FROM item i
             JOIN escritorio e ON e.id = i.escritorio_id
             JOIN departamento d ON d.id = i.departamento_id
@@ -41,7 +53,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query(value = """
             SELECT i.id, i.codigo, i.patrimonio, i.nome, i.categoria, i.serial,
                    i.fabricante, i.modelo, i.descricao, i.status, i.data_aquisicao,
-                   e.id, e.nome, d.id, d.nome, p.id, p.nome_completo
+                   e.id, e.nome, d.id, d.nome, p.id, p.nome_completo, i.instituicao
             FROM item i
             JOIN escritorio e ON e.id = i.escritorio_id
             JOIN departamento d ON d.id = i.departamento_id

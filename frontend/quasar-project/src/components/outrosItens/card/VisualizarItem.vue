@@ -19,8 +19,13 @@
           <div class="info-item"><span>CÓDIGO</span><strong>{{ item.codigo || '-' }}</strong></div>
           <div class="info-item"><span>NOME DO ITEM</span><strong>{{ item.nome || '-' }}</strong></div>
           <div class="info-item"><span>CATEGORIA</span><strong>{{ item.categoria || '-' }}</strong></div>
+          <div class="info-item"><span>PATRIMÔNIO</span><strong>{{ item.patrimonio || '-' }}</strong></div>
+          <div class="info-item"><span>INSTITUIÇÃO</span><strong>{{ item.instituicao || '-' }}</strong></div>
           <div class="info-item"><span>FORNECEDOR</span><strong>{{ item.fornecedor || '-' }}</strong></div>
         </div>
+
+        <div class="titulo-secao q-mt-xl">HISTÓRICO DE INSTITUIÇÃO</div>
+        <HistoricoInstituicaoTab entidade="outros-itens" :entidade-id="item.id" />
 
         <div class="titulo-secao q-mt-xl">LOCALIZAÇÃO E ESTOQUE</div>
         <div class="info-grid">
@@ -40,6 +45,8 @@
 </template>
 
 <script setup>
+import HistoricoInstituicaoTab from '@/components/common/HistoricoInstituicaoTab.vue'
+
 defineProps({ modelValue: Boolean, item: { type: Object, default: () => ({}) } })
 const emit = defineEmits(['update:modelValue'])
 function fechar() { emit('update:modelValue', false) }

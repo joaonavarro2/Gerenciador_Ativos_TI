@@ -3,6 +3,7 @@ package br.com.stecar.stecar_backend.service;
 import br.com.stecar.stecar_backend.dto.UsuarioAtualizarRequestDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioRequestDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioResponseDTO;
+import br.com.stecar.stecar_backend.dto.PerfilAtualizarRequestDTO;
 import br.com.stecar.stecar_backend.entity.Usuario;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
 import br.com.stecar.stecar_backend.repository.PessoaRepository;
@@ -45,6 +46,28 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(Long id) {
         return converterParaResponseDTO(buscarEntidadePorId(id));
+    }
+
+    @Transactional
+    public UsuarioResponseDTO atualizarMeuPerfil(String emailAutenticado, PerfilAtualizarRequestDTO dados) {
+        Usuario usuario = usuarioRepository.findByEmail(normalizarEmail(emailAutenticado))
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.UNAUTHORIZED, "Usuário autenticado não encontrado."));
+        String email = normalizarEmail(dados.email());
+        usuarioRepository.findByEmail(email).ifPresent(outro -> {
+            if (!outro.getId().equals(usuario.getId())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT,
+                        "Já existe outro usuário com este e-mail.");
+            }
+        });
+
+        boolean alterouEmail = !usuario.getEmail().equals(email);
+        usuario.setNomeCompleto(dados.nomeCompleto().trim());
+        usuario.setEmail(email);
+        if (alterouEmail) {
+            usuario.marcarAlteracaoAutenticacao();
+        }
+        return converterParaResponseDTO(usuarioRepository.save(usuario));
     }
 
     @Transactional

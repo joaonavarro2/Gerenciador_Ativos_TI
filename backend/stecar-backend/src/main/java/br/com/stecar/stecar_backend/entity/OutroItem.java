@@ -12,6 +12,13 @@ public class OutroItem {
     @Column(nullable = false, unique = true, length = 50)
     private String codigo;
 
+    @Column(length = 50)
+    private String patrimonio;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "instituicao", length = 4)
+    private InstituicaoPatrimonio instituicao;
+
     @Column(nullable = false, length = 150)
     private String nome;
 
@@ -40,6 +47,10 @@ public class OutroItem {
     public void setId(Long id) { this.id = id; }
     public String getCodigo() { return codigo; }
     public void setCodigo(String codigo) { this.codigo = codigo; }
+    public String getPatrimonio() { return patrimonio; }
+    public void setPatrimonio(String patrimonio) { this.patrimonio = patrimonio; }
+    public InstituicaoPatrimonio getInstituicao() { return instituicao; }
+    public void setInstituicao(InstituicaoPatrimonio instituicao) { this.instituicao = instituicao; }
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
     public String getCategoria() { return categoria; }

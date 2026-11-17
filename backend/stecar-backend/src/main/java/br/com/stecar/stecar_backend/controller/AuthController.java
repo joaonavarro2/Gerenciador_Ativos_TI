@@ -4,6 +4,7 @@ import br.com.stecar.stecar_backend.dto.LoginRequestDTO;
 import br.com.stecar.stecar_backend.dto.LoginResponseDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioResponseDTO;
 import br.com.stecar.stecar_backend.dto.AlterarSenhaRequestDTO;
+import br.com.stecar.stecar_backend.dto.PerfilAtualizarRequestDTO;
 import br.com.stecar.stecar_backend.dto.RecuperarSenhaRequestDTO;
 import br.com.stecar.stecar_backend.dto.RedefinirSenhaRequestDTO;
 import br.com.stecar.stecar_backend.entity.Usuario;
@@ -91,5 +92,15 @@ public class AuthController {
                 );
 
         return ResponseEntity.ok(resposta);
+    }
+
+    @PutMapping("/me")
+    public ResponseEntity<LoginResponseDTO> atualizarMeuPerfil(
+            @Valid @RequestBody PerfilAtualizarRequestDTO dados,
+            JwtAuthenticationToken authentication) {
+        Object inicio = authentication.getToken().getClaims().get(JwtService.CLAIM_INICIO_SESSAO);
+        Instant inicioSessao = inicio instanceof Number n ? Instant.ofEpochSecond(n.longValue()) : null;
+        return ResponseEntity.ok(
+                authService.atualizarMeuPerfil(authentication.getName(), dados, inicioSessao));
     }
 }

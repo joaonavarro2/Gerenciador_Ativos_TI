@@ -77,6 +77,32 @@
               <q-badge v-if="filtroDepartamentoAplicado" color="primary" label="Aplicado" />
             </q-item-section>
           </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="account_balance" :color="filtroInstituicaoAplicado ? 'primary' : 'grey-6'" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Instituição</q-item-label>
+              <q-item-label caption>{{ texto(filtros.instituicao) || 'Todas' }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-badge v-if="filtroInstituicaoAplicado" color="primary" label="Aplicado" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="business" :color="filtroEscritorioAplicado ? 'primary' : 'grey-6'" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Escritório</q-item-label>
+              <q-item-label caption>{{ texto(filtros.escritorio) || 'Todos' }}</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-badge v-if="filtroEscritorioAplicado" color="primary" label="Aplicado" />
+            </q-item-section>
+          </q-item>
         </q-list>
 
         <div class="titulo-secao q-mt-lg">RESUMO</div>
@@ -147,7 +173,9 @@ const filtroBuscaAplicado = computed(() => Boolean(texto(filtros?.busca).trim())
 const filtroCategoriaAplicado = computed(() => normalizarFiltro(filtros?.categoria).length > 0)
 const filtroStatusAplicado = computed(() => normalizarFiltro(filtros?.status).length > 0)
 const filtroDepartamentoAplicado = computed(() => normalizarFiltro(filtros?.departamento).length > 0)
-const possuiFiltros = computed(() => filtroBuscaAplicado.value || filtroCategoriaAplicado.value || filtroStatusAplicado.value || filtroDepartamentoAplicado.value)
+const filtroInstituicaoAplicado = computed(() => normalizarFiltro(filtros?.instituicao).length > 0)
+const filtroEscritorioAplicado = computed(() => normalizarFiltro(filtros?.escritorio).length > 0)
+const possuiFiltros = computed(() => filtroBuscaAplicado.value || filtroCategoriaAplicado.value || filtroStatusAplicado.value || filtroDepartamentoAplicado.value || filtroInstituicaoAplicado.value || filtroEscritorioAplicado.value)
 
 function mostrarFiltro(valor, vazio) {
   const lista = normalizarFiltro(valor)
@@ -160,7 +188,7 @@ const itensFiltrados = computed(() => {
   const busca = texto(filtros?.busca).trim().toLowerCase()
   if (busca) {
     resultado = resultado.filter(item => {
-      const valoresBusca = [ item.id, item.descricao, item.categoria, item.marca, item.departamento, item.responsavel, item.status ]
+      const valoresBusca = [ item.id, item.codigo, item.patrimonio, item.descricao, item.nome, item.categoria, item.marca, item.departamento, item.responsavel, item.status, item.instituicao ]
       return valoresBusca.some(valor => texto(valor).toLowerCase().includes(busca))
     })
   }
@@ -180,6 +208,16 @@ const itensFiltrados = computed(() => {
     resultado = resultado.filter(item => departamentos.includes(texto(item.departamento || item.nomeDepartamento || item.idDepartamento).trim().toLowerCase()))
   }
 
+  const instituicoes = normalizarFiltro(filtros?.instituicao)
+  if (instituicoes.length) {
+    resultado = resultado.filter(item => instituicoes.includes(texto(item.instituicao).trim().toLowerCase()))
+  }
+
+  const escritorios = normalizarFiltro(filtros?.escritorio)
+  if (escritorios.length) {
+    resultado = resultado.filter(item => escritorios.includes(texto(item.escritorio).trim().toLowerCase()))
+  }
+
   return resultado
 })
 
@@ -189,11 +227,16 @@ const quantidadeItens = computed(() => itensParaExportar.value.length)
 function prepararDadosRelatorio() {
   return itensParaExportar.value.map(item => ({
     ID: texto(item.id),
-    Nome: texto(item.descricao),
+    Código: texto(item.codigo),
+    Patrimônio: texto(item.patrimonio),
+    Instituição: texto(item.instituicao),
+    Nome: texto(item.descricao || item.nome),
     Categoria: texto(item.categoria || item.categoriaBem || item.tipo),
     Fabricante: texto(item.fabricante || item.marca),
     Status: texto(item.status),
-    Departamento: texto(item.departamento || item.nomeDepartamento || item.idDepartamento)
+    Departamento: texto(item.departamento || item.nomeDepartamento || item.idDepartamento),
+    Escritório: texto(item.escritorio),
+    Localização: texto(item.localizacao)
   }))
 }
 

@@ -99,6 +99,20 @@
             />
           </div>
 
+          <div class="col-12 col-md-6">
+            <q-select
+              outlined
+              dense
+              v-model="form.instituicao"
+              :options="instituicoes"
+              label="Instituição *"
+              :rules="modoEdicao ? [] : [valor => !!valor || 'Selecione a instituição do bem']"
+            />
+            <div v-if="modoEdicao && !form.instituicao" class="text-caption text-grey-7 q-mt-xs">
+              Registro legado sem instituição; deixe em branco para preservar o valor atual.
+            </div>
+          </div>
+
           <div class="col-12">
             <q-input
               outlined
@@ -320,6 +334,7 @@ const form = ref({
   categoria: null,
   codigo: '',
   patrimonio: '',
+  instituicao: null,
   serie: '',
 
   fabricante: '',
@@ -343,6 +358,7 @@ const categorias = computed(() => props.opcoes.categorias || [])
 const statusOptions = computed(() => [
   ...new Set([...(props.opcoes.status || []), 'Ativo', 'Em Manutenção', 'Inativo', 'Descartado']),
 ])
+const instituicoes = ['CAR', 'FLEM']
 
 const escritorios = computed(() => props.opcoes.escritorios || [])
 const departamentos = computed(() => props.opcoes.departamentos || [])
@@ -385,6 +401,7 @@ function limparFormulario() {
     categoria: null,
     codigo: '',
     patrimonio: '',
+    instituicao: null,
     serie: '',
 
     fabricante: '',
@@ -439,6 +456,7 @@ function carregarBem(bem) {
     codigo: bem.codigo ?? bem.codigoInterno ?? '',
 
     patrimonio: bem.patrimonio ?? '',
+    instituicao: bem.instituicao ?? null,
 
     serie: bem.serie ?? bem.serial ?? bem.numeroSerie ?? '',
 
@@ -507,6 +525,7 @@ async function salvarBem() {
     ['nome', 'nome do bem'],
     ['categoria', 'categoria'],
     ['codigo', 'código interno'],
+    ...(!modoEdicao.value ? [['instituicao', 'instituição']] : []),
     ['fabricante', 'fabricante'],
     ['modelo', 'modelo'],
     ['status', 'status'],
@@ -539,6 +558,7 @@ async function salvarBem() {
     const payload = {
       codigo: form.value.codigo.trim(),
       patrimonio: form.value.patrimonio || null,
+      instituicao: form.value.instituicao || null,
       nome: form.value.nome.trim(),
       categoria: form.value.categoria,
       serial: form.value.serie || null,

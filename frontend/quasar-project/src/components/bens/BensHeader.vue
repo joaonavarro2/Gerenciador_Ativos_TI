@@ -24,6 +24,16 @@
           no-caps
         />
 
+        <q-btn
+          v-if="$podeEditar()"
+          outline
+          color="primary"
+          icon="upload_file"
+          label="Importar Excel"
+          no-caps
+          @click="emit('importar')"
+        />
+
         <!--
       IMPORTANTE:
       Envia os filtros atuais para o componente
@@ -82,6 +92,18 @@
         />
       </div>
 
+      <div class="col-auto">
+        <q-select
+          v-model="filtros.instituicao"
+          outlined
+          dense
+          clearable
+          style="width: 170px"
+          label="Instituição"
+          :options="['CAR', 'FLEM']"
+        />
+      </div>
+
       <!-- ===================================================
        STATUS
   ==================================================== -->
@@ -133,6 +155,17 @@
         @remove="filtros.busca = ''"
       >
         Pesquisa: {{ filtros.busca }}
+      </q-chip>
+
+      <q-chip
+        v-if="filtros.instituicao"
+        removable
+        color="blue-1"
+        text-color="primary"
+        icon="account_balance"
+        @remove="filtros.instituicao = ''"
+      >
+        Instituição: {{ filtros.instituicao }}
       </q-chip>
 
       <!-- Categoria -->
@@ -204,7 +237,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['update:filtros', 'bem-salvo'])
+const emit = defineEmits(['update:filtros', 'bem-salvo', 'importar'])
 const filtros = props.filtros
 const statusDisponiveis = computed(() => [
   ...new Set([...(props.opcoes.status || []), 'Ativo', 'Em Manutenção', 'Inativo', 'Descartado']),
@@ -253,6 +286,7 @@ const possuiFiltros = computed(() => {
     filtros.categoria.length ||
     filtros.status.length ||
     filtros.departamento,
+    filtros.instituicao,
   )
 })
 </script>

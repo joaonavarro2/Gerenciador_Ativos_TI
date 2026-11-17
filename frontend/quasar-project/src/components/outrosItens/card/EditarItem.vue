@@ -20,6 +20,13 @@
           <div class="row q-col-gutter-md">
             <div class="col-12 col-md-4"><q-input v-model="form.codigo" outlined dense label="Código *" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-8"><q-input v-model="form.nome" outlined dense label="Nome do item *" :rules="[obrigatorio]" hide-bottom-space /></div>
+            <div class="col-12 col-md-6"><q-input v-model="form.patrimonio" outlined dense label="Patrimônio" /></div>
+            <div class="col-12 col-md-6">
+              <q-select v-model="form.instituicao" outlined dense label="Instituição" :options="instituicoes" clearable />
+              <div v-if="!form.instituicao" class="text-caption text-grey-7 q-mt-xs">
+                Registro legado sem instituição; deixe em branco para preservar o valor atual.
+              </div>
+            </div>
             <div class="col-12 col-md-6"><q-select v-model="form.categoria" outlined dense label="Categoria *" :options="props.categorias" :rules="[obrigatorio]" hide-bottom-space /></div>
             <div class="col-12 col-md-6"><q-select v-model="form.status" outlined dense label="Status *" :options="statusOptions" :rules="[obrigatorio]" hide-bottom-space /></div>
           </div>
@@ -51,7 +58,8 @@ const props = defineProps({ item: { type: Object, default: () => ({}) }, escrito
 const emit = defineEmits(['salvar'])
 
 const statusOptions = ['Ativo', 'Inativo', 'Esgotado']
-const estadoInicial = () => ({ codigo: '', nome: '', categoria: null, escritorio: null, localizacao: '', quantidade: 0, estoqueMinimo: 0, fornecedor: '', status: 'Ativo' })
+const instituicoes = ['CAR', 'FLEM']
+const estadoInicial = () => ({ codigo: '', patrimonio: '', instituicao: null, nome: '', categoria: null, escritorio: null, localizacao: '', quantidade: 0, estoqueMinimo: 0, fornecedor: '', status: 'Ativo' })
 const form = ref(estadoInicial())
 
 watch(() => props.item, item => {

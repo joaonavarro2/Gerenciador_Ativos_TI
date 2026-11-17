@@ -42,6 +42,7 @@
             }}</q-chip></q-td
           >
           <q-td key="marca" :props="tableProps">{{ tableProps.row.marca }}</q-td>
+          <q-td key="instituicao" :props="tableProps">{{ tableProps.row.instituicao || '—' }}</q-td>
           <q-td key="departamento" :props="tableProps">{{ tableProps.row.departamento }}</q-td>
           <q-td key="responsavel" :props="tableProps">
             <div class="responsavel-cell">
@@ -160,6 +161,7 @@ const columns = [
   { name: 'descricao', label: 'DESCRIÇÃO', field: 'descricao', align: 'left' },
   { name: 'categoria', label: 'CATEGORIA', field: 'categoria', align: 'left' },
   { name: 'marca', label: 'MARCA / MODELO', field: 'marca', align: 'left' },
+  { name: 'instituicao', label: 'INSTITUIÇÃO', field: 'instituicao', align: 'left' },
   { name: 'departamento', label: 'DEPARTAMENTO', field: 'departamento', align: 'left' },
   { name: 'responsavel', label: 'RESPONSÁVEL', field: 'responsavel', align: 'left' },
   { name: 'status', label: 'STATUS', field: 'status', align: 'left' },

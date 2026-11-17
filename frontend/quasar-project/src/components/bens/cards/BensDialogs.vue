@@ -80,6 +80,7 @@
         <q-tab name="manutencoes" label="Histórico de Manutenção" />
 
         <q-tab name="movimentacoes" label="Movimentações Recentes" />
+        <q-tab name="instituicao" label="Histórico de Instituição" />
       </q-tabs>
 
       <q-separator />
@@ -103,6 +104,10 @@
           <!-- COMPONENTE -->
           <BemMovementsTab :bem-id="bem.id" />
         </q-tab-panel>
+
+        <q-tab-panel name="instituicao">
+          <HistoricoInstituicaoTab entidade="bens" :entidade-id="bem.id" />
+        </q-tab-panel>
       </q-tab-panels>
     </q-card>
   </q-dialog>
@@ -113,6 +118,7 @@ import { ref, computed } from 'vue'
 
 import BemInfoTab from '../cards/BemInfoTab.vue'
 import BemMaintenanceTab from '../cards/BemMaintenanceTab.vue'
+import HistoricoInstituicaoTab from '@/components/common/HistoricoInstituicaoTab.vue'
 import BemMovementsTab from '../cards/BemMovementsTab.vue'
 
 const props = defineProps({

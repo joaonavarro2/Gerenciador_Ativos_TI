@@ -8,9 +8,12 @@ import br.com.stecar.stecar_backend.dto.MovimentacaoItemRequestDTO;
 import br.com.stecar.stecar_backend.dto.MovimentacaoItemResponseDTO;
 import br.com.stecar.stecar_backend.dto.ConsertoItemResponseDTO;
 import br.com.stecar.stecar_backend.entity.Item;
+import br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio;
 import br.com.stecar.stecar_backend.repository.ItemRepository;
 import br.com.stecar.stecar_backend.repository.MovimentacaoRepository;
+import br.com.stecar.stecar_backend.repository.OutroItemRepository;
 import br.com.stecar.stecar_backend.repository.UsuarioRepository;
+import br.com.stecar.stecar_backend.dto.HistoricoInstituicaoResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,12 +29,18 @@ public class ItemService {
     private final ItemRepository itemRepository;
     private final UsuarioRepository usuarioRepository;
     private final MovimentacaoRepository movimentacaoRepository;
+    private final HistoricoInstituicaoService historicoInstituicaoService;
+    private final OutroItemRepository outroItemRepository;
 
     public ItemService(ItemRepository itemRepository, UsuarioRepository usuarioRepository,
-            MovimentacaoRepository movimentacaoRepository) {
+            MovimentacaoRepository movimentacaoRepository,
+            HistoricoInstituicaoService historicoInstituicaoService,
+            OutroItemRepository outroItemRepository) {
         this.movimentacaoRepository = movimentacaoRepository;
         this.itemRepository = itemRepository;
         this.usuarioRepository = usuarioRepository;
+        this.historicoInstituicaoService = historicoInstituicaoService;
+        this.outroItemRepository = outroItemRepository;
     }
 
     @Transactional(readOnly = true)
@@ -42,6 +51,13 @@ public class ItemService {
     @Transactional(readOnly = true)
     public List<ItemResponseDTO> listar(
             String busca, String categoria, String status, Long departamentoId, String departamento) {
+        return listar(busca, categoria, status, departamentoId, departamento, null);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ItemResponseDTO> listar(
+            String busca, String categoria, String status, Long departamentoId,
+            String departamento, InstituicaoPatrimonio instituicao) {
         return itemRepository.listarComReferencias().stream()
                 .map(this::mapearItem)
                 .filter(item -> corresponde(item.nome() + " " + item.codigo() + " " + item.patrimonio() + " " + item.serial(), busca))
@@ -49,6 +65,7 @@ public class ItemService {
                 .filter(item -> correspondeALista(item.status(), status))
                 .filter(item -> departamentoId == null || departamentoId.equals(item.departamentoId()))
                 .filter(item -> corresponde(item.departamento(), departamento))
+                .filter(item -> instituicao == null || instituicao == item.instituicao())
                 .toList();
     }
 
@@ -92,6 +109,12 @@ public class ItemService {
         }
 
     @Transactional(readOnly = true)
+    public List<HistoricoInstituicaoResponseDTO> listarHistoricoInstituicao(Long id) {
+        validarExistencia(id);
+        return historicoInstituicaoService.listar("ITEM", id);
+    }
+
+    @Transactional(readOnly = true)
     public ItemOpcoesResponseDTO buscarOpcoes() {
         List<ItemOpcaoDTO> escritorios = itemRepository.listarEscritorios().stream()
                 .map(row -> new ItemOpcaoDTO(numero(row[0]), (String) row[1], null))
@@ -109,24 +132,35 @@ public class ItemService {
 
     @Transactional
     public ItemResponseDTO criar(ItemRequestDTO dados) {
-        validarReferencias(dados);
-        validarCodigo(dados.codigo(), null);
+        return criar(dados, null);
+    }
+
+    @Transactional
+    public ItemResponseDTO criar(ItemRequestDTO dados, String emailUsuario) {
+        validarParaImportacao(dados);
         Item item = new Item();
         preencherItem(item, dados);
-        return salvarERetornar(item);
+        return salvarERetornar(item, null, emailUsuario);
     }
 
     @Transactional
     public ItemResponseDTO atualizar(Long id, ItemRequestDTO dados) {
+        return atualizar(id, dados, null);
+    }
+
+    @Transactional
+    public ItemResponseDTO atualizar(Long id, ItemRequestDTO dados, String emailUsuario) {
         validarReferencias(dados);
         Item item = itemRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado."));
         if (item.isExcluido()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bem não encontrado.");
         }
+        InstituicaoPatrimonio instituicaoAnterior = item.getInstituicao();
         validarCodigo(dados.codigo(), id);
+        validarPatrimonioUnico(dados.patrimonio(), id, item.getPatrimonio());
         preencherItem(item, dados);
-        return salvarERetornar(item);
+        return salvarERetornar(item, instituicaoAnterior, emailUsuario);
     }
 
     @Transactional
@@ -179,8 +213,11 @@ public class ItemService {
         return buscarPorId(id);
     }
 
-    private ItemResponseDTO salvarERetornar(Item item) {
+    private ItemResponseDTO salvarERetornar(
+            Item item, InstituicaoPatrimonio instituicaoAnterior, String emailUsuario) {
         Long id = itemRepository.save(item).getId();
+        historicoInstituicaoService.registrar(
+                "ITEM", id, instituicaoAnterior, item.getInstituicao(), emailUsuario);
         return buscarPorId(id);
     }
 
@@ -193,6 +230,9 @@ public class ItemService {
     private void preencherItem(Item item, ItemRequestDTO dados) {
         item.setCodigo(dados.codigo().trim());
         item.setPatrimonio(normalizar(dados.patrimonio()));
+        if (dados.instituicao() != null) {
+            item.setInstituicao(dados.instituicao());
+        }
         item.setNome(dados.nome().trim());
         item.setCategoria(dados.categoria().trim());
         item.setSerial(normalizar(dados.serial()));
@@ -257,15 +297,43 @@ public class ItemService {
         }
     }
 
+    private void validarInstituicaoObrigatoria(InstituicaoPatrimonio instituicao) {
+        if (instituicao == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A instituição do bem é obrigatória.");
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public void validarParaImportacao(ItemRequestDTO dados) {
+        validarInstituicaoObrigatoria(dados.instituicao());
+        validarReferencias(dados);
+        validarCodigo(dados.codigo(), null);
+        validarPatrimonioUnico(dados.patrimonio(), null, null);
+    }
+
+    private void validarPatrimonioUnico(String patrimonio, Long itemId, String patrimonioAnterior) {
+        String valor = normalizar(patrimonio);
+        if (valor == null || valor.equalsIgnoreCase(normalizar(patrimonioAnterior))) return;
+        if (itemRepository.existePatrimonio(valor, itemId)
+                || outroItemRepository.existePatrimonio(valor, null)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Já existe um registro com este número de patrimônio.");
+        }
+    }
+
     private ItemResponseDTO mapearItem(Object[] row) {
         Long id = numero(row[0]);
         String codigo = row[1] == null ? String.format(Locale.ROOT, "BEM-%03d", id) : (String) row[1];
         return new ItemResponseDTO(
-            id, codigo, (String) row[2], (String) row[3], (String) row[4], (String) row[5],
+            id, codigo, (String) row[2], instituicao(row[17]), (String) row[3], (String) row[4], (String) row[5],
             (String) row[6], (String) row[7], (String) row[8], (String) row[9],
                 dataLocal(row[10]),
             numero(row[11]), (String) row[12], numero(row[13]), (String) row[14],
             numero(row[15]), (String) row[16]);
+    }
+
+    private InstituicaoPatrimonio instituicao(Object value) {
+        return value == null ? null : InstituicaoPatrimonio.valueOf(value.toString());
     }
 
     private Long numero(Object value) {

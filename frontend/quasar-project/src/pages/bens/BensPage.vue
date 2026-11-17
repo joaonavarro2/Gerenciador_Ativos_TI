@@ -1,6 +1,12 @@
 <template>
   <q-page class="page-container">
-    <BensHeader v-model:filtros="filtros" :itens="bens" :opcoes="opcoes" @bem-salvo="bemSalvo" />
+    <BensHeader
+      v-model:filtros="filtros"
+      :itens="bens"
+      :opcoes="opcoes"
+      @bem-salvo="bemSalvo"
+      @importar="dialogImportar = true"
+    />
 
     <q-banner v-if="erro" class="bg-negative text-white q-mb-md" rounded>
       {{ erro }}
@@ -15,6 +21,12 @@
       :loading="carregando"
       @bens-atualizados="carregarBens"
     />
+    <ImportacaoExcelDialog
+      v-model="dialogImportar"
+      tipo="bens"
+      :opcoes="opcoes"
+      @concluido="atualizarInventario"
+    />
   </q-page>
 </template>
 
@@ -23,12 +35,14 @@ import { onMounted, reactive, ref, watch } from 'vue'
 import { api } from '@/boot/axios'
 import BensHeader from '@/components/bens/BensHeader.vue'
 import BensTable from '@/components/bens/BensTable.vue'
+import ImportacaoExcelDialog from '@/components/common/ImportacaoExcelDialog.vue'
 
 const bens = ref([])
 const opcoes = ref({ escritorios: [], departamentos: [], pessoas: [], categorias: [], status: [] })
 const carregando = ref(false)
 const erro = ref('')
-const filtros = reactive({ busca: '', categoria: [], status: [], departamento: '' })
+const dialogImportar = ref(false)
+const filtros = reactive({ busca: '', categoria: [], status: [], departamento: '', instituicao: '' })
 let timerBusca
 let requestIdBens = 0
 
@@ -60,6 +74,7 @@ async function carregarBens() {
         categoria: filtros.categoria.length ? filtros.categoria.join(',') : undefined,
         status: filtros.status.length ? filtros.status.join(',') : undefined,
         departamento: filtros.departamento || undefined,
+        instituicao: filtros.instituicao || undefined,
       },
     })
     if (chamadaAtual !== requestIdBens) return
@@ -125,6 +140,7 @@ function mapearBem(item) {
     escritorio: item.escritorio,
     localizacao: item.escritorio,
     responsavel: item.responsavel || 'Não atribuído',
+    instituicao: item.instituicao || '',
     observacoes: item.descricao,
     icon,
     avatarColor,
@@ -133,7 +149,7 @@ function mapearBem(item) {
 }
 
 watch(
-  () => [filtros.busca, filtros.categoria, filtros.status, filtros.departamento],
+  () => [filtros.busca, filtros.categoria, filtros.status, filtros.departamento, filtros.instituicao],
   () => {
     clearTimeout(timerBusca)
     timerBusca = setTimeout(carregarBens, 250)

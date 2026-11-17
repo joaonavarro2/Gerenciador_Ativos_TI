@@ -1,6 +1,13 @@
 <template>
   <q-page class="outros-itens-page">
-    <HeaderOutros v-model:filtros="filtros" :opcoes-escritorios="nomesEscritorios" :opcoes-categorias="categorias" @novo-item="abrirNovoItem" />
+    <HeaderOutros
+      v-model:filtros="filtros"
+      :itens="itensFiltrados"
+      :opcoes-escritorios="nomesEscritorios"
+      :opcoes-categorias="categorias"
+      @novo-item="abrirNovoItem"
+      @importar="dialogImportar = true"
+    />
 
     <q-banner v-if="erro" dense rounded class="bg-red-1 text-negative q-mt-md">
       {{ erro }}
@@ -16,11 +23,17 @@
     <VisualizarItem v-model="dialogVisualizarItem" :item="itemSelecionado" />
     <EditarItem v-model="dialogEditarItem" :item="itemSelecionado" :escritorios="nomesEscritorios" :categorias="categorias" @salvar="atualizarItem" />
     <ExcluirItem v-model="dialogExcluirItem" :item="itemSelecionado" @excluir="removerItem" />
+    <ImportacaoExcelDialog
+      v-model="dialogImportar"
+      tipo="outros-itens"
+      :opcoes="{ escritorios }"
+      @concluido="carregarItens"
+    />
   </q-page>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import { api } from '@/boot/axios.js'
 import HeaderOutros from '@/components/outrosItens/HeaderOutros.vue'
@@ -29,6 +42,7 @@ import NovoItem from '@/components/outrosItens/card/NovoItem.vue'
 import VisualizarItem from '@/components/outrosItens/card/VisualizarItem.vue'
 import EditarItem from '@/components/outrosItens/card/EditarItem.vue'
 import ExcluirItem from '@/components/outrosItens/card/ExcluirItem.vue'
+import ImportacaoExcelDialog from '@/components/common/ImportacaoExcelDialog.vue'
 
 const $q = useQuasar()
 const itens = ref([])
@@ -39,8 +53,9 @@ const dialogNovoItem = ref(false)
 const dialogVisualizarItem = ref(false)
 const dialogEditarItem = ref(false)
 const dialogExcluirItem = ref(false)
+const dialogImportar = ref(false)
 const itemSelecionado = ref({})
-const filtros = ref({ busca: '', categoria: null, escritorio: null, status: null })
+const filtros = ref({ busca: '', categoria: null, escritorio: null, status: null, instituicao: null })
 const nomesEscritorios = computed(() => escritorios.value.map(item => item.nome))
 const categorias = computed(() => [...new Set([...itens.value.map(item => item.categoria), 'Material de escrit\u00f3rio', 'Suprimentos', 'Mobili\u00e1rio', 'Outros'].filter(Boolean))].sort())
 const possuiFiltros = computed(() => Object.values(filtros.value).some(value => value !== null && value !== ''))
@@ -54,6 +69,7 @@ const itensFiltrados = computed(() => {
       && (!filtro.categoria || normalizar(item.categoria) === normalizar(filtro.categoria))
       && (!filtro.escritorio || item.escritorio === filtro.escritorio)
       && (!filtro.status || item.status === filtro.status)
+      && (!filtro.instituicao || item.instituicao === filtro.instituicao)
   })
 })
 
@@ -61,7 +77,10 @@ async function carregarItens() {
   carregando.value = true
   erro.value = ''
   try {
-    const [resItens, resEscritorios] = await Promise.all([api.get('/outros-itens'), api.get('/escritorios')])
+    const [resItens, resEscritorios] = await Promise.all([
+      api.get('/outros-itens', { params: { instituicao: filtros.value.instituicao || undefined } }),
+      api.get('/escritorios'),
+    ])
     escritorios.value = resEscritorios.data
     itens.value = resItens.data.map(mapearItem)
   } catch (error) {
@@ -77,6 +96,7 @@ function payload(item) {
   const escritorio = escritorios.value.find(opcao => opcao.nome === item.escritorio)
   return {
     codigo: item.codigo?.trim(), nome: item.nome?.trim(), categoria: item.categoria,
+    patrimonio: item.patrimonio?.trim() || null, instituicao: item.instituicao || null,
     escritorioId: item.escritorioId || escritorio?.id,
     localizacao: item.localizacao?.trim(), quantidade: Number(item.quantidade),
     estoqueMinimo: Number(item.estoqueMinimo), fornecedor: item.fornecedor?.trim() || null,
@@ -115,6 +135,7 @@ async function removerItem(id) {
 }
 
 onMounted(carregarItens)
+watch(() => filtros.value.instituicao, () => { carregarItens() })
 </script>
 
 <style scoped>

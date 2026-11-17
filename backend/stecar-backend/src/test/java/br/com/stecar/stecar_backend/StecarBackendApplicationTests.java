@@ -74,7 +74,8 @@ class StecarBackendApplicationTests extends PostgresIntegrationTest {
 		var escritorio = opcoes.escritorios().get(0);
 		var departamento = opcoes.departamentos().get(0);
 		var dados = new ItemRequestDTO(
-				"TESTE-" + System.nanoTime(), "TESTE-PAT", "Bem de teste", "Teste",
+				"TESTE-" + System.nanoTime(), "TESTE-PAT", br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR,
+				"Bem de teste", "Teste",
 				"TESTE-SERIAL", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
 				escritorio.id(), departamento.id(), null);
 
@@ -86,7 +87,7 @@ class StecarBackendApplicationTests extends PostgresIntegrationTest {
 		Assertions.assertEquals(HttpStatus.CONFLICT, erroDuplicidade.getStatusCode());
 
 		var atualizado = itemService.atualizar(criado.id(), new ItemRequestDTO(
-				dados.codigo(), dados.patrimonio(), "Bem atualizado", dados.categoria(), dados.serial(),
+				dados.codigo(), dados.patrimonio(), dados.instituicao(), "Bem atualizado", dados.categoria(), dados.serial(),
 				dados.fabricante(), dados.modelo(), dados.descricao(), dados.status(), dados.dataAquisicao(),
 				dados.escritorioId(), dados.departamentoId(), dados.pessoaId()));
 		Assertions.assertEquals("Bem atualizado", atualizado.nome());
@@ -110,7 +111,8 @@ class StecarBackendApplicationTests extends PostgresIntegrationTest {
 				.noneMatch(item -> item.id().equals(criado.id())));
 
 		var paraExcluir = itemService.criar(new ItemRequestDTO(
-				"TESTE-EXCLUIR-" + System.nanoTime(), "TESTE-PAT-2", "Bem para excluir", "Teste",
+				"TESTE-EXCLUIR-" + System.nanoTime(), "TESTE-PAT-2",
+				br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR, "Bem para excluir", "Teste",
 				"TESTE-SERIAL-2", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
 				escritorio.id(), departamento.id(), null));
 		itemService.excluir(paraExcluir.id());

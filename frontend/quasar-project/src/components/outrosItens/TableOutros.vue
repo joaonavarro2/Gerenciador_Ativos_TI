@@ -71,6 +71,8 @@ const columns = [
   { name: 'codigo', label: 'CÓDIGO', field: 'codigo', align: 'left' },
   { name: 'nome', label: 'NOME DO ITEM', field: 'nome', align: 'left' },
   { name: 'categoria', label: 'CATEGORIA', field: 'categoria', align: 'left' },
+  { name: 'patrimonio', label: 'PATRIMÔNIO', field: 'patrimonio', align: 'left' },
+  { name: 'instituicao', label: 'INSTITUIÇÃO', field: 'instituicao', align: 'left' },
   { name: 'escritorio', label: 'ESCRITÓRIO', field: 'escritorio', align: 'left' },
   { name: 'localizacao', label: 'LOCALIZAÇÃO', field: 'localizacao', align: 'left' },
   { name: 'quantidade', label: 'QTD. DISPONÍVEL', field: 'quantidade', align: 'center' },

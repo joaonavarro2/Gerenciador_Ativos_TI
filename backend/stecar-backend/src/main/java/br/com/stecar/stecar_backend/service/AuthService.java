@@ -3,6 +3,7 @@ package br.com.stecar.stecar_backend.service;
 import br.com.stecar.stecar_backend.dto.LoginRequestDTO;
 import br.com.stecar.stecar_backend.dto.LoginResponseDTO;
 import br.com.stecar.stecar_backend.dto.AlterarSenhaRequestDTO;
+import br.com.stecar.stecar_backend.dto.PerfilAtualizarRequestDTO;
 import br.com.stecar.stecar_backend.dto.UsuarioResponseDTO;
 import br.com.stecar.stecar_backend.entity.TokenRecuperacaoSenha;
 import br.com.stecar.stecar_backend.entity.Usuario;
@@ -46,6 +47,7 @@ public class AuthService {
     private final TokenRecuperacaoSenhaRepository tokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
+    private final UsuarioService usuarioService;
     private final String frontendUrl;
     private final String mailFrom;
     private final Duration sessaoMaxima;
@@ -57,6 +59,7 @@ public class AuthService {
             TokenRecuperacaoSenhaRepository tokenRepository,
             PasswordEncoder passwordEncoder,
             JavaMailSender mailSender,
+            UsuarioService usuarioService,
             @Value("${stecar.frontend-url}") String frontendUrl,
             @Value("${stecar.mail.from}") String mailFrom,
             @Value("${stecar.jwt.sessao-maxima-horas:12}") long sessaoMaximaHoras) {
@@ -67,6 +70,7 @@ public class AuthService {
         this.tokenRepository = tokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
+        this.usuarioService = usuarioService;
         this.frontendUrl = frontendUrl;
         this.mailFrom = mailFrom;
         this.sessaoMaxima = Duration.ofHours(sessaoMaximaHoras);
@@ -116,6 +120,14 @@ public class AuthService {
         }
         usuario.setSenha(passwordEncoder.encode(dados.novaSenha()));
         usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public LoginResponseDTO atualizarMeuPerfil(
+            String emailAutenticado, PerfilAtualizarRequestDTO dados, Instant inicioSessao) {
+        UsuarioResponseDTO atualizado = usuarioService.atualizarMeuPerfil(emailAutenticado, dados);
+        Instant inicio = inicioSessao == null ? Instant.now() : inicioSessao;
+        return emitirToken(atualizado.getEmail(), inicio);
     }
 
     private LoginResponseDTO emitirToken(String email, Instant inicioSessao) {

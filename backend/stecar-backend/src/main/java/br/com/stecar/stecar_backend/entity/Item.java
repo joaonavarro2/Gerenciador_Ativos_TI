@@ -14,6 +14,10 @@ public class Item {
     @Column(name = "patrimonio")
     private String patrimonio;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "instituicao", length = 4)
+    private InstituicaoPatrimonio instituicao;
+
     @Column(name = "codigo", unique = true, length = 50)
     private String codigo;
 
@@ -70,6 +74,14 @@ public class Item {
 
     public void setPatrimonio(String patrimonio) {
         this.patrimonio = patrimonio;
+    }
+
+    public InstituicaoPatrimonio getInstituicao() {
+        return instituicao;
+    }
+
+    public void setInstituicao(InstituicaoPatrimonio instituicao) {
+        this.instituicao = instituicao;
     }
 
     public String getCodigo() {

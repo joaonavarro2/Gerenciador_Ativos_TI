@@ -17,6 +17,24 @@
         class="outros-itens-btn-novo"
         @click="emit('novo-item')"
       />
+      <q-btn
+        v-if="$podeEditar()"
+        outline
+        color="primary"
+        icon="upload_file"
+        label="Importar Excel"
+        no-caps
+        @click="emit('importar')"
+      />
+      <q-btn
+        outline
+        color="grey-8"
+        icon="download"
+        label="Exportar"
+        no-caps
+        @click="dialogExportar = true"
+      />
+      <ExportarRelatorio v-model="dialogExportar" :filtros="props.filtros" :itens="props.itens" />
     </div>
 
     <div class="row q-col-gutter-md">
@@ -41,6 +59,18 @@
           clearable
           label="Categoria"
           :options="props.opcoesCategorias"
+          class="outros-itens-filtro"
+        />
+      </div>
+
+      <div class="col-12 col-md-auto">
+        <q-select
+          v-model="instituicao"
+          outlined
+          dense
+          clearable
+          label="Instituição"
+          :options="['CAR', 'FLEM']"
           class="outros-itens-filtro"
         />
       </div>
@@ -85,14 +115,19 @@
       <q-chip v-if="props.filtros.status" removable color="blue-1" text-color="primary" icon="verified" @remove="status = null">
         Status: {{ props.filtros.status }}
       </q-chip>
+      <q-chip v-if="props.filtros.instituicao" removable color="blue-1" text-color="primary" icon="account_balance" @remove="instituicao = null">
+        Instituição: {{ props.filtros.instituicao }}
+      </q-chip>
     </div>
   </q-card>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import ExportarRelatorio from '@/components/common/ExportarRelatorio.vue'
 
 const props = defineProps({
+  itens: { type: Array, default: () => [] },
   filtros: {
     type: Object,
     required: true,
@@ -101,7 +136,8 @@ const props = defineProps({
   opcoesCategorias: { type: Array, default: () => [] },
 })
 
-const emit = defineEmits(['update:filtros', 'novo-item'])
+const emit = defineEmits(['update:filtros', 'novo-item', 'importar'])
+const dialogExportar = ref(false)
 
 const opcoesStatus = ['Ativo', 'Inativo', 'Esgotado']
 
@@ -123,6 +159,11 @@ const escritorio = computed({
 const status = computed({
   get: () => props.filtros.status || null,
   set: value => emit('update:filtros', { ...props.filtros, status: value || null }),
+})
+
+const instituicao = computed({
+  get: () => props.filtros.instituicao || null,
+  set: value => emit('update:filtros', { ...props.filtros, instituicao: value || null }),
 })
 
 const possuiFiltros = computed(() =>

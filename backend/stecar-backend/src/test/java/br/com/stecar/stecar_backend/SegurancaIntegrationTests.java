@@ -305,7 +305,9 @@ class SegurancaIntegrationTests extends PostgresIntegrationTest {
         var escritorio = opcoes.escritorios().get(0);
         var departamento = opcoes.departamentos().get(0);
         Long itemId = itemService.criar(new ItemRequestDTO(
-                "HIST-" + System.nanoTime(), "HIST-PAT", "Bem de teste de histórico", "Teste",
+                "HIST-" + System.nanoTime(), "HIST-PAT",
+                br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR,
+                "Bem de teste de histórico", "Teste",
                 "HIST-SERIAL", "Fabricante", "Modelo", null, "Ativo", java.time.LocalDate.now(),
                 escritorio.id(), departamento.id(), null)).id();
 
@@ -386,6 +388,78 @@ class SegurancaIntegrationTests extends PostgresIntegrationTest {
                     .andExpect(jsonPath("$.token").isNotEmpty())
                     .andExpect(jsonPath("$.usuario.senha").doesNotExist());
         }
+    }
+
+    @Test
+    void consultaMeuPerfilExigeAutenticacaoERetornaSomenteDadosDoUsuarioAutenticado() throws Exception {
+        mockMvc.perform(get("/api/auth/me"))
+                .andExpect(status().isUnauthorized());
+
+        Usuario autenticado = usuarioRepository.findByEmail(administrador).orElseThrow();
+        mockMvc.perform(get("/api/auth/me").header("Authorization", bearer(administrador)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(autenticado.getId()))
+                .andExpect(jsonPath("$.nomeCompleto").value(autenticado.getNomeCompleto()))
+                .andExpect(jsonPath("$.email").value(administrador))
+                .andExpect(jsonPath("$.funcao").value("ADMINISTRADOR"))
+                .andExpect(jsonPath("$.status").value("ATIVO"))
+                .andExpect(jsonPath("$.senha").doesNotExist())
+                .andExpect(jsonPath("$.senhaAlteradaEm").doesNotExist());
+    }
+
+    @Test
+    void atualizacaoDoMeuPerfilAlteraNomeEEmailSemPermitirFuncaoOuIdEAtualizaToken() throws Exception {
+        Usuario autenticado = usuarioRepository.findByEmail(administrador).orElseThrow();
+        String tokenAnterior = bearer(administrador);
+
+        mockMvc.perform(put("/api/auth/me").header("Authorization", tokenAnterior)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeCompleto\":\"Nome Não Permitido\",\"email\":\"" + administrador
+                                + "\",\"funcao\":\"ADMINISTRADOR GERAL\"}"))
+                .andExpect(status().isBadRequest());
+        mockMvc.perform(put("/api/auth/me").header("Authorization", tokenAnterior)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeCompleto\":\"Nome Não Permitido\",\"email\":\"" + administrador
+                                + "\",\"id\":999999}"))
+                .andExpect(status().isBadRequest());
+        Assertions.assertEquals("Teste ADMINISTRADOR",
+                usuarioRepository.findById(autenticado.getId()).orElseThrow().getNomeCompleto());
+
+        String novoEmail = "perfil-" + System.nanoTime() + "@exemplo.com";
+        String resposta = mockMvc.perform(put("/api/auth/me").header("Authorization", tokenAnterior)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeCompleto\":\"Nome Atualizado\",\"email\":\"" + novoEmail + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.usuario.nomeCompleto").value("Nome Atualizado"))
+                .andExpect(jsonPath("$.usuario.email").value(novoEmail))
+                .andExpect(jsonPath("$.usuario.funcao").value("ADMINISTRADOR"))
+                .andExpect(jsonPath("$.usuario.status").value("ATIVO"))
+                .andExpect(jsonPath("$.usuario.senha").doesNotExist())
+                .andReturn().getResponse().getContentAsString();
+        String novoToken = com.fasterxml.jackson.databind.json.JsonMapper.builder().build()
+                .readTree(resposta).get("token").asText();
+
+        Assertions.assertEquals(novoEmail, usuarioRepository.findById(autenticado.getId()).orElseThrow().getEmail());
+        mockMvc.perform(get("/api/auth/me").header("Authorization", "Bearer " + novoToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email").value(novoEmail));
+        mockMvc.perform(get("/api/auth/me").header("Authorization", tokenAnterior))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void atualizacaoDoMeuPerfilRejeitaDadosInvalidosEEmailEmUso() throws Exception {
+        String token = bearer(administrador);
+        mockMvc.perform(put("/api/auth/me").header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeCompleto\":\" \",\"email\":\"email-invalido\"}"))
+                .andExpect(status().isBadRequest());
+
+        mockMvc.perform(put("/api/auth/me").header("Authorization", token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"nomeCompleto\":\"Nome válido\",\"email\":\"" + inativo + "\"}"))
+                .andExpect(status().isConflict());
     }
 
     @Test

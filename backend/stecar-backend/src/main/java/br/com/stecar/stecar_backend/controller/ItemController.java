@@ -3,6 +3,8 @@ package br.com.stecar.stecar_backend.controller;
 import br.com.stecar.stecar_backend.dto.ItemOpcoesResponseDTO;
 import br.com.stecar.stecar_backend.dto.ItemRequestDTO;
 import br.com.stecar.stecar_backend.dto.ItemResponseDTO;
+import br.com.stecar.stecar_backend.dto.HistoricoInstituicaoResponseDTO;
+import br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio;
 import br.com.stecar.stecar_backend.dto.MovimentacaoItemRequestDTO;
 import br.com.stecar.stecar_backend.dto.MovimentacaoItemResponseDTO;
 import br.com.stecar.stecar_backend.dto.ConsertoItemResponseDTO;
@@ -30,8 +32,10 @@ public class ItemController {
             @RequestParam(required = false) String categoria,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Long departamentoId,
-            @RequestParam(required = false) String departamento) {
-        return ResponseEntity.ok(itemService.listar(busca, categoria, status, departamentoId, departamento));
+            @RequestParam(required = false) String departamento,
+            @RequestParam(required = false) InstituicaoPatrimonio instituicao) {
+        return ResponseEntity.ok(itemService.listar(
+                busca, categoria, status, departamentoId, departamento, instituicao));
     }
 
     @GetMapping("/opcoes")
@@ -54,16 +58,24 @@ public class ItemController {
         return ResponseEntity.ok(itemService.listarConsertos(id));
     }
 
+    @GetMapping("/{id}/historico-instituicao")
+    public ResponseEntity<List<HistoricoInstituicaoResponseDTO>> historicoInstituicao(@PathVariable Long id) {
+        return ResponseEntity.ok(itemService.listarHistoricoInstituicao(id));
+    }
+
     @PostMapping
-    public ResponseEntity<ItemResponseDTO> criar(@Valid @RequestBody ItemRequestDTO dados) {
-        return ResponseEntity.status(201).body(itemService.criar(dados));
+    public ResponseEntity<ItemResponseDTO> criar(
+            @Valid @RequestBody ItemRequestDTO dados,
+            org.springframework.security.core.Authentication authentication) {
+        return ResponseEntity.status(201).body(itemService.criar(dados, authentication.getName()));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ItemResponseDTO> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody ItemRequestDTO dados) {
-        return ResponseEntity.ok(itemService.atualizar(id, dados));
+            @Valid @RequestBody ItemRequestDTO dados,
+            org.springframework.security.core.Authentication authentication) {
+        return ResponseEntity.ok(itemService.atualizar(id, dados, authentication.getName()));
     }
 
     @DeleteMapping("/{id}")

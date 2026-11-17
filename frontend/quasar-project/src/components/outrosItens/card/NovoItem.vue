@@ -25,6 +25,12 @@
               <q-input v-model="form.nome" outlined dense label="Nome do item *" placeholder="Ex: Papel A4 - Resma" :rules="[obrigatorio]" hide-bottom-space />
             </div>
             <div class="col-12 col-md-6">
+              <q-input v-model="form.patrimonio" outlined dense label="Patrimônio" />
+            </div>
+            <div class="col-12 col-md-6">
+              <q-select v-model="form.instituicao" outlined dense label="Instituição *" :options="instituicoes" :rules="[obrigatorio]" hide-bottom-space />
+            </div>
+            <div class="col-12 col-md-6">
               <q-select v-model="form.categoria" outlined dense label="Categoria *" :options="props.categorias" :rules="[obrigatorio]" hide-bottom-space />
             </div>
             <div class="col-12 col-md-6">
@@ -67,9 +73,12 @@ const props = defineProps({ escritorios: { type: Array, default: () => [] }, cat
 const emit = defineEmits(['salvar'])
 
 const statusOptions = ['Ativo', 'Inativo', 'Esgotado']
+const instituicoes = ['CAR', 'FLEM']
 
 const estadoInicial = () => ({
   codigo: '',
+  patrimonio: '',
+  instituicao: null,
   nome: '',
   categoria: null,
   escritorio: null,
@@ -83,7 +92,7 @@ const estadoInicial = () => ({
 const form = ref(estadoInicial())
 watch(() => aberto.value, (visivel) => { if (!visivel) form.value = estadoInicial() })
 const formValido = computed(() =>
-  form.value.codigo && form.value.nome && form.value.categoria && form.value.escritorio
+  form.value.codigo && form.value.nome && form.value.categoria && form.value.instituicao && form.value.escritorio
   && form.value.localizacao && form.value.quantidade >= 0 && form.value.estoqueMinimo >= 0 && form.value.status,
 )
 

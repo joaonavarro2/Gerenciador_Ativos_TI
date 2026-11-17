@@ -5,9 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
+import br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio;
 
 public record OutroItemRequestDTO(
         @NotBlank @Size(max = 50) String codigo,
+        @Size(max = 50) String patrimonio,
+        InstituicaoPatrimonio instituicao,
         @NotBlank @Size(max = 150) String nome,
         @NotBlank @Size(max = 100) String categoria,
         @NotNull @Positive Long escritorioId,

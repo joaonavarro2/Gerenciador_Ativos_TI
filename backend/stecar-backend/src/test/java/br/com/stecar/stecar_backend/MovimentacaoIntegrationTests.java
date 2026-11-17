@@ -41,7 +41,8 @@ class MovimentacaoIntegrationTests extends PostgresIntegrationTest {
         Assertions.assertNotEquals(origem.id(), destino.id());
 
         var bem = itemService.criar(new ItemRequestDTO(
-                "TESTE-MOV-" + System.nanoTime(), "PAT-MOV", "Bem movimentado", "Teste",
+                "TESTE-MOV-" + System.nanoTime(), "PAT-MOV",
+                br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR, "Bem movimentado", "Teste",
                 "SERIAL-MOV", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
                 origem.id(), opcoes.departamentos().get(0).id(), null));
 
@@ -115,13 +116,16 @@ class MovimentacaoIntegrationTests extends PostgresIntegrationTest {
         Long departamentoId = departamentoVinculadoAoDestino.getId();
         var vinculoInvalido = Assertions.assertThrows(ResponseStatusException.class,
                 () -> itemService.criar(new ItemRequestDTO(
-                        "TESTE-LOCAL-" + System.nanoTime(), "PAT-LOCAL", "Bem com vínculo inválido", "Teste",
+                        "TESTE-LOCAL-" + System.nanoTime(), "PAT-LOCAL",
+                        br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR,
+                        "Bem com vínculo inválido", "Teste",
                         "SERIAL-LOCAL", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
                         escritorioOrigem.id(), departamentoId, null)));
         Assertions.assertEquals(HttpStatus.BAD_REQUEST, vinculoInvalido.getStatusCode());
 
         var bem = itemService.criar(new ItemRequestDTO(
-                "TESTE-LOCAL-OK-" + System.nanoTime(), "PAT-LOCAL-OK", "Bem de origem", "Teste",
+                "TESTE-LOCAL-OK-" + System.nanoTime(), "PAT-LOCAL-OK",
+                br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR, "Bem de origem", "Teste",
                 "SERIAL-LOCAL-OK", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
                 escritorioOrigem.id(), opcoes.departamentos().get(0).id(), null));
         Assertions.assertTrue(itemService.listarPorEscritorio(escritorioOrigem.id()).stream()
@@ -174,7 +178,9 @@ class MovimentacaoIntegrationTests extends PostgresIntegrationTest {
         pessoaDestino = pessoaRepository.save(pessoaDestino);
 
         var bem = itemService.criar(new ItemRequestDTO(
-                "TESTE-PESSOA-" + System.nanoTime(), "PAT-PESSOA", "Bem com pessoa incompatível", "Teste",
+                "TESTE-PESSOA-" + System.nanoTime(), "PAT-PESSOA",
+                br.com.stecar.stecar_backend.entity.InstituicaoPatrimonio.CAR,
+                "Bem com pessoa incompatível", "Teste",
                 "SERIAL-PESSOA", "Fabricante", "Modelo", null, "Ativo", LocalDate.now(),
                 escritorioOrigem.id(), departamentoOrigem.id(), null));
 
