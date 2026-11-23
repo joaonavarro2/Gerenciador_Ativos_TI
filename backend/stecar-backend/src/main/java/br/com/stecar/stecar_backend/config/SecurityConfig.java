@@ -9,6 +9,8 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -46,7 +48,8 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             UserDetailsService usuarioDetailsService,
-            UsuarioRepository usuarioRepository) throws Exception {
+            UsuarioRepository usuarioRepository,
+            Environment environment) throws Exception {
 
         http
             // API stateless com JWT: não há sessão nem cookie para proteger com CSRF.
@@ -55,8 +58,11 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
+            .authorizeHttpRequests(auth -> {
+                if (environment.acceptsProfiles(Profiles.of("docker"))) {
+                    auth.requestMatchers("/actuator/health", "/actuator/health/**").permitAll();
+                }
+                auth.requestMatchers(
                     "/api/auth/login",
                     "/api/auth/recuperar-senha",
                     "/api/auth/redefinir-senha",
@@ -67,8 +73,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").hasAnyAuthority(PAPEIS_VALIDOS)
                 .requestMatchers(HttpMethod.GET, "/api/**").hasAnyAuthority(PAPEIS_VALIDOS)
                 .requestMatchers("/api/**").hasAnyAuthority(PAPEIS_VALIDOS)
-                .anyRequest().hasAnyAuthority(PAPEIS_VALIDOS)
-            )
+                .anyRequest().hasAnyAuthority(PAPEIS_VALIDOS);
+            })
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                 jwt.jwtAuthenticationConverter(token -> {
                     // Papel e status vêm do banco a cada requisição: alterações e

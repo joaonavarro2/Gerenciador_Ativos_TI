@@ -6,7 +6,11 @@ Sistema de inventário e movimentação de bens de TI: bens, movimentações, co
 | --- | --- |
 | Backend | Java 25, Spring Boot 4, Spring Security (JWT HS512), JPA, Flyway, PostgreSQL |
 | Frontend | Vue 3, Quasar 2, Vite, Axios, Pinia |
-| Banco de dados | PostgreSQL instalado no Windows; sem containers |
+| Banco de dados | PostgreSQL no Windows para desenvolvimento; PostgreSQL isolado em Docker para testes |
+
+## Ambiente Docker isolado para testes
+
+O projeto também fornece um compose separado que usa um PostgreSQL exclusivo, sem publicar a porta do banco e sem acessar a base de desenvolvimento do Windows. Consulte [docs/docker-test.md](./docs/docker-test.md) para configurar variáveis locais, construir, iniciar, validar e encerrar os containers. O ambiente usa as portas `18080` (frontend) e `18081` (backend), e preserva os dados de teste em um volume nomeado.
 
 ## Pré-requisitos para desenvolvimento no Windows
 

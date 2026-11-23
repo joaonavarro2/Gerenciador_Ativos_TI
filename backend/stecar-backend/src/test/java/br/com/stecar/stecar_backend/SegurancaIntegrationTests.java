@@ -353,7 +353,7 @@ class SegurancaIntegrationTests extends PostgresIntegrationTest {
     }
 
     @Test
-    void endpointsDeUsuarioImpedemDesativarRebaixarOuExcluirUltimoAdministradorGeral() throws Exception {
+    void endpointsDeUsuarioBloqueiamAdministradorAntesDaRegraDoUltimoAdministradorGeral() throws Exception {
         Long id = usuarioRepository.findByEmail(administradorGeral).orElseThrow().getId();
         usuarioRepository.findAll().stream()
                 .filter(usuario -> !usuario.getId().equals(id)
@@ -366,14 +366,14 @@ class SegurancaIntegrationTests extends PostgresIntegrationTest {
 
         mockMvc.perform(patch("/api/usuarios/" + id + "/status?status=INATIVO")
                         .header("Authorization", bearer(administrador)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isForbidden());
         mockMvc.perform(put("/api/usuarios/" + id).header("Authorization", bearer(administrador))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"nomeCompleto\":\"Admin geral\",\"email\":\"" + administradorGeral
                                 + "\",\"funcao\":\"ADMINISTRADOR\"}"))
-                .andExpect(status().isConflict());
+                .andExpect(status().isForbidden());
         mockMvc.perform(delete("/api/usuarios/" + id).header("Authorization", bearer(administrador)))
-                .andExpect(status().isConflict());
+                .andExpect(status().isForbidden());
         Assertions.assertEquals("ATIVO", usuarioRepository.findById(id).orElseThrow().getStatus());
         Assertions.assertEquals("ADMINISTRADOR GERAL",
                 usuarioRepository.findById(id).orElseThrow().getFuncao());

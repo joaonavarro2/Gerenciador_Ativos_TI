@@ -1,0 +1,40 @@
+services:
+  database:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: stecar_integration
+      POSTGRES_USER: stecar_it
+      POSTGRES_PASSWORD: ${STECAR_IT_POSTGRES_PASSWORD:?Set a temporary STECAR_IT_POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/18/docker
+    tmpfs:
+      - /var/lib/postgresql:rw,noexec,nosuid,size=512m
+    networks:
+      - integration-tests
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  integration-tests:
+    build:
+      context: ./backend/stecar-backend
+      dockerfile: Dockerfile
+      target: integration-tests
+    environment:
+      STECAR_INTEGRATION_RUNNER: "1"
+      STECAR_TEST_DB_HOST: database
+      STECAR_TEST_DB_PORT: "5432"
+      STECAR_TEST_DB_NAME: stecar_integration
+      STECAR_TEST_DB_USER: stecar_it
+      STECAR_TEST_DB_PASSWORD: ${STECAR_IT_POSTGRES_PASSWORD:?Set a temporary STECAR_IT_POSTGRES_PASSWORD}
+    networks:
+      - integration-tests
+    depends_on:
+      database:
+        condition: service_healthy
+
+networks:
+  integration-tests:
+    internal: true

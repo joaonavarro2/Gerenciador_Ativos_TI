@@ -1,0 +1,68 @@
+name: stecar-test
+
+services:
+  database:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: stecar_test
+      POSTGRES_USER: stecar_test
+      POSTGRES_PASSWORD: ${POSTGRES_TEST_PASSWORD:?Set POSTGRES_TEST_PASSWORD in .env.docker.test}
+      PGDATA: /var/lib/postgresql/18/docker
+    volumes:
+      - stecar_test_postgres_data:/var/lib/postgresql
+    networks:
+      - stecar-test-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend/stecar-backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: stecar_test
+      DB_USER: stecar_test
+      DB_PASSWORD: ${POSTGRES_TEST_PASSWORD:?Set POSTGRES_TEST_PASSWORD in .env.docker.test}
+      STECAR_JWT_SECRET: ${STECAR_TEST_JWT_SECRET:?Set STECAR_TEST_JWT_SECRET in .env.docker.test}
+      STECAR_ADMIN_EMAIL: ${STECAR_TEST_ADMIN_EMAIL:-admin.teste@stecar.local}
+      STECAR_ADMIN_NOME: ${STECAR_TEST_ADMIN_NOME:-Administrador de Teste}
+      STECAR_ADMIN_PASSWORD: ${STECAR_TEST_ADMIN_PASSWORD:?Set STECAR_TEST_ADMIN_PASSWORD in .env.docker.test}
+      STECAR_FRONTEND_URL: http://127.0.0.1:18080
+      MAIL_HOST: ""
+    ports:
+      - "127.0.0.1:18081:8080"
+    networks:
+      - stecar-test-internal
+    depends_on:
+      database:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend/quasar-project
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "127.0.0.1:18080:80"
+    networks:
+      - stecar-test-internal
+    depends_on:
+      backend:
+        condition: service_healthy
+
+networks:
+  stecar-test-internal:
+    name: stecar-test-internal
+
+volumes:
+  stecar_test_postgres_data:
+    name: stecar-test-postgres-data

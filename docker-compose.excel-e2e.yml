@@ -1,0 +1,87 @@
+services:
+  database:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: stecar_excel_e2e
+      POSTGRES_USER: stecar_excel_e2e
+      POSTGRES_PASSWORD: ${STECAR_EXCEL_E2E_PASSWORD:?A unique temporary password is required}
+      PGDATA: /var/lib/postgresql/18/docker
+    tmpfs:
+      - /var/lib/postgresql:rw,noexec,nosuid,size=512m
+    networks: [excel-e2e]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend/stecar-backend
+      dockerfile: Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8080
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: stecar_excel_e2e
+      DB_USER: stecar_excel_e2e
+      DB_PASSWORD: ${STECAR_EXCEL_E2E_PASSWORD:?A unique temporary password is required}
+      STECAR_JWT_SECRET: ${STECAR_EXCEL_E2E_JWT_SECRET:?A temporary JWT secret is required}
+      STECAR_ADMIN_EMAIL: ${STECAR_EXCEL_E2E_ADMIN_EMAIL:?A test administrator email is required}
+      STECAR_ADMIN_NOME: Excel E2E Administrator
+      STECAR_ADMIN_PASSWORD: ${STECAR_EXCEL_E2E_ADMIN_PASSWORD:?A temporary administrator password is required}
+      STECAR_FRONTEND_URL: http://frontend
+      MAIL_HOST: ""
+    networks: [excel-e2e]
+    depends_on:
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/actuator/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 24
+      start_period: 60s
+
+  frontend:
+    build:
+      context: ./frontend/quasar-project
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    networks: [excel-e2e]
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+  e2e:
+    build:
+      context: .
+      dockerfile: tests/functional/excel-import/e2e/Dockerfile
+    environment:
+      APP_BASE_URL: http://frontend
+      STECAR_ADMIN_EMAIL: ${STECAR_EXCEL_E2E_ADMIN_EMAIL:?A test administrator email is required}
+      STECAR_ADMIN_PASSWORD: ${STECAR_EXCEL_E2E_ADMIN_PASSWORD:?A temporary administrator password is required}
+      STECAR_TEST_DB_HOST: database
+      STECAR_TEST_DB_PORT: 5432
+      STECAR_TEST_DB_NAME: stecar_excel_e2e
+      STECAR_TEST_DB_USER: stecar_excel_e2e
+      STECAR_TEST_DB_PASSWORD: ${STECAR_EXCEL_E2E_PASSWORD:?A unique temporary password is required}
+    networks: [excel-e2e]
+    depends_on:
+      frontend:
+        condition: service_healthy
+      database:
+        condition: service_healthy
+
+networks:
+  excel-e2e:
+    internal: true

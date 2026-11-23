@@ -1,0 +1,8 @@
+.git
+.env
+.npmrc
+*.crt
+*.cer
+*.pem
+target
+*.log

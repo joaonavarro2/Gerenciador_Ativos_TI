@@ -1,0 +1,11 @@
+.git
+.env
+.npmrc
+*.crt
+*.cer
+*.pem
+node_modules
+dist
+.quasar
+.tsupgrader
+*.log
