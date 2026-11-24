@@ -31,11 +31,11 @@
           <label class="label">Escritório</label>
 
           <q-select
-            v-model="form.escritorio"
+            v-model="form.escritorioId"
             outlined
             dense
             clearable
-            :options="escritorios"
+            :options="props.escritorios"
             label="Selecione o escritório"
             option-label="label"
             option-value="value"

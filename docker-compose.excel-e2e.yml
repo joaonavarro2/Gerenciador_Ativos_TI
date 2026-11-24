@@ -64,8 +64,8 @@ services:
 
   e2e:
     build:
-      context: .
-      dockerfile: tests/functional/excel-import/e2e/Dockerfile
+      context: ./tests/functional/excel-import/e2e
+      dockerfile: Dockerfile
     environment:
       APP_BASE_URL: http://frontend
       STECAR_ADMIN_EMAIL: ${STECAR_EXCEL_E2E_ADMIN_EMAIL:?A test administrator email is required}

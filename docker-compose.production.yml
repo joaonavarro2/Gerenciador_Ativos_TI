@@ -1,0 +1,111 @@
+name: stecar-production
+
+services:
+  database:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: stecar
+      POSTGRES_USER: stecar_app
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+      PGDATA: /var/lib/postgresql/18/docker
+    secrets:
+      - source: db_password
+        target: db_password
+    volumes:
+      - ./deploy/postgres-init/10-restrict-app-role.sql:/docker-entrypoint-initdb.d/10-restrict-app-role.sql:ro
+      - stecar_production_postgres_data:/var/lib/postgresql
+    networks:
+      - database-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\""]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 15s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  backend:
+    build:
+      context: ./backend/stecar-backend
+      dockerfile: Dockerfile
+    image: stecar-backend:${STECAR_IMAGE_TAG:-local}
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_CONFIG_IMPORT: optional:configtree:/run/secrets/
+      SERVER_PORT: 8080
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: stecar
+      DB_USER: stecar_app
+      STECAR_FRONTEND_URL: ${STECAR_PUBLIC_URL:?Set STECAR_PUBLIC_URL in .env.production}
+      MAIL_HOST: ${MAIL_HOST:-}
+    secrets:
+      - source: db_password
+        target: spring.datasource.password
+      - source: jwt_secret
+        target: stecar.jwt.secret
+      - source: admin_password
+        target: stecar.admin.senha
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - web-internal
+      - database-internal
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  frontend:
+    build:
+      context: ./frontend/quasar-project
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    image: stecar-frontend:${STECAR_IMAGE_TAG:-local}
+    restart: unless-stopped
+    ports:
+      - "${STECAR_BIND_ADDRESS:-127.0.0.1}:${STECAR_WEB_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - web-internal
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+networks:
+  web-internal:
+  database-internal:
+    internal: true
+
+volumes:
+  stecar_production_postgres_data:
+    name: stecar-production-postgres-data
+
+secrets:
+  db_password:
+    file: ./deploy/secrets/db_password
+  jwt_secret:
+    file: ./deploy/secrets/jwt_secret
+  admin_password:
+    file: ./deploy/secrets/admin_password

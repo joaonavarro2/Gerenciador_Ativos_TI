@@ -186,7 +186,7 @@ test('importa XLSX pela interface, consulta pela API e confere PostgreSQL', asyn
     escritorio: opcoes.escritorio,
     departamento: opcoes.departamento,
   })
-  expect(String(registroBanco.data_aquisicao)).toContain('2024-02-29')
+  expect(registroBanco.data_aquisicao.toISOString()).toContain('2024-02-29')
 })
 
 test('rejeita arquivo com extensão PDF e não grava registros', async ({ page }) => {
@@ -201,7 +201,27 @@ test('rejeita arquivo com extensão PDF e não grava registros', async ({ page }
     mimeType: 'application/pdf',
     buffer: Buffer.from('%PDF-1.7 teste inválido'),
   })
-  await expect(page.getByText('Selecione um arquivo .xlsx.')).toBeVisible()
+  const inputArquivo = page.locator('input[type="file"]')
+  await expect(inputArquivo).toHaveAttribute('accept', '.xlsx')
+  expect(await inputArquivo.evaluate(input => input.files?.length || 0)).toBe(0)
+  await expect(page.getByRole('button', { name: 'Validar planilha' })).toHaveCount(0)
+  expect(requisicoesImportacao).toBe(0)
+  expect(await contarPrefixoBanco()).toBe(1)
+})
+
+test('informa erro para conteúdo corrompido com extensão XLSX e não grava registros', async ({ page }) => {
+  await autenticar(page)
+  let requisicoesImportacao = 0
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && request.url().includes('/api/importacao-excel/')) requisicoesImportacao++
+  })
+  await page.getByRole('button', { name: 'Importar Excel' }).click()
+  await page.locator('input[type="file"]').setInputFiles({
+    name: `${prefix}-corrompido.xlsx`,
+    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    buffer: Buffer.from('%PDF-1.7 conteúdo inválido para XLSX'),
+  })
+  await expect(page.getByRole('alert')).toBeVisible()
   await expect(page.getByRole('button', { name: 'Validar planilha' })).toHaveCount(0)
   expect(requisicoesImportacao).toBe(0)
   expect(await contarPrefixoBanco()).toBe(1)
