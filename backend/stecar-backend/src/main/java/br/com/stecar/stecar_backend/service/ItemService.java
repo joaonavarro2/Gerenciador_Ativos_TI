@@ -22,9 +22,21 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Locale;
 import java.time.LocalDate;
+import java.util.stream.Stream;
 
 @Service
 public class ItemService {
+
+    private static final List<String> CATEGORIAS_PADRAO = List.of(
+            "Computadores",
+            "Impressão",
+            "Impressoras",
+            "Monitores",
+            "Notebooks",
+            "Outros",
+            "Periféricos",
+            "Rede",
+            "Scanner");
 
     private final ItemRepository itemRepository;
     private final UsuarioRepository usuarioRepository;
@@ -125,9 +137,14 @@ public class ItemService {
         List<ItemOpcaoDTO> pessoas = itemRepository.listarPessoasAtivas().stream()
                 .map(row -> new ItemOpcaoDTO(numero(row[0]), (String) row[1], numero(row[2])))
                 .toList();
+        List<String> categorias = Stream.concat(
+                        CATEGORIAS_PADRAO.stream(), itemRepository.listarCategorias().stream())
+                .distinct()
+                .sorted()
+                .toList();
         return new ItemOpcoesResponseDTO(
             escritorios, departamentos, pessoas,
-            itemRepository.listarCategorias(), itemRepository.listarStatus());
+            categorias, itemRepository.listarStatus());
     }
 
     @Transactional
